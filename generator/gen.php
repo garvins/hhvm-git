@@ -1,7 +1,9 @@
 <?hh
 
+require_once 'Parameter.hh';
 require_once 'Source.hh';
 require_once 'Header.hh';
+require_once 'Type.hh';
 require_once 'Func.hh';
 
 $generator = new Gen();
@@ -34,15 +36,16 @@ class Gen {
                 
                 for ($i = 0; $i < $cnt; $i++) {
                     $function = new Func($match[2][$i]);
-                    $args = explode(",", $match[3][$i]);
+                    $function->setReturnType(new Type($match[1][$i]));
+                    $params = explode(",", $match[3][$i]);
                     
-                    foreach ($args as $arg) {
-                        $arg = trim($arg);
-                        $pos = strrpos($arg, " ");
-                        $key = trim(substr($arg, $pos));
-                        $type = trim(substr($arg, 0, $pos));
+                    foreach ($params as $param) {
+                        $param = trim($param);
+                        $pos = strrpos($param, " ");
+                        $type = new Type(trim(substr($param, 0, $pos)));
                         
-                        $param = new Parameter();
+                        $param = new Parameter(trim(substr($param, $pos)));
+                        $param->setType($type);
                         
                         $function->add2Params($param);
                     }

@@ -39,8 +39,24 @@ class Source extends Printer {
     }
     
     protected function printBody() {
-        foreach ($functions as $function) {
+        $body = "";
+        
+        foreach ($this->functions as $function) {
+            $body .= "\n";
+            $body .= $function->getReturnType()->getHHVMType()." HHVM_FUNCTION(".$function->getName();
             
+            if (count($function->getParams())) {
+            	$body.= ",\n";
+            }
+            
+            foreach ($function->getParams() as $param) {
+                $body .= ($param->isConstant() ? "const " : ""). $param->getType()->getHHVMType() . $param->getName() .",";
+            }
+            
+            $body = rtrim($body, ',');
+            $body .= ") { }";
         }
+        
+        $this->add($body);
     }
 }

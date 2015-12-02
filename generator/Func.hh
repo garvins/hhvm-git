@@ -5,12 +5,12 @@ require_once 'Type.hh';
 
 class Func {
     private string $name = "";
-    private ?Type $returnType;
+    private Type $returnType;
     private array<Parameter> $params = array();
 
     public function __construct(string $name) {
         $this->name = $name;
-		$this->returnType = null;
+		$this->returnType = new Type("void");
 		$this->params = array();
     }
 
@@ -18,7 +18,7 @@ class Func {
         return $this->name;
     }
 
-    public function getReturnType() : ?Type {
+    public function getReturnType() : Type {
         return $this->returnType;
     }
 

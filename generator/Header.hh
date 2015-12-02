@@ -35,7 +35,7 @@ class Header extends Printer {
     protected function printIncludes() { }
     
     protected function printBody() {
-        foreach ($functions as $function) {
+        foreach ($this->functions as $function) {
             
         }
     }
