@@ -43,20 +43,30 @@ class Source extends Printer {
         
         foreach ($this->functions as $function) {
             $body .= "\n";
-            $body .= $function->getReturnType()->getHHVMType()." HHVM_FUNCTION(".$function->getName();
+            $body .= $function->getReturnType()->getHHVMReturnType()." HHVM_FUNCTION(".$function->getName();
             
             if (count($function->getParams())) {
-            	$body.= ",\n";
+            	$body.= ", ";
             }
             
             foreach ($function->getParams() as $param) {
-                $body .= ($param->isConstant() ? "const " : ""). $param->getType()->getHHVMType() . $param->getName() .",";
+                $body .= $param->getType()->getHHVMType() . str_repeat("*", $param->getPointerLvl()) . " " .  $param->getName() .",\n";
             }
             
-            $body = rtrim($body, ',');
-            $body .= ") { }";
+            $body = rtrim(rtrim($body,"\n"), ",");
+            $body .= ") {\n";
+            
+            $body .= "\t" . $function->getName() . "(";
+            
+            foreach ($function->getParams() as $param) {
+                $body .= $param->getName() .", ";
+            }
+            
+            $body = rtrim(rtrim($body), ",");
+            
+            $body .= ")\n}\n";
         }
         
-        $this->add($body);
+        $this->add(rtrim($body, ""));
     }
 }

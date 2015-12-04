@@ -7,6 +7,7 @@ class Func {
     private string $name = "";
     private Type $returnType;
     private array<Parameter> $params = array();
+    private bool $constant = false;
 
     public function __construct(string $name) {
         $this->name = $name;
@@ -25,6 +26,10 @@ class Func {
     public function getParams() : array<Parameter> {
         return $this->params;
     }
+    
+    public function isConstant() : bool {
+        return $this->constant;
+    }
 
     public function setName(string $name) : this {
         $this->name = $name;
@@ -38,6 +43,11 @@ class Func {
 
     public function setParams(array<Parameter> $params) : this {
         $this->params = params;
+        return $this;
+    }
+    
+    public function setConstant(bool $constant) :this {
+        $this->constant = $constant;
         return $this;
     }
 

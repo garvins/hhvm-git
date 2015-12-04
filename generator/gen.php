@@ -36,18 +36,26 @@ class Gen {
                 
                 for ($i = 0; $i < $cnt; $i++) {
                     $function = new Func($match[2][$i]);
-                    $function->setReturnType(new Type($match[1][$i]));
+                    
+                    $typeName = $match[1][$i];
+                    $typeName = preg_replace("/const /", "", $typeName);
+                    $function->setReturnType(new Type($typeName));
                     $params = explode(",", $match[3][$i]);
                     
                     foreach ($params as $param) {
                         $param = trim($param);
                         $pos = strrpos($param, " ");
-                        $type = new Type(trim(substr($param, 0, $pos)));
+                        $pointerLvl = 0;
+        
+                        $parameter = new Parameter(str_replace("*", "" , substr($param, $pos), $pointerLvl));
                         
-                        $param = new Parameter(trim(substr($param, $pos)));
-                        $param->setType($type);
+                        $typeName = str_replace("*", "", substr($param, 0, $pos), $pointerLvl);
+                        $typeName = preg_replace("/const /", "", $typeName);
+                        $parameter->setType(new Type($typeName));
+                        $parameter->setPointerLvl($pointerLvl);
+                        $parameter->setConstant(strpos($param, "const") ? true : false);
                         
-                        $function->add2Params($param);
+                        $function->add2Params($parameter);
                     }
                     
                     $this->functions[] = $function;

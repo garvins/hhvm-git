@@ -15,7 +15,7 @@ abstract class Printer {
     }
     
     private function printStartIfDef() {
-        $this->add("#ifndef HHVM_GIT2_". strtoupper($this->fileName) ."_H\n");
+        $this->add("#ifndef HHVM_GIT2_". strtoupper($this->fileName) ."_H");
         $this->add("#define HHVM_GIT2_". strtoupper($this->fileName) ."_H\n");
     }
     
@@ -32,12 +32,13 @@ abstract class Printer {
     }
     
     public function print(bool $printIfDef = false) {
+        $this->printLicense();
+        
         if ($printIfDef) {
             $this->printStartIfDef();
         }
         
         $this->printDefines();
-        $this->printLicense();
         $this->printIncludes();
         $this->printBody();
         
