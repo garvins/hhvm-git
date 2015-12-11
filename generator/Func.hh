@@ -1,4 +1,4 @@
-<?hh
+<?hh //strict
 
 require_once 'Parameter.hh';
 require_once 'Type.hh';
@@ -42,7 +42,7 @@ class Func {
     }
 
     public function setParams(array<Parameter> $params) : this {
-        $this->params = params;
+        $this->params = $params;
         return $this;
     }
     

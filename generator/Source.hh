@@ -1,4 +1,4 @@
-<?hh
+<?hh //strict
 
 require_once 'Printer.hh';
 require_once 'Func.hh';
@@ -30,15 +30,15 @@ class Source extends Printer {
         return $this;
     }
     
-    protected function printDefines() {
+    protected function printDefines() : void {
         
     }
     
-    protected function printIncludes() {
+    protected function printIncludes() : void {
         $this->add("#include \"". $this->fileName .".h\"");
     }
     
-    protected function printBody() {
+    protected function printBody() : void {
         $body = "";
         
         foreach ($this->functions as $function) {

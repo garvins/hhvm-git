@@ -1,4 +1,4 @@
-<?hh
+<?hh //strict
 
 require_once 'Printer.hh';
 require_once 'Func.hh';
@@ -30,11 +30,11 @@ class Header extends Printer {
         return $this;
     }
     
-    protected function printDefines() { }
+    protected function printDefines() : void { }
     
-    protected function printIncludes() { }
+    protected function printIncludes() : void { }
     
-    protected function printBody() {
+    protected function printBody() : void {
         foreach ($this->functions as $function) {
             
         }

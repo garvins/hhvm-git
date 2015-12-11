@@ -1,4 +1,4 @@
-<?hh
+<?hh //strict
 
 enum HackType : string {
     VOID     = "void";
@@ -52,7 +52,7 @@ class Type {
         return $this->type;
     }
     
-    public function setType($type) : this {
+    public function setType(string $type) : this {
         $this->type = $type;
         return $this;
     }
