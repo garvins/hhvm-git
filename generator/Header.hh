@@ -35,8 +35,30 @@ class Header extends Printer {
     protected function printIncludes() : void { }
     
     protected function printBody() : void {
+        $body = "";
+        
         foreach ($this->functions as $function) {
+            $body .= "\n";
+            $body .= $function->getReturnType()->getHHVMReturnType()." HHVM_FUNCTION(".$function->getName();
             
+            if (count($function->getParams())) {
+                $body.= ", ";
+            }
+            
+            $size = strlen($function->getName()) + strlen($function->getReturnType()->getHHVMReturnType()) + 17;
+            
+            foreach ($function->getParams() as $k => $param) {
+                if ($k > 0) {
+                    $body .= str_repeat(" ", $size);
+                }
+                
+                $body .= $param->getType()->getHHVMType() . str_repeat("*", $param->getPointerLvl()) . " " .  $param->getName() .",\n";
+            }
+            
+            $body = rtrim(rtrim($body,"\n"), ",");
+            $body .= ");\n";
         }
+        
+        $this->add(rtrim($body, ""));
     }
 }

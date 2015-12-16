@@ -8,24 +8,56 @@ enum HackType : string {
     STRING   = "string";
     ARR      = "array";
     RESOURCE = "resource";
-    CALLABLE = "???";
+    CALLABLE = "mixed";
 }
 
 class Type {
+    public static array<string, string> $unknownTypes = array();
+    
     private string $type = "";
     
     public function __construct(string $type) {
         $this->type = $type;
     }
     
-    private function typeToHackType() : HackType {
+    public static function hhvmTypeToHack(string $hhvmType): HackType {
+        $void      = array("void");
+        $bool      = array("bool");
+        $int       = array("int64_t");
+        $float     = array("double");
+        $string    = array("const String&", "String");
+        $arr       = array("const Array&", "Array");
+        $ressource = array("const Resource&", "Resource");
+        $callable  = array("const Variant&", "Variant");
+        
+        if (in_array($hhvmType, $void)) {
+            return HackType::VOID;
+        } else if (in_array($hhvmType, $bool)) {
+            return HackType::BOOL;
+        } else if (in_array($hhvmType, $int)) {
+            return HackType::INT;
+        } else if (in_array($hhvmType, $string)) {
+            return HackType::STRING;
+        } else if (in_array($hhvmType, $arr)) {
+            return HackType::ARR;
+        } else if (in_array($hhvmType, $ressource)) {
+            return HackType::RESOURCE;
+        } else if (in_array($hhvmType, $callable)) {
+            return HackType::CALLABLE;
+        } else {
+            Type::$unknownTypes[$hhvmType] = $hhvmType;
+            return HackType::VOID;
+        }
+    }
+    
+    public function typeToHackType() : HackType {
         $void      = array("void");
         $bool      = array("bool");
         $int       = array("int", "uint32_t");
         $float     = array();
         $string    = array("char");
         $arr       = array();
-        $ressource = array();
+        $ressource = array("git_blame", "git_blame_hunk", "git_blame_options", "git_repository");
         $callable  = array();
         
         if (in_array($this->type, $void)) {
@@ -43,7 +75,7 @@ class Type {
         } else if (in_array($this->type, $callable)) {
             return HackType::CALLABLE;
         } else {
-            echo "\n". $this->type . " is an unkown type.";
+            Type::$unknownTypes[$this->type] = $this->type;
             return HackType::VOID;
         }
     }
@@ -77,7 +109,7 @@ class Type {
             case HackType::RESOURCE :
                 $hhvmType = "const Resource&"; break;
             case HackType::CALLABLE :
-                $hhvmType = "???"; break;
+                $hhvmType = "const Variant&"; break;
         }
         
         return $hhvmType;
@@ -103,7 +135,7 @@ class Type {
             case HackType::RESOURCE :
                 $hhvmType = "Resource"; break;
             case HackType::CALLABLE :
-                $hhvmType = "???"; break;
+                $hhvmType = "Variant"; break;
         }
         
         return $hhvmType;

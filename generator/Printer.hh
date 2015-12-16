@@ -24,7 +24,7 @@ abstract class Printer {
     }
     
     private function writeToFile() : void {
-        file_put_contents(dirname(__FILE__)."/../".$this->fileName.".".$this->fileType, $this->content);
+        file_put_contents(dirname(__FILE__)."/../src/".$this->fileName.".".$this->fileType, $this->content);
     }
     
     public function add(string $text) : void {

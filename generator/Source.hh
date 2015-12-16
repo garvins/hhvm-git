@@ -49,12 +49,25 @@ class Source extends Printer {
             	$body.= ", ";
             }
             
-            foreach ($function->getParams() as $param) {
+            $size = strlen($function->getName()) + strlen($function->getReturnType()->getHHVMReturnType()) + 17;
+            
+            foreach ($function->getParams() as $k => $param) {
+                if ($k > 0) {
+                    $body .= str_repeat(" ", $size);
+                }
+                
                 $body .= $param->getType()->getHHVMType() . str_repeat("*", $param->getPointerLvl()) . " " .  $param->getName() .",\n";
             }
             
             $body = rtrim(rtrim($body,"\n"), ",");
             $body .= ") {\n";
+            
+            
+            foreach ($function->getParams() as $param) {
+                if ($param->getType()->typeToHackType() == HackType::RESOURCE) {
+                    $body .= "\t" . $param->getType()->getType() . " _" . $param->getName() . ";\n";
+                }
+            }
             
             $body .= "\t" . $function->getName() . "(";
             
