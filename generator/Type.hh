@@ -12,12 +12,35 @@ enum HackType : string {
 }
 
 class Type {
+    public static array<HackType, array<string>> $knownTypes = array(
+			HackType::VOID     => array("void"),
+            HackType::BOOL     => array("bool"),
+			HackType::INT      => array(
+				"int", "int32_t", "int64_t",
+				"size_t",
+				"uint32_t"),
+            HackType::FLOAT    => array(),
+            HackType::STRING   => array("char"),
+            HackType::ARR      => array(),
+            HackType::RESOURCE => array(),
+            HackType::CALLABLE => array(),
+        );
+    
     public static array<string, string> $unknownTypes = array();
     
     private string $type = "";
     
     public function __construct(string $type) {
         $this->type = $type;
+    }
+    
+    public function getType() : string {
+        return $this->type;
+    }
+    
+    public function setType(string $type) : this {
+        $this->type = $type;
+        return $this;
     }
     
     public static function hhvmTypeToHack(string $hhvmType): HackType {
@@ -51,42 +74,26 @@ class Type {
     }
     
     public function typeToHackType() : HackType {
-        $void      = array("void");
-        $bool      = array("bool");
-        $int       = array("int", "uint32_t");
-        $float     = array();
-        $string    = array("char");
-        $arr       = array();
-        $ressource = array("git_blame", "git_blame_hunk", "git_blame_options", "git_repository");
-        $callable  = array();
-        
-        if (in_array($this->type, $void)) {
+        if (in_array($this->type, Type::$knownTypes[HackType::VOID])) {
             return HackType::VOID;
-        } else if (in_array($this->type, $bool)) {
+        } else if (in_array($this->type, Type::$knownTypes[HackType::BOOL])) {
             return HackType::BOOL;
-        } else if (in_array($this->type, $int)) {
+        } else if (in_array($this->type, Type::$knownTypes[HackType::INT])) {
             return HackType::INT;
-        } else if (in_array($this->type, $string)) {
+        } else if (in_array($this->type, Type::$knownTypes[HackType::FLOAT])) {
+            return HackType::FLOAT;
+        } else if (in_array($this->type, Type::$knownTypes[HackType::STRING])) {
             return HackType::STRING;
-        } else if (in_array($this->type, $arr)) {
+        } else if (in_array($this->type, Type::$knownTypes[HackType::ARR])) {
             return HackType::ARR;
-        } else if (in_array($this->type, $ressource)) {
+        } else if (in_array($this->type, Type::$knownTypes[HackType::RESOURCE])) {
             return HackType::RESOURCE;
-        } else if (in_array($this->type, $callable)) {
+        } else if (in_array($this->type, Type::$knownTypes[HackType::CALLABLE])) {
             return HackType::CALLABLE;
         } else {
             Type::$unknownTypes[$this->type] = $this->type;
             return HackType::VOID;
         }
-    }
-    
-    public function getType() : string {
-        return $this->type;
-    }
-    
-    public function setType(string $type) : this {
-        $this->type = $type;
-        return $this;
     }
     
     public function getHHVMType() : string {
