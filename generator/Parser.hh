@@ -66,7 +66,7 @@ class Parser {
         $fileContent = file_get_contents(dirname(__FILE__)."/../libgit2/include/git2/".$fileName);
         $result = array();
         
-        $pattern = "/\n?[ \t]*typedef[\s]+struct[\s]+([\w]+)[\s]*(?:{(?:[\s\S]*)})?[\s]*((?:[\w]+[\s]*,[\s]*)*?[\w]+)?[\s]*;/";
+        $pattern = "/\n?[ \t]*typedef[\s]+struct[\s]+([\w]*)[\s]*(?:{(?:[\s\S]*?)})?[\s]*((?:[\w]+[\s]*,[\s]*)*?[\w]+)?[\s]*;/";
         $match = array();
         
         if (preg_match_all($pattern, $fileContent, $match)) {
@@ -102,15 +102,21 @@ class Parser {
                 $function = new Func($match[2][$i]);
                 
                 $typeName = $match[1][$i];
-                $typeName = preg_replace("/const /", "", $typeName);
+                $typeName = preg_replace("/(const|unsigned)/", "", $typeName);
                 $typeName = str_replace("*", "", $typeName);
                 $typeName = str_replace(" ", "", $typeName);
                 $function->setReturnType(new Type($typeName));
                 $params = explode(",", $match[3][$i]);
                 
                 foreach ($params as $param) {
+                    $param = preg_replace("/(\/\*[\s\S]*?\*\/|(^|\s)struct\s)*/","",$param);
                     $param = trim($param);
                     $pos = strrpos($param, " ");
+                    
+                    if($pos === false) {
+                        $pos = strlen($param);
+                    }
+                    
                     $pointerLvl = 0;
                     
                     $parameter = new Parameter(trim(str_replace("*", "" , substr($param, $pos), $pointerLvl)));
@@ -138,11 +144,24 @@ class Parser {
         $result = array();
         
         // todo create pattern to parse callbacks
-        $pattern = "/\nGIT_EXTERN\((.+?)\)\s*([a-zA-Z0-9_-]+)\(([\S\s]+?)\);/";
+        $pattern = "/\n?[ \t]*typedef[\s]+((?:[^e]|e[^n]|[^s]|s[^t]|st[^r]|str[^u])[\w]*)[\s]+(\(\*?[\w]+\)|\*?[\w]+)\(([\s\S]+?)\);/";
         $match = array();
         
         if (preg_match_all($pattern, $fileContent, $match)) {
             $cnt = count($match[0]);
+            
+            for ($i = 0; $i < $cnt; $i++) {
+                $callbackName = $match[2][$i];
+                $callbackName = str_replace(array("*", "(", ")", " "), "", $callbackName);
+                
+                $params = explode(",", $match[3][$i]);
+                
+                $returnType = $match[1][$i];
+                $returnType = preg_replace("/const /", "", $returnType);
+                $returnType = str_replace(array("*", " "), "", $returnType);
+                
+                $result[] = $callbackName;
+            }
         }
         
         return $result;

@@ -18,9 +18,9 @@ class Type {
 			HackType::INT      => array(
 				"int", "int32_t", "int64_t",
 				"size_t",
-				"uint32_t"),
+				"unsigned", "unsigned int", "uint32_t"),
             HackType::FLOAT    => array(),
-            HackType::STRING   => array("char"),
+            HackType::STRING   => array("char", "unsigned char"),
             HackType::ARR      => array(),
             HackType::RESOURCE => array(),
             HackType::CALLABLE => array(),

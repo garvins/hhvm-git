@@ -22,9 +22,7 @@ $fileFuncList = array();
 
 foreach ($files as $file => $path)
 {
-    $consts = array();
     $structs = $parser->parseStructs($file);
-    
     foreach ($structs as $name) {
         if (in_array($name, Type::$knownTypes[HackType::RESOURCE])) {
             // todo handling double names ...
@@ -34,6 +32,17 @@ foreach ($files as $file => $path)
         // todo
     }
     
+    $callbacks = $parser->parseCallbacks($file);
+    foreach ($callbacks as $name) {
+        if (in_array($name, Type::$knownTypes[HackType::CALLABLE])) {
+            // todo handling double names ...
+        } else {
+            Type::$knownTypes[HackType::CALLABLE][] = $name;
+        }
+        // todo
+    }
+    
+    $consts = array();
     $constants = $parser->parseConstants($file);
     
     /* add parsed constants to knownTypes */
@@ -48,10 +57,14 @@ foreach ($files as $file => $path)
     }
     $fileConsts[$file] = $consts;
     
+    
+    if(isset($argv[1]) && $argv[1] != $file) {
+        continue;
+    }
+    
     $functions = $parser->parseFunctions($file);
     $fileFuncList[$file] = $functions;
 }
-
 
 $generator = new Gen();
 $generator->generateFuncFiles($fileFuncList);

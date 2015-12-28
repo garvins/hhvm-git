@@ -4,9 +4,6 @@ require_once 'Header.hh';
 require_once 'Source.hh';
 
 class Gen {
-    private array<string, string> $files = array();
-    private array<string, array<string>> $structs = array();
-    private array<string, array<string, int>> $constants = array();
     
     public function __construct() {
     }
