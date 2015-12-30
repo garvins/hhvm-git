@@ -42,24 +42,43 @@ class Source extends Printer {
         $body = "";
         
         foreach ($this->functions as $function) {
+            $hasOutValue = false;
+
+            if (count($function->getParams()) && preg_match("/out/" ,$function->getParams()[0]->getName())) {
+                $returnType = $function->getParams()[0]->getType();
+                $hasOutValue = true;
+            } else {
+                $returnType = $function->getReturnType();
+            }
+            
             $body .= "\n";
-            $body .= $function->getReturnType()->getHHVMReturnType()." HHVM_FUNCTION(".$function->getName().",";
+            $body .= $returnType->getHHVMReturnType() ." HHVM_FUNCTION(".$function->getName().",";
             
             foreach ($function->getParams() as $k => $param) {
+                if($k == 0 && preg_match("/out/" ,$param->getName())) {
+                    continue;
+                }
+                
                 $body .= "\n\t" . $param->getType()->getHHVMType() . str_repeat("*", $param->getPointerLvl()) . " " .  $param->getName() .",";
             }
             
             $body = rtrim($body, ",");
-            $body .= ")\n{\n";
+            $body .= ")\n{";
             
+            if ($returnType->typeToHackType() != HackType::VOID) {
+            	$body .= "\n\t" . $function->getReturnType()->getType() . " result;\n";
+            	$body .= "\t" . $returnType->getHHVMReturnType() . " return_value;\n";
+            }
             
+            /*
             foreach ($function->getParams() as $param) {
                 if ($param->getType()->typeToHackType() == HackType::RESOURCE) {
                     $body .= "\t" . $param->getType()->getType() . " _" . $param->getName() . ";\n";
                 }
-            }
+            }*/
             
-            $body .= "\t" . $function->getName() . "(";
+            // todo only assign to result if return type isnt void
+            $body .= "\n\t". ($returnType->typeToHackType() != HackType::VOID ? "result = " : "") . $function->getName() . "(";
             
             foreach ($function->getParams() as $param) {
                 $body .= $param->getName() .", ";

@@ -38,10 +38,20 @@ class Header extends Printer {
         $body = "";
         
         foreach ($this->functions as $function) {
+            if (count($function->getParams()) && preg_match("/out/" ,$function->getParams()[0]->getName())) {
+                $returnType = $function->getParams()[0]->getType()->getHHVMReturnType();
+            } else {
+                $returnType = $function->getReturnType()->getHHVMReturnType();
+            }
+            
             $body .= "\n";
-            $body .= $function->getReturnType()->getHHVMReturnType()." HHVM_FUNCTION(".$function->getName().",";
+            $body .= $returnType." HHVM_FUNCTION(".$function->getName().",";
             
             foreach ($function->getParams() as $k => $param) {
+                if($k == 0 && preg_match("/out/" ,$param->getName())) {
+                    continue;
+                }
+                
                 $body .= "\n\t" . $param->getType()->getHHVMType() . str_repeat("*", $param->getPointerLvl()) . " " .  $param->getName() .",";
             }
             
