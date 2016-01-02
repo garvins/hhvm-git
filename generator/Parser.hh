@@ -14,8 +14,7 @@ class Parser {
      *
      * @return array<string, array<string, string>>
      */
-    public function parseConstants(string $fileName): array<string, array<string>> {
-        $fileContent = file_get_contents(dirname(__FILE__)."/../libgit2/include/git2/".$fileName);
+    public function parseConstants(string $fileContent): array<string, array<string>> {
         $result = array();
         
         /**
@@ -24,10 +23,10 @@ class Parser {
          *       <content>
          *   } git_blame_flag_t;
          */
-        $pattern = "/\n[ \t]*?typedef[\s]+enum[\s]*[\w]*[\s]*{([\s\S]*?)}[\s]+([\w]+?);/";
+        $pattern = "/\n[ \t]*?typedef\s+enum\s*\w*\s*{([\s\S]*?)}\s+(\w+?);/";
         
         /** @var $pattern2 - pattern to parse constant name and value */
-        $pattern2 = "/\n[\s]*(?:\/\*\*[\s\S]\*\/)*[\s]*([A-Z_][A-Z0-9_]*)[\s]*(?:=[\s\S]*?)?(?:,|$)/";
+        $pattern2 = "/\n\s*(?:\/\*\*[\s\S]\*\/)*\s*([A-Z_][A-Z0-9_]*)\s*(?:=[\s\S]*?)?(?:,|$)/";
         
         $match = array();
         
@@ -62,11 +61,10 @@ class Parser {
      *
      * @return array<string>
      */
-    public function parseStructs(string $fileName): array<string> {
-        $fileContent = file_get_contents(dirname(__FILE__)."/../libgit2/include/git2/".$fileName);
+    public function parseStructs(string $fileContent): array<string> {
         $result = array();
         
-        $pattern = "/\n?[ \t]*typedef[\s]+struct[\s]+([\w]*)[\s]*(?:{(?:[\s\S]*?)})?[\s]*((?:[\w]+[\s]*,[\s]*)*?[\w]+)?[\s]*;/";
+        $pattern = "/\n?[ \t]*typedef\s+struct\s+(\w*)\s*(?:{(?:[\s\S]*?)})?\s*((?:\w+\s*,\s*)*?\w+)?\s*;/";
         $match = array();
         
         if (preg_match_all($pattern, $fileContent, $match)) {
@@ -88,8 +86,7 @@ class Parser {
      *
      * @return array<Func>
      */
-    public function parseFunctions(string $fileName): array<Func> {
-        $fileContent = file_get_contents(dirname(__FILE__)."/../libgit2/include/git2/".$fileName);
+    public function parseFunctions(string $fileContent): array<Func> {
         $result = array();
         
         $pattern = "/\nGIT_EXTERN\((.+?)\)\s*([a-zA-Z0-9_-]+)\(([\S\s]+?)\);/";
@@ -138,13 +135,11 @@ class Parser {
     }
     
     
-    public function parseCallbacks(string $fileName): array<string> {
-        
-        $fileContent = file_get_contents(dirname(__FILE__)."/../libgit2/include/git2/".$fileName);
+    public function parseCallbacks(string $fileContent): array<string> {
         $result = array();
         
         // todo create pattern to parse callbacks
-        $pattern = "/\n?[ \t]*typedef[\s]+((?:[^e]|e[^n]|[^s]|s[^t]|st[^r]|str[^u])[\w]*)[\s]+(\(\*?[\w]+\)|\*?[\w]+)\(([\s\S]+?)\);/";
+        $pattern = "/\n?[ \t]*typedef\s+((?:[^e]|e[^n]|[^s]|s[^t]|st[^r]|str[^u])\w*)\s+(\(\*?\w+\)|\*?\w+)\(([\s\S]+?)\);/";
         $match = array();
         
         if (preg_match_all($pattern, $fileContent, $match)) {

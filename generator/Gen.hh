@@ -28,7 +28,7 @@ class Gen {
     
     public function generateSysLib(array<string, array<string, array<string>>> $enums): void {
         if ($handle = opendir(dirname(__FILE__)."/../src")) {
-            $pattern = "/([\w]+) HHVM_FUNCTION\(([\w]+),((?:[\s]*(?:const [\w]+&|[\w]+)[\s]*[\w]+(?:,\n|\);))*)/";
+            $pattern = "/(\w+) HHVM_FUNCTION\((\w+),((?:\s*(?:const \w+&|\w+)\s*\**\w+(?:,\n|\);))*)/";
             $ignore = "/([^h]|[^\.]h)$/";
             $content = "<?hh\n";
             
@@ -65,7 +65,7 @@ class Gen {
                                 
                                 $match2 = array();
                                 
-                                if (preg_match("/^([\s\S]+?)[\s]+([\w]+)$/", $v1, $match2)) {
+                                if (preg_match("/^([\s\S]+?)\s+\**(\w+)$/", $v1, $match2)) {
                                     $content .= Type::hhvmTypeToHack(trim($match2[1]))." $".$match2[2];
                                 } else {
                                     $content .= "ERROR";
