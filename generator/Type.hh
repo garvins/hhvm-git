@@ -15,10 +15,10 @@ class Type {
     public static array<HackType, array<string>> $knownTypes = array(
 			HackType::VOID     => array("void"),
             HackType::BOOL     => array("bool"),
-			HackType::INT      => array(
+			HackType::INT      => array( "git_off_t", "git_time_t",
 				"int", "int32_t", "int64_t",
 				"size_t",
-				"unsigned", "unsigned int", "uint32_t"),
+				"unsigned", "unsigned int", "uint16_t", "uint32_t"),
             HackType::FLOAT    => array(),
             HackType::STRING   => array("char", "unsigned char"),
             HackType::ARR      => array(),
