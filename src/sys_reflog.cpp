@@ -1,0 +1,34 @@
+/*
+ * Copyright (C) the hhvm-git contributors. All rights reserved.
+ *
+ * This file is part of hhvm-git, distributed under the GNU GPL v2 with
+ * a Linking Exception. For full terms see the included LICENSE file.
+ */
+
+#include "hphp/runtime/ext/extension.h"
+#include "hphp/system/systemlib.h"
+
+#include "../ext_git2.h"
+#include "sys_reflog.h"
+
+using namespace HPHP;
+
+Resource HHVM_FUNCTION(git_reflog_entry__alloc)
+{
+	git_reflog_entry *result;
+	Git2Resource *return_value = new Git2Resource();
+
+	result = git_reflog_entry__alloc();
+	HHVM_GIT2_V(return_value, reflog_entry) = result;
+	return Resource(return_value);
+}
+
+void HHVM_FUNCTION(git_reflog_entry__free,
+	const Resource& entry)
+{
+
+	auto entry_ = dyn_cast<Git2Resource>(entry);
+
+	git_reflog_entry__free(HHVM_GIT2_V(entry_, reflog_entry));
+}
+
