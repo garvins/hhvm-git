@@ -97,16 +97,41 @@ class Parser {
             
             for ($i = 0; $i < $cnt; $i++) {
                 $function = new Func($match[2][$i]);
-                
+                $pointerLvl = 0;
                 $typeName = $match[1][$i];
+                $function->setConstant(strpos($typeName, "const") !== false ? true : false);
                 $typeName = preg_replace("/(const|unsigned)/", "", $typeName);
-                $typeName = str_replace("*", "", $typeName);
+                $typeName = str_replace("*", "", $typeName, $pointerLvl);
                 $typeName = str_replace(" ", "", $typeName);
                 $function->setReturnType(new Type($typeName));
-                $params = explode(",", $match[3][$i]);
+                $function->setPointerLvl($pointerLvl);
+                
+                
+                $params = array();
+                $paramsText =  $match[3][$i];
+                $param = "";
+                while ($pos = strpos($paramsText, ",")) {
+                    $param .= substr($paramsText, 0, $pos + 1);
+                    
+                    $isOpen = substr_count($param, "(") - substr_count($param, ")");
+                    
+                    if ($isOpen == 0) {
+                        $params[] = rtrim($param, ',');
+                        $param = "";
+                    }
+                    
+                    $paramsText = substr($paramsText, $pos + 1);
+                }
+                
+                if(strlen($paramsText)) {
+                    $params[] = $paramsText;
+                }
                 
                 foreach ($params as $param) {
-                    $param = preg_replace("/(\/\*[\s\S]*?\*\/|(^|\s)struct\s)*/","",$param);
+                    $param = preg_replace("/(\/\*[\s\S]*?\*\/)*/","",$param);
+                    $param = preg_replace("/((?:\([\s\S]*?\))+\s*)$/" , "cb", $param);
+                    $param = trim(preg_replace("/((^|\s)struct\s)*/","",$param));
+                    
                     $param = trim($param);
                     $pos = strrpos($param, " ");
                     
@@ -115,16 +140,22 @@ class Parser {
                     }
                     
                     $pointerLvl = 0;
+                    $tmpCount = 0;
+                                        
+                    $param = str_replace("[]", "", $param); // todo add handling for arrays
                     
                     $parameter = new Parameter(trim(str_replace("*", "" , substr($param, $pos), $pointerLvl)));
+                    $typeName = str_replace("*", "", substr($param, 0, $pos), $tmpCount);
                     
-                    $typeName = str_replace("*", "", substr($param, 0, $pos), $pointerLvl);
+                    $pointerLvl += $tmpCount;
                     $typeName = preg_replace("/const /", "", $typeName);
                     $parameter->setType(new Type($typeName));
                     $parameter->setPointerLvl($pointerLvl);
-                    $parameter->setConstant(strpos($param, "const") ? true : false);
+                    $parameter->setConstant(strpos($param, "const") !== false ? true : false);
                     
-                    $function->add2Params($parameter);
+                    if ($typeName == "..." || strlen($parameter->getName())) {
+                        $function->add2Params($parameter);
+                    }
                 }
                 
                 $result[] = $function;
