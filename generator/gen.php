@@ -7,11 +7,11 @@ require_once 'Type.hh';
 $argv = $_SERVER['argv'];
 $files = array();
 
-$ignore = "/([^h]|[^\.]h)$/";
+$filePattern = "/.h$/";
 
 if ($handle = opendir(dirname(__FILE__)."/../libgit2/include/git2")) {
     while (false !== ($entry = readdir($handle))) {
-        if (!preg_match($ignore, $entry)) {
+        if (preg_match($filePattern, $entry) && $entry != "inttypes.h") {
             $files[$entry] = dirname(__FILE__) ." /../libgit2/include/git2/" . $entry;
         }
     }
@@ -20,7 +20,7 @@ if ($handle = opendir(dirname(__FILE__)."/../libgit2/include/git2")) {
 
 if ($handle = opendir(dirname(__FILE__)."/../libgit2/include/git2/sys")) {
     while (false !== ($entry = readdir($handle))) {
-        if (!preg_match($ignore, $entry)) {
+        if (preg_match($filePattern, $entry)) {
             $files["sys_" . $entry] = dirname(__FILE__) ." /../libgit2/include/git2/sys/" . $entry;
         }
     }
@@ -85,5 +85,8 @@ foreach ($files as $file => $path)
 
 $generator = new Gen();
 $generator->generateFuncFiles($fileFuncList);
-$generator->generateSysLib($fileConsts);
+$generator->generateExtRegFile($fileConsts);
+$generator->generateExtHeader();
+$generator->generateConfigCmake();
+$generator->generateSysLib();
 $generator->postUnkownTypes();

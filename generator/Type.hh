@@ -20,7 +20,7 @@ class Type {
 				"size_t",
 				"unsigned", "unsigned int", "uint16_t", "uint32_t"),
             HackType::FLOAT    => array(),
-            HackType::STRING   => array("char", "unsigned char"),
+            HackType::STRING   => array("char", "unsigned char", "git_oid"),
             HackType::ARR      => array(),
             HackType::RESOURCE => array(),
             HackType::CALLABLE => array(),
@@ -102,7 +102,7 @@ class Type {
         
         switch ($hackType) {
             case HackType::VOID :
-                $hhvmType = "void"; break;
+                $hhvmType = "const Variant&"; break;
             case HackType::BOOL :
                 $hhvmType = "bool"; break;
             case HackType::INT :
