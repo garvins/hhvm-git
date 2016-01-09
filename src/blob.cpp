@@ -6,9 +6,7 @@
  */
 
 #include "hphp/runtime/ext/extension.h"
-
 #include "hphp/system/systemlib.h"
-
 
 #include "../ext_git2.h"
 #include "blob.h"
@@ -19,9 +17,9 @@ Resource HHVM_FUNCTION(git_blob_lookup,
 	const Resource& repo,
 	const String& id)
 {
-    Git2Resource *return_value = new Git2Resource();
+	Git2Resource *return_value = new Git2Resource();
 
-	git_blob **blob;
+	git_blob **blob = NULL;
 	git_oid *id_ = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
@@ -40,9 +38,9 @@ Resource HHVM_FUNCTION(git_blob_lookup_prefix,
 	const String& id,
 	int64_t len)
 {
-    Git2Resource *return_value = new Git2Resource();
+	Git2Resource *return_value = new Git2Resource();
 
-	git_blob **blob;
+	git_blob **blob = NULL;
 	git_oid *id_ = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
@@ -170,7 +168,6 @@ int64_t HHVM_FUNCTION(git_blob_create_fromdisk,
 	return_value = (int64_t) result;
 	return return_value;
 }
-
 
 int64_t HHVM_FUNCTION(git_blob_create_fromchunks,
 	const String& id,

@@ -6,9 +6,7 @@
  */
 
 #include "hphp/runtime/ext/extension.h"
-
 #include "hphp/system/systemlib.h"
-
 
 #include "../ext_git2.h"
 #include "message.h"

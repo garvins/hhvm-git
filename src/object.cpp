@@ -18,9 +18,9 @@ Resource HHVM_FUNCTION(git_object_lookup,
 	const String& id,
 	int64_t type)
 {
-    Git2Resource *return_value = new Git2Resource();
-    
-	git_object **object;
+	Git2Resource *return_value = new Git2Resource();
+
+	git_object **object = NULL;
 	git_oid *id_ = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
@@ -29,9 +29,9 @@ Resource HHVM_FUNCTION(git_object_lookup,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-    git_object_lookup(object, HHVM_GIT2_V(repo_, repository), id_, (git_otype) type);
-    HHVM_GIT2_V(return_value, object) = *object;
-    return Resource(return_value);
+	git_object_lookup(object, HHVM_GIT2_V(repo_, repository), id_, (git_otype) type);
+	HHVM_GIT2_V(return_value, object) = *object;
+	return Resource(return_value);
 }
 
 Resource HHVM_FUNCTION(git_object_lookup_prefix,
@@ -182,14 +182,14 @@ Resource HHVM_FUNCTION(git_object_peel,
 Resource HHVM_FUNCTION(git_object_dup,
 	const Resource& source)
 {
-    Git2Resource *return_value = new Git2Resource();
+	Git2Resource *return_value = new Git2Resource();
 
-	git_object **dest;
+	git_object **dest = NULL;
 
 	auto source_ = dyn_cast<Git2Resource>(source);
 
-    git_object_dup(dest, HHVM_GIT2_V(source_, object));
-    HHVM_GIT2_V(return_value, object) = *dest;
-    return Resource(return_value);
+	git_object_dup(dest, HHVM_GIT2_V(source_, object));
+	HHVM_GIT2_V(return_value, object) = *dest;
+	return Resource(return_value);
 }
 

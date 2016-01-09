@@ -17,15 +17,15 @@ Resource HHVM_FUNCTION(git_submodule_lookup,
 	const Resource& repo,
 	const String& name)
 {
-    Git2Resource *return_value = new Git2Resource();
+	Git2Resource *return_value = new Git2Resource();
 
-	git_submodule **submodule;
+	git_submodule **submodule = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-    git_submodule_lookup(submodule, HHVM_GIT2_V(repo_, repository), name.c_str());
-    HHVM_GIT2_V(return_value, submodule) = *submodule;
-    return Resource(return_value);
+	git_submodule_lookup(submodule, HHVM_GIT2_V(repo_, repository), name.c_str());
+	HHVM_GIT2_V(return_value, submodule) = *submodule;
+	return Resource(return_value);
 }
 
 int64_t HHVM_FUNCTION(git_submodule_foreach,

@@ -6,9 +6,7 @@
  */
 
 #include "hphp/runtime/ext/extension.h"
-
 #include "hphp/system/systemlib.h"
-
 
 #include "../ext_git2.h"
 #include "commit.h"
@@ -19,9 +17,9 @@ Resource HHVM_FUNCTION(git_commit_lookup,
 	const Resource& repo,
 	const String& id)
 {
-    Git2Resource *return_value = new Git2Resource();
+	Git2Resource *return_value = new Git2Resource();
 
-	git_commit **commit;
+	git_commit **commit = NULL;
 	git_oid *id_ = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
@@ -30,18 +28,19 @@ Resource HHVM_FUNCTION(git_commit_lookup,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-    git_commit_lookup(commit, HHVM_GIT2_V(repo_, repository), id_);
-    HHVM_GIT2_V(return_value, commit) = *commit;
-    return Resource(return_value);}
+	git_commit_lookup(commit, HHVM_GIT2_V(repo_, repository), id_);
+	HHVM_GIT2_V(return_value, commit) = *commit;
+	return Resource(return_value);
+}
 
 Resource HHVM_FUNCTION(git_commit_lookup_prefix,
 	const Resource& repo,
 	const String& id,
 	int64_t len)
 {
-    Git2Resource *return_value = new Git2Resource();
+	Git2Resource *return_value = new Git2Resource();
 
-	git_commit **commit;
+	git_commit **commit = NULL;
 	git_oid *id_ = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
@@ -50,9 +49,9 @@ Resource HHVM_FUNCTION(git_commit_lookup_prefix,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-    git_commit_lookup_prefix(commit, HHVM_GIT2_V(repo_, repository), id_, (size_t) len);
-    HHVM_GIT2_V(return_value, commit) = *commit;
-    return Resource(return_value);
+	git_commit_lookup_prefix(commit, HHVM_GIT2_V(repo_, repository), id_, (size_t) len);
+	HHVM_GIT2_V(return_value, commit) = *commit;
+	return Resource(return_value);
 }
 
 void HHVM_FUNCTION(git_commit_free,
