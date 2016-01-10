@@ -5,17 +5,15 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "odb.h"
 
 using namespace HPHP;
 
 Resource HHVM_FUNCTION(git_odb_new)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_odb **out = NULL;
 
@@ -27,7 +25,7 @@ Resource HHVM_FUNCTION(git_odb_new)
 Resource HHVM_FUNCTION(git_odb_open,
 	const String& objects_dir)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_odb **out = NULL;
 
@@ -63,7 +61,7 @@ Resource HHVM_FUNCTION(git_odb_read,
 	const Resource& db,
 	const String& id)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_odb_object **out = NULL;
 	git_oid *id_ = NULL;
@@ -84,7 +82,7 @@ Resource HHVM_FUNCTION(git_odb_read_prefix,
 	const String& short_id,
 	int64_t len)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_odb_object **out = NULL;
 	git_oid *short_id_ = NULL;
@@ -196,7 +194,7 @@ Resource HHVM_FUNCTION(git_odb_open_wstream,
 	int64_t size,
 	int64_t type)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_odb_stream **out = NULL;
 
@@ -264,7 +262,7 @@ Resource HHVM_FUNCTION(git_odb_open_rstream,
 	const Resource& db,
 	const String& oid)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_odb_stream **out = NULL;
 	git_oid *oid_ = NULL;
@@ -285,7 +283,7 @@ Resource HHVM_FUNCTION(git_odb_write_pack,
 	const Variant& progress_cb,
 	const Variant& progress_payload)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_odb_writepack **out = NULL;
 	git_transfer_progress_callback progress_cb_ = NULL;
@@ -304,7 +302,7 @@ String HHVM_FUNCTION(git_odb_hash,
 	int64_t len,
 	int64_t type)
 {
-	char *return_value = NULL;
+	char *return_value;
 
 	git_oid *out = NULL;
 	void *data_ = NULL;
@@ -318,7 +316,7 @@ String HHVM_FUNCTION(git_odb_hashfile,
 	const String& path,
 	int64_t type)
 {
-	char *return_value = NULL;
+	char *return_value;
 
 	git_oid *out = NULL;
 
@@ -330,7 +328,7 @@ String HHVM_FUNCTION(git_odb_hashfile,
 Resource HHVM_FUNCTION(git_odb_object_dup,
 	const Resource& source)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_odb_object **dest = NULL;
 
@@ -447,7 +445,7 @@ Resource HHVM_FUNCTION(git_odb_get_backend,
 	const Resource& odb,
 	int64_t pos)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_odb_backend **out = NULL;
 

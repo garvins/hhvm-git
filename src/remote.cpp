@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "remote.h"
 
 using namespace HPHP;
@@ -18,7 +16,7 @@ Resource HHVM_FUNCTION(git_remote_create,
 	const String& name,
 	const String& url)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_remote **out = NULL;
 
@@ -35,7 +33,7 @@ Resource HHVM_FUNCTION(git_remote_create_with_fetchspec,
 	const String& url,
 	const String& fetch)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_remote **out = NULL;
 
@@ -51,7 +49,7 @@ Resource HHVM_FUNCTION(git_remote_create_inmemory,
 	const String& fetch,
 	const String& url)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_remote **out = NULL;
 
@@ -66,7 +64,7 @@ Resource HHVM_FUNCTION(git_remote_load,
 	const Resource& repo,
 	const String& name)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_remote **out = NULL;
 
@@ -94,7 +92,7 @@ Resource HHVM_FUNCTION(git_remote_owner,
 	const Resource& remote)
 {
 	git_repository *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto remote_ = dyn_cast<Git2Resource>(remote);
 
@@ -285,12 +283,12 @@ Resource HHVM_FUNCTION(git_remote_get_refspec,
 	int64_t n)
 {
 	const git_refspec *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto remote_ = dyn_cast<Git2Resource>(remote);
 
 	result = git_remote_get_refspec(HHVM_GIT2_V(remote_, remote), (size_t) n);
-	HHVM_GIT2_V(return_value, refspec) = const_cast<git_refspec*>(result);
+	//HHVM_GIT2_V(return_value, refspec) = result; todo return as array
 	return Resource(return_value);
 }
 
@@ -312,7 +310,7 @@ Resource HHVM_FUNCTION(git_remote_ls,
 	int64_t size,
 	const Resource& remote)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	const git_remote_head ***out = NULL;
 
@@ -427,7 +425,7 @@ int64_t HHVM_FUNCTION(git_remote_supported_url,
 Resource HHVM_FUNCTION(git_remote_list,
 	const Resource& repo)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_strarray *out = NULL;
 
@@ -482,7 +480,7 @@ Resource HHVM_FUNCTION(git_remote_stats,
 	const Resource& remote)
 {
 	const git_transfer_progress *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto remote_ = dyn_cast<Git2Resource>(remote);
 

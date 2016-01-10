@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "reflog.h"
 
 using namespace HPHP;
@@ -17,7 +15,7 @@ Resource HHVM_FUNCTION(git_reflog_read,
 	const Resource& repo,
 	const String& name)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_reflog **out = NULL;
 
@@ -135,12 +133,12 @@ Resource HHVM_FUNCTION(git_reflog_entry_byindex,
 	int64_t idx)
 {
 	const git_reflog_entry *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto reflog_ = dyn_cast<Git2Resource>(reflog);
 
 	result = git_reflog_entry_byindex(HHVM_GIT2_V(reflog_, reflog), (size_t) idx);
-	HHVM_GIT2_V(return_value, reflog_entry) = const_cast<git_reflog_entry*>(result);
+	//HHVM_GIT2_V(return_value, reflog_entry) = result; todo return as array
 	return Resource(return_value);
 }
 
@@ -189,7 +187,7 @@ Resource HHVM_FUNCTION(git_reflog_entry_committer,
 	const Resource& entry)
 {
 	const git_signature *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto entry_ = dyn_cast<Git2Resource>(entry);
 

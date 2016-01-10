@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "tag.h"
 
 using namespace HPHP;
@@ -17,7 +15,7 @@ Resource HHVM_FUNCTION(git_tag_lookup,
 	const Resource& repo,
 	const String& id)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_tag **out = NULL;
 	git_oid *id_ = NULL;
@@ -38,7 +36,7 @@ Resource HHVM_FUNCTION(git_tag_lookup_prefix,
 	const String& id,
 	int64_t len)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_tag **out = NULL;
 	git_oid *id_ = NULL;
@@ -80,7 +78,7 @@ Resource HHVM_FUNCTION(git_tag_owner,
 	const Resource& tag)
 {
 	git_repository *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto tag_ = dyn_cast<Git2Resource>(tag);
 
@@ -92,7 +90,7 @@ Resource HHVM_FUNCTION(git_tag_owner,
 Resource HHVM_FUNCTION(git_tag_target,
 	const Resource& tag)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_object **target_out = NULL;
 
@@ -146,7 +144,7 @@ Resource HHVM_FUNCTION(git_tag_tagger,
 	const Resource& tag)
 {
 	const git_signature *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto tag_ = dyn_cast<Git2Resource>(tag);
 
@@ -168,8 +166,7 @@ String HHVM_FUNCTION(git_tag_message,
 	return return_value;
 }
 
-int64_t HHVM_FUNCTION(git_tag_create,
-	const String& oid,
+String HHVM_FUNCTION(git_tag_create,
 	const Resource& repo,
 	const String& tag_name,
 	const Resource& target,
@@ -177,94 +174,71 @@ int64_t HHVM_FUNCTION(git_tag_create,
 	const String& message,
 	int64_t force)
 {
-	int result;
-	int64_t return_value;
+	char *return_value;
 
-	git_oid *oid_ = NULL;
+	git_oid *oid = NULL;
 
-	if (git_oid_fromstrn(oid_, oid.c_str(), oid.length())) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
-	}
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto target_ = dyn_cast<Git2Resource>(target);
 	auto tagger_ = dyn_cast<Git2Resource>(tagger);
 
-	result = git_tag_create(oid_, HHVM_GIT2_V(repo_, repository), tag_name.c_str(), HHVM_GIT2_V(target_, object), HHVM_GIT2_V(tagger_, signature), message.c_str(), (int) force);
-	return_value = (int64_t) result;
-	return return_value;
+	git_tag_create(oid, HHVM_GIT2_V(repo_, repository), tag_name.c_str(), HHVM_GIT2_V(target_, object), HHVM_GIT2_V(tagger_, signature), message.c_str(), (int) force);
+	git_oid_fmt(return_value, oid);
+	return String(return_value);
 }
 
-int64_t HHVM_FUNCTION(git_tag_annotation_create,
-	const String& oid,
+String HHVM_FUNCTION(git_tag_annotation_create,
 	const Resource& repo,
 	const String& tag_name,
 	const Resource& target,
 	const Resource& tagger,
 	const String& message)
 {
-	int result;
-	int64_t return_value;
+	char *return_value;
 
-	git_oid *oid_ = NULL;
+	git_oid *oid = NULL;
 
-	if (git_oid_fromstrn(oid_, oid.c_str(), oid.length())) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
-	}
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto target_ = dyn_cast<Git2Resource>(target);
 	auto tagger_ = dyn_cast<Git2Resource>(tagger);
 
-	result = git_tag_annotation_create(oid_, HHVM_GIT2_V(repo_, repository), tag_name.c_str(), HHVM_GIT2_V(target_, object), HHVM_GIT2_V(tagger_, signature), message.c_str());
-	return_value = (int64_t) result;
-	return return_value;
+	git_tag_annotation_create(oid, HHVM_GIT2_V(repo_, repository), tag_name.c_str(), HHVM_GIT2_V(target_, object), HHVM_GIT2_V(tagger_, signature), message.c_str());
+	git_oid_fmt(return_value, oid);
+	return String(return_value);
 }
 
-int64_t HHVM_FUNCTION(git_tag_create_frombuffer,
-	const String& oid,
+String HHVM_FUNCTION(git_tag_create_frombuffer,
 	const Resource& repo,
 	const String& buffer,
 	int64_t force)
 {
-	int result;
-	int64_t return_value;
+	char *return_value;
 
-	git_oid *oid_ = NULL;
+	git_oid *oid = NULL;
 
-	if (git_oid_fromstrn(oid_, oid.c_str(), oid.length())) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
-	}
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	result = git_tag_create_frombuffer(oid_, HHVM_GIT2_V(repo_, repository), buffer.c_str(), (int) force);
-	return_value = (int64_t) result;
-	return return_value;
+	git_tag_create_frombuffer(oid, HHVM_GIT2_V(repo_, repository), buffer.c_str(), (int) force);
+	git_oid_fmt(return_value, oid);
+	return String(return_value);
 }
 
-int64_t HHVM_FUNCTION(git_tag_create_lightweight,
-	const String& oid,
+String HHVM_FUNCTION(git_tag_create_lightweight,
 	const Resource& repo,
 	const String& tag_name,
 	const Resource& target,
 	int64_t force)
 {
-	int result;
-	int64_t return_value;
+	char *return_value;
 
-	git_oid *oid_ = NULL;
+	git_oid *oid = NULL;
 
-	if (git_oid_fromstrn(oid_, oid.c_str(), oid.length())) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
-	}
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto target_ = dyn_cast<Git2Resource>(target);
 
-	result = git_tag_create_lightweight(oid_, HHVM_GIT2_V(repo_, repository), tag_name.c_str(), HHVM_GIT2_V(target_, object), (int) force);
-	return_value = (int64_t) result;
-	return return_value;
+	git_tag_create_lightweight(oid, HHVM_GIT2_V(repo_, repository), tag_name.c_str(), HHVM_GIT2_V(target_, object), (int) force);
+	git_oid_fmt(return_value, oid);
+	return String(return_value);
 }
 
 int64_t HHVM_FUNCTION(git_tag_delete,
@@ -334,7 +308,7 @@ int64_t HHVM_FUNCTION(git_tag_foreach,
 Resource HHVM_FUNCTION(git_tag_peel,
 	const Resource& tag)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_object **tag_target_out = NULL;
 

@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "notes.h"
 
 using namespace HPHP;
@@ -17,7 +15,7 @@ Resource HHVM_FUNCTION(git_note_iterator_new,
 	const Resource& repo,
 	const String& notes_ref)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_note_iterator **out = NULL;
 
@@ -37,30 +35,24 @@ void HHVM_FUNCTION(git_note_iterator_free,
 	git_note_iterator_free(HHVM_GIT2_V(it_, note_iterator));
 }
 
-int64_t HHVM_FUNCTION(git_note_next,
-	const String& note_id,
+String HHVM_FUNCTION(git_note_next,
 	const String& annotated_id,
 	const Resource& it)
 {
-	int result;
-	int64_t return_value;
+	char *return_value;
 
-	git_oid *note_id_ = NULL;
+	git_oid *note_id = NULL;
 	git_oid *annotated_id_ = NULL;
 
-	if (git_oid_fromstrn(note_id_, note_id.c_str(), note_id.length())) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
-	}
 	if (git_oid_fromstrn(annotated_id_, annotated_id.c_str(), annotated_id.length())) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 	auto it_ = dyn_cast<Git2Resource>(it);
 
-	result = git_note_next(note_id_, annotated_id_, HHVM_GIT2_V(it_, note_iterator));
-	return_value = (int64_t) result;
-	return return_value;
+	git_note_next(note_id, annotated_id_, HHVM_GIT2_V(it_, note_iterator));
+	git_oid_fmt(return_value, note_id);
+	return String(return_value);
 }
 
 Resource HHVM_FUNCTION(git_note_read,
@@ -68,7 +60,7 @@ Resource HHVM_FUNCTION(git_note_read,
 	const String& notes_ref,
 	const String& oid)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_note **out = NULL;
 	git_oid *oid_ = NULL;

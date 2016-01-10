@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "config.h"
 
 using namespace HPHP;
@@ -51,7 +49,7 @@ String HHVM_FUNCTION(git_config_find_system,
 
 Resource HHVM_FUNCTION(git_config_open_default)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_config **out = NULL;
 
@@ -62,7 +60,7 @@ Resource HHVM_FUNCTION(git_config_open_default)
 
 Resource HHVM_FUNCTION(git_config_new)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_config **out = NULL;
 
@@ -90,7 +88,7 @@ int64_t HHVM_FUNCTION(git_config_add_file_ondisk,
 Resource HHVM_FUNCTION(git_config_open_ondisk,
 	const String& path)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_config **out = NULL;
 
@@ -103,7 +101,7 @@ Resource HHVM_FUNCTION(git_config_open_level,
 	const Resource& parent,
 	int64_t level)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_config **out = NULL;
 
@@ -117,7 +115,7 @@ Resource HHVM_FUNCTION(git_config_open_level,
 Resource HHVM_FUNCTION(git_config_open_global,
 	const Resource& config)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_config **out = NULL;
 
@@ -154,7 +152,7 @@ Resource HHVM_FUNCTION(git_config_get_entry,
 	const Resource& cfg,
 	const String& name)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	const git_config_entry **out = NULL;
 
@@ -251,7 +249,7 @@ Resource HHVM_FUNCTION(git_config_multivar_iterator_new,
 	const String& name,
 	const String& regexp)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_config_iterator **out = NULL;
 
@@ -265,15 +263,15 @@ Resource HHVM_FUNCTION(git_config_multivar_iterator_new,
 Resource HHVM_FUNCTION(git_config_next,
 	const Resource& iter)
 {
-    Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
-	git_config_entry **entry;
+	git_config_entry **entry = NULL;
 
 	auto iter_ = dyn_cast<Git2Resource>(iter);
 
-    git_config_next(entry, HHVM_GIT2_V(iter_, config_iterator));
-    HHVM_GIT2_V(return_value, config_entry) = *entry;
-    return Resource(return_value);
+	git_config_next(entry, HHVM_GIT2_V(iter_, config_iterator));
+	HHVM_GIT2_V(return_value, config_entry) = *entry;
+	return Resource(return_value);
 }
 
 void HHVM_FUNCTION(git_config_iterator_free,
@@ -412,7 +410,7 @@ int64_t HHVM_FUNCTION(git_config_foreach,
 Resource HHVM_FUNCTION(git_config_iterator_new,
 	const Resource& cfg)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_config_iterator **out = NULL;
 
@@ -427,7 +425,7 @@ Resource HHVM_FUNCTION(git_config_iterator_glob_new,
 	const Resource& cfg,
 	const String& regexp)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_config_iterator **out = NULL;
 

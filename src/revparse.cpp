@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "revparse.h"
 
 using namespace HPHP;
@@ -17,7 +15,7 @@ Resource HHVM_FUNCTION(git_revparse_single,
 	const Resource& repo,
 	const String& spec)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_object **out = NULL;
 
@@ -32,7 +30,7 @@ Resource HHVM_FUNCTION(git_revparse_ext,
 	const Resource& repo,
 	const String& spec)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_object **object_out = NULL;
 	git_reference **reference_out_;

@@ -5,17 +5,15 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "sys_repository.h"
 
 using namespace HPHP;
 
 Resource HHVM_FUNCTION(git_repository_new)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_repository **out = NULL;
 

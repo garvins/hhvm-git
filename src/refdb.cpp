@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "refdb.h"
 
 using namespace HPHP;
@@ -16,7 +14,7 @@ using namespace HPHP;
 Resource HHVM_FUNCTION(git_refdb_new,
 	const Resource& repo)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_refdb **out = NULL;
 
@@ -30,7 +28,7 @@ Resource HHVM_FUNCTION(git_refdb_new,
 Resource HHVM_FUNCTION(git_refdb_open,
 	const Resource& repo)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_refdb **out = NULL;
 

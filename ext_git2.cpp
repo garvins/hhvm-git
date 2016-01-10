@@ -1,4 +1,3 @@
-#include "hphp/runtime/ext/extension.h"
 #include "ext_git2.h"
 
 #include "src/attr.h"
@@ -58,10 +57,13 @@
 #include "src/trace.h"
 #include "src/transport.h"
 #include "src/tree.h"
-#define HHVM_RC_INT_SAME(const_name)                                \
-Native::registerConstant<KindOfInt64>(                            \
+#define HHVM_RC_INT_SAME(const_name)                  \
+Native::registerConstant<KindOfInt64>(                \
 makeStaticString(#const_name), (int64_t)const_name);
+
 namespace HPHP {
+
+IMPLEMENT_RESOURCE_ALLOCATION(Git2Resource)
 
 static class Git2Extension : public Extension  {
   public:
@@ -157,23 +159,21 @@ static class Git2Extension : public Extension  {
       HHVM_FE(git_commit_parent_id);
       HHVM_FE(git_commit_nth_gen_ancestor);
       HHVM_FE(git_commit_create);
-        
-      // todo
-      //HHVM_FE(git_commit_create_v);
+      HHVM_FE(git_commit_create_v);
 
 
       // --------------- common.h ---------------
       HHVM_FE(git_libgit2_version);
-        
-      // todo
-      //HHVM_FE(git_libgit2_capabilities);
-      //HHVM_FE(git_libgit2_opts);
+      HHVM_FE(git_libgit2_capabilities);
+      HHVM_FE(git_libgit2_opts);
 
 
       // --------------- config.h ---------------
       HHVM_FE(git_config_find_global);
       HHVM_FE(git_config_find_xdg);
       HHVM_FE(git_config_find_system);
+      HHVM_FE(git_config_open_default);
+      HHVM_FE(git_config_new);
       HHVM_FE(git_config_add_file_ondisk);
       HHVM_FE(git_config_open_ondisk);
       HHVM_FE(git_config_open_level);
@@ -205,9 +205,7 @@ static class Git2Extension : public Extension  {
       HHVM_FE(git_config_parse_bool);
       HHVM_FE(git_config_parse_int32);
       HHVM_FE(git_config_parse_int64);
-        
-      // todo
-      //HHVM_FE(git_config_backend_foreach_match);
+      HHVM_FE(git_config_backend_foreach_match);
 
 
       // --------------- cred_helpers.h ---------------
@@ -216,12 +214,11 @@ static class Git2Extension : public Extension  {
 
       // --------------- diff.h ---------------
       HHVM_FE(git_diff_free);
-      /* todo
       HHVM_FE(git_diff_tree_to_tree);
       HHVM_FE(git_diff_tree_to_index);
       HHVM_FE(git_diff_index_to_workdir);
       HHVM_FE(git_diff_tree_to_workdir);
-      HHVM_FE(git_diff_tree_to_workdir_with_index); */
+      HHVM_FE(git_diff_tree_to_workdir_with_index);
       HHVM_FE(git_diff_merge);
       HHVM_FE(git_diff_find_similar);
       HHVM_FE(git_diff_options_init);
@@ -264,6 +261,7 @@ static class Git2Extension : public Extension  {
 
       // --------------- index.h ---------------
       HHVM_FE(git_index_open);
+      HHVM_FE(git_index_new);
       HHVM_FE(git_index_free);
       HHVM_FE(git_index_owner);
       HHVM_FE(git_index_caps);
@@ -356,6 +354,7 @@ static class Git2Extension : public Extension  {
 
 
       // --------------- odb.h ---------------
+      HHVM_FE(git_odb_new);
       HHVM_FE(git_odb_open);
       HHVM_FE(git_odb_add_disk_alternate);
       HHVM_FE(git_odb_free);
@@ -774,6 +773,7 @@ static class Git2Extension : public Extension  {
 
 
       // --------------- sys_repository.h ---------------
+      HHVM_FE(git_repository_new);
       HHVM_FE(git_repository__cleanup);
       HHVM_FE(git_repository_reinit_filesystem);
       HHVM_FE(git_repository_set_config);
@@ -819,6 +819,7 @@ static class Git2Extension : public Extension  {
       HHVM_FE(git_cred_userpass_plaintext_new);
       HHVM_FE(git_cred_ssh_key_new);
       HHVM_FE(git_cred_ssh_custom_new);
+      HHVM_FE(git_cred_default_new);
       HHVM_FE(git_transport_new);
       HHVM_FE(git_transport_register);
       HHVM_FE(git_transport_unregister);

@@ -8,6 +8,7 @@
 #ifndef HHVM_GIT2_SYS_INDEX_H
 #define HHVM_GIT2_SYS_INDEX_H
 
+#include "../ext_git2.h"
 
 using namespace HPHP;
 

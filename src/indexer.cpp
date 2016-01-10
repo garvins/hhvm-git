@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "indexer.h"
 
 using namespace HPHP;
@@ -20,7 +18,7 @@ Resource HHVM_FUNCTION(git_indexer_new,
 	const Variant& progress_cb,
 	const Variant& progress_cb_payload)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_indexer **out = NULL;
 	git_transfer_progress_callback progress_cb_ = NULL;

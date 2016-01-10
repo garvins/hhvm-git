@@ -8,6 +8,7 @@
 #ifndef HHVM_GIT2_TAG_H
 #define HHVM_GIT2_TAG_H
 
+#include "../ext_git2.h"
 
 using namespace HPHP;
 
@@ -47,8 +48,7 @@ Resource HHVM_FUNCTION(git_tag_tagger,
 String HHVM_FUNCTION(git_tag_message,
 	const Resource& tag);
 
-int64_t HHVM_FUNCTION(git_tag_create,
-	const String& oid,
+String HHVM_FUNCTION(git_tag_create,
 	const Resource& repo,
 	const String& tag_name,
 	const Resource& target,
@@ -56,22 +56,19 @@ int64_t HHVM_FUNCTION(git_tag_create,
 	const String& message,
 	int64_t force);
 
-int64_t HHVM_FUNCTION(git_tag_annotation_create,
-	const String& oid,
+String HHVM_FUNCTION(git_tag_annotation_create,
 	const Resource& repo,
 	const String& tag_name,
 	const Resource& target,
 	const Resource& tagger,
 	const String& message);
 
-int64_t HHVM_FUNCTION(git_tag_create_frombuffer,
-	const String& oid,
+String HHVM_FUNCTION(git_tag_create_frombuffer,
 	const Resource& repo,
 	const String& buffer,
 	int64_t force);
 
-int64_t HHVM_FUNCTION(git_tag_create_lightweight,
-	const String& oid,
+String HHVM_FUNCTION(git_tag_create_lightweight,
 	const Resource& repo,
 	const String& tag_name,
 	const Resource& target,

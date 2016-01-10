@@ -153,7 +153,7 @@ class Parser {
                     $parameter->setPointerLvl($pointerLvl);
                     $parameter->setConstant(strpos($param, "const") !== false ? true : false);
                     
-                    if ($typeName == "..." || strlen($parameter->getName())) {
+                    if (strlen($parameter->getName())) {
                         $function->add2Params($parameter);
                     }
                 }

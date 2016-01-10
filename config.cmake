@@ -1,4 +1,5 @@
-include_directories(./libgit2/include)
+HHVM_ADD_INCLUDES(git2 ./libgit2/include ./ ./src/. ./../../../..)
 
 HHVM_EXTENSION(git2 ext_git2.cpp src/attr.cpp src/blame.cpp src/blob.cpp src/branch.cpp src/buffer.cpp src/checkout.cpp src/clone.cpp src/commit.cpp src/common.cpp src/config.cpp src/cred_helpers.cpp src/diff.cpp src/errors.cpp src/filter.cpp src/graph.cpp src/ignore.cpp src/index.cpp src/indexer.cpp src/merge.cpp src/message.cpp src/notes.cpp src/object.cpp src/odb.cpp src/odb_backend.cpp src/oid.cpp src/pack.cpp src/patch.cpp src/pathspec.cpp src/push.cpp src/refdb.cpp src/reflog.cpp src/refs.cpp src/refspec.cpp src/remote.cpp src/repository.cpp src/reset.cpp src/revparse.cpp src/revwalk.cpp src/signature.cpp src/stash.cpp src/status.cpp src/strarray.cpp src/submodule.cpp src/sys_commit.cpp src/sys_config.cpp src/sys_filter.cpp src/sys_index.cpp src/sys_odb_backend.cpp src/sys_refdb_backend.cpp src/sys_reflog.cpp src/sys_refs.cpp src/sys_repository.cpp src/tag.cpp src/threads.cpp src/trace.cpp src/transport.cpp src/tree.cpp)
+
 HHVM_SYSTEMLIB(git2 ext_git2.php)

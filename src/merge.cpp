@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "merge.h"
 
 using namespace HPHP;
@@ -64,7 +62,7 @@ Resource HHVM_FUNCTION(git_merge_head_from_ref,
 	const Resource& repo,
 	const Resource& ref)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_merge_head **out = NULL;
 
@@ -82,7 +80,7 @@ Resource HHVM_FUNCTION(git_merge_head_from_fetchhead,
 	const String& remote_url,
 	const String& oid)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_merge_head **out = NULL;
 	git_oid *oid_ = NULL;
@@ -102,7 +100,7 @@ Resource HHVM_FUNCTION(git_merge_head_from_oid,
 	const Resource& repo,
 	const String& oid)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_merge_head **out = NULL;
 	git_oid *oid_ = NULL;
@@ -134,7 +132,7 @@ Resource HHVM_FUNCTION(git_merge_trees,
 	const Resource& their_tree,
 	const Resource& opts)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_index **out = NULL;
 

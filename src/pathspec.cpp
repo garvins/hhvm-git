@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "pathspec.h"
 
 using namespace HPHP;
@@ -16,7 +14,7 @@ using namespace HPHP;
 Resource HHVM_FUNCTION(git_pathspec_new,
 	const Resource& pathspec)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_pathspec **out = NULL;
 
@@ -56,7 +54,7 @@ Resource HHVM_FUNCTION(git_pathspec_match_workdir,
 	int64_t flags,
 	const Resource& ps)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_pathspec_match_list **out = NULL;
 
@@ -73,7 +71,7 @@ Resource HHVM_FUNCTION(git_pathspec_match_index,
 	int64_t flags,
 	const Resource& ps)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_pathspec_match_list **out = NULL;
 
@@ -90,7 +88,7 @@ Resource HHVM_FUNCTION(git_pathspec_match_tree,
 	int64_t flags,
 	const Resource& ps)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_pathspec_match_list **out = NULL;
 
@@ -107,7 +105,7 @@ Resource HHVM_FUNCTION(git_pathspec_match_diff,
 	int64_t flags,
 	const Resource& ps)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_pathspec_match_list **out = NULL;
 
@@ -160,7 +158,7 @@ Resource HHVM_FUNCTION(git_pathspec_match_list_diff_entry,
 	int64_t pos)
 {
 	const git_diff_delta *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto m_ = dyn_cast<Git2Resource>(m);
 

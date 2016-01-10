@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "sys_reflog.h"
 
 using namespace HPHP;
@@ -16,7 +14,7 @@ using namespace HPHP;
 Resource HHVM_FUNCTION(git_reflog_entry__alloc)
 {
 	git_reflog_entry *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	result = git_reflog_entry__alloc();
 	HHVM_GIT2_V(return_value, reflog_entry) = result;

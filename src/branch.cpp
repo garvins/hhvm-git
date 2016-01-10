@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "branch.h"
 
 using namespace HPHP;
@@ -19,7 +17,7 @@ Resource HHVM_FUNCTION(git_branch_create,
 	const Resource& target,
 	int64_t force)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_reference **out = NULL;
 
@@ -48,7 +46,7 @@ Resource HHVM_FUNCTION(git_branch_iterator_new,
 	const Resource& repo,
 	int64_t list_flags)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_branch_iterator **out = NULL;
 
@@ -63,7 +61,7 @@ Resource HHVM_FUNCTION(git_branch_next,
 	int64_t out_type,
 	const Resource& iter)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_reference **out = NULL;
 
@@ -88,7 +86,7 @@ Resource HHVM_FUNCTION(git_branch_move,
 	const String& new_branch_name,
 	int64_t force)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_reference **out = NULL;
 
@@ -104,7 +102,7 @@ Resource HHVM_FUNCTION(git_branch_lookup,
 	const String& branch_name,
 	int64_t branch_type)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_reference **out = NULL;
 
@@ -132,7 +130,7 @@ String HHVM_FUNCTION(git_branch_name,
 Resource HHVM_FUNCTION(git_branch_upstream,
 	const Resource& branch)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_reference **out = NULL;
 

@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "diff.h"
 
 using namespace HPHP;
@@ -22,110 +20,99 @@ void HHVM_FUNCTION(git_diff_free,
 	git_diff_free(HHVM_GIT2_V(diff_, diff));
 }
 
-/* todo
-int64_t HHVM_FUNCTION(git_diff_tree_to_tree,
+Resource HHVM_FUNCTION(git_diff_tree_to_tree,
 	const Resource& repo,
 	const Resource& old_tree,
 	const Resource& new_tree,
 	const Resource& opts)
 {
-	int result;
-	int64_t return_value;
+	auto return_value = req::make<Git2Resource>();
 
-	git_diff **diff_;
+	git_diff **diff = NULL;
 
-	auto diff_ = dyn_cast<Git2Resource>(diff);
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto old_tree_ = dyn_cast<Git2Resource>(old_tree);
 	auto new_tree_ = dyn_cast<Git2Resource>(new_tree);
 	auto opts_ = dyn_cast<Git2Resource>(opts);
 
-	result = git_diff_tree_to_tree(diff_, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(old_tree_, tree), HHVM_GIT2_V(new_tree_, tree), HHVM_GIT2_V(opts_, diff_options));
-	return_value = (int64_t) result;
-	return return_value;
+	git_diff_tree_to_tree(diff, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(old_tree_, tree), HHVM_GIT2_V(new_tree_, tree), HHVM_GIT2_V(opts_, diff_options));
+	HHVM_GIT2_V(return_value, diff) = *diff;
+	return Resource(return_value);
 }
 
-int64_t HHVM_FUNCTION(git_diff_tree_to_index,
+Resource HHVM_FUNCTION(git_diff_tree_to_index,
 	const Resource& repo,
 	const Resource& old_tree,
 	const Resource& index,
 	const Resource& opts)
 {
-	int result;
-	int64_t return_value;
+	auto return_value = req::make<Git2Resource>();
 
-	git_diff **diff_;
+	git_diff **diff = NULL;
 
-	auto diff_ = dyn_cast<Git2Resource>(diff);
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto old_tree_ = dyn_cast<Git2Resource>(old_tree);
 	auto index_ = dyn_cast<Git2Resource>(index);
 	auto opts_ = dyn_cast<Git2Resource>(opts);
 
-	result = git_diff_tree_to_index(diff_, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(old_tree_, tree), HHVM_GIT2_V(index_, index), HHVM_GIT2_V(opts_, diff_options));
-	return_value = (int64_t) result;
-	return return_value;
+	git_diff_tree_to_index(diff, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(old_tree_, tree), HHVM_GIT2_V(index_, index), HHVM_GIT2_V(opts_, diff_options));
+	HHVM_GIT2_V(return_value, diff) = *diff;
+	return Resource(return_value);
 }
 
-int64_t HHVM_FUNCTION(git_diff_index_to_workdir,
+Resource HHVM_FUNCTION(git_diff_index_to_workdir,
 	const Resource& repo,
 	const Resource& index,
 	const Resource& opts)
 {
-	int result;
-	int64_t return_value;
+	auto return_value = req::make<Git2Resource>();
 
-	git_diff **diff_;
+	git_diff **diff = NULL;
 
-	auto diff_ = dyn_cast<Git2Resource>(diff);
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto index_ = dyn_cast<Git2Resource>(index);
 	auto opts_ = dyn_cast<Git2Resource>(opts);
 
-	result = git_diff_index_to_workdir(diff_, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(index_, index), HHVM_GIT2_V(opts_, diff_options));
-	return_value = (int64_t) result;
-	return return_value;
+	git_diff_index_to_workdir(diff, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(index_, index), HHVM_GIT2_V(opts_, diff_options));
+	HHVM_GIT2_V(return_value, diff) = *diff;
+	return Resource(return_value);
 }
 
-int64_t HHVM_FUNCTION(git_diff_tree_to_workdir,
-    const Resource& repo,
+Resource HHVM_FUNCTION(git_diff_tree_to_workdir,
+	const Resource& repo,
 	const Resource& old_tree,
 	const Resource& opts)
 {
-	int result;
-	int64_t return_value;
+	auto return_value = req::make<Git2Resource>();
 
-	git_diff **diff_;
+	git_diff **diff = NULL;
 
-	auto diff_ = dyn_cast<Git2Resource>(diff);
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto old_tree_ = dyn_cast<Git2Resource>(old_tree);
 	auto opts_ = dyn_cast<Git2Resource>(opts);
 
-	result = git_diff_tree_to_workdir(diff_, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(old_tree_, tree), HHVM_GIT2_V(opts_, diff_options));
-	return_value = (int64_t) result;
-	return return_value;
+	git_diff_tree_to_workdir(diff, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(old_tree_, tree), HHVM_GIT2_V(opts_, diff_options));
+	HHVM_GIT2_V(return_value, diff) = *diff;
+	return Resource(return_value);
 }
 
-int64_t HHVM_FUNCTION(git_diff_tree_to_workdir_with_index,
-    const Resource& repo,
+Resource HHVM_FUNCTION(git_diff_tree_to_workdir_with_index,
+	const Resource& repo,
 	const Resource& old_tree,
 	const Resource& opts)
 {
-	int result;
-	int64_t return_value;
+	auto return_value = req::make<Git2Resource>();
 
-	git_diff **diff_;
+	git_diff **diff = NULL;
 
-	auto diff_ = dyn_cast<Git2Resource>(diff);
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto old_tree_ = dyn_cast<Git2Resource>(old_tree);
 	auto opts_ = dyn_cast<Git2Resource>(opts);
 
-	result = git_diff_tree_to_workdir_with_index(diff_, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(old_tree_, tree), HHVM_GIT2_V(opts_, diff_options));
-	return_value = (int64_t) result;
-	return return_value;
-} */
+	git_diff_tree_to_workdir_with_index(diff, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(old_tree_, tree), HHVM_GIT2_V(opts_, diff_options));
+	HHVM_GIT2_V(return_value, diff) = *diff;
+	return Resource(return_value);
+}
 
 int64_t HHVM_FUNCTION(git_diff_merge,
 	const Resource& onto,
@@ -203,12 +190,12 @@ Resource HHVM_FUNCTION(git_diff_get_delta,
 	int64_t idx)
 {
 	const git_diff_delta *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto diff_ = dyn_cast<Git2Resource>(diff);
 
 	result = git_diff_get_delta(HHVM_GIT2_V(diff_, diff), (size_t) idx);
-	//HHVM_GIT2_V(return_value, diff_delta) = result; todo return array
+	//HHVM_GIT2_V(return_value, diff_delta) = result; todo return as array
 	return Resource(return_value);
 }
 
@@ -312,8 +299,7 @@ int64_t HHVM_FUNCTION(git_diff_blobs,
 	return return_value;
 }
 
-int64_t HHVM_FUNCTION(git_diff_blob_to_buffer,
-	const Resource& old_blob,
+Resource HHVM_FUNCTION(git_diff_blob_to_buffer,
 	const String& old_as_path,
 	const String& buffer,
 	int64_t buffer_len,
@@ -324,22 +310,21 @@ int64_t HHVM_FUNCTION(git_diff_blob_to_buffer,
 	const Variant& line_cb,
 	const Variant& payload)
 {
-	int result;
-	int64_t return_value;
+	auto return_value = req::make<Git2Resource>();
 
+	const git_blob *old_blob = NULL;
 	git_diff_file_cb file_cb_ = NULL;
 	git_diff_hunk_cb hunk_cb_ = NULL;
 	git_diff_line_cb line_cb_ = NULL;
 	void *payload_ = NULL;
 
-	auto old_blob_ = dyn_cast<Git2Resource>(old_blob);
 	auto options_ = dyn_cast<Git2Resource>(options);
 	file_cb_ = NULL;
 	hunk_cb_ = NULL;
 	line_cb_ = NULL;
 
-	result = git_diff_blob_to_buffer(HHVM_GIT2_V(old_blob_, blob), old_as_path.c_str(), buffer.c_str(), (size_t) buffer_len, buffer_as_path.c_str(), HHVM_GIT2_V(options_, diff_options), /* todo */ file_cb_, /* todo */ hunk_cb_, /* todo */ line_cb_, payload_);
-	return_value = (int64_t) result;
-	return return_value;
+	git_diff_blob_to_buffer(old_blob, old_as_path.c_str(), buffer.c_str(), (size_t) buffer_len, buffer_as_path.c_str(), HHVM_GIT2_V(options_, diff_options), /* todo */ file_cb_, /* todo */ hunk_cb_, /* todo */ line_cb_, payload_);
+	//HHVM_GIT2_V(return_value, blob) = old_blob; todo return as array
+	return Resource(return_value);
 }
 

@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "repository.h"
 
 using namespace HPHP;
@@ -16,7 +14,7 @@ using namespace HPHP;
 Resource HHVM_FUNCTION(git_repository_open,
 	const String& path)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_repository **out = NULL;
 
@@ -28,7 +26,7 @@ Resource HHVM_FUNCTION(git_repository_open,
 Resource HHVM_FUNCTION(git_repository_wrap_odb,
 	const Resource& odb)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_repository **out = NULL;
 
@@ -59,7 +57,7 @@ Resource HHVM_FUNCTION(git_repository_open_ext,
 	int64_t flags,
 	const String& ceiling_dirs)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_repository **out = NULL;
 
@@ -71,7 +69,7 @@ Resource HHVM_FUNCTION(git_repository_open_ext,
 Resource HHVM_FUNCTION(git_repository_open_bare,
 	const String& bare_path)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_repository **out = NULL;
 
@@ -93,7 +91,7 @@ Resource HHVM_FUNCTION(git_repository_init,
 	const String& path,
 	int64_t is_bare)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_repository **out = NULL;
 
@@ -106,7 +104,7 @@ Resource HHVM_FUNCTION(git_repository_init_ext,
 	const String& repo_path,
 	const Resource& opts)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_repository **out = NULL;
 
@@ -120,7 +118,7 @@ Resource HHVM_FUNCTION(git_repository_init_ext,
 Resource HHVM_FUNCTION(git_repository_head,
 	const Resource& repo)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_reference **out = NULL;
 
@@ -227,7 +225,7 @@ int64_t HHVM_FUNCTION(git_repository_is_bare,
 Resource HHVM_FUNCTION(git_repository_config,
 	const Resource& repo)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_config **out = NULL;
 
@@ -241,7 +239,7 @@ Resource HHVM_FUNCTION(git_repository_config,
 Resource HHVM_FUNCTION(git_repository_odb,
 	const Resource& repo)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_odb **out = NULL;
 
@@ -255,7 +253,7 @@ Resource HHVM_FUNCTION(git_repository_odb,
 Resource HHVM_FUNCTION(git_repository_refdb,
 	const Resource& repo)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_refdb **out = NULL;
 
@@ -269,7 +267,7 @@ Resource HHVM_FUNCTION(git_repository_refdb,
 Resource HHVM_FUNCTION(git_repository_index,
 	const Resource& repo)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_index **out = NULL;
 

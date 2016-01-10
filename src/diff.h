@@ -8,39 +8,39 @@
 #ifndef HHVM_GIT2_DIFF_H
 #define HHVM_GIT2_DIFF_H
 
+#include "../ext_git2.h"
 
 using namespace HPHP;
 
 void HHVM_FUNCTION(git_diff_free,
 	const Resource& diff);
 
-/* todo
-int64_t HHVM_FUNCTION(git_diff_tree_to_tree,
+Resource HHVM_FUNCTION(git_diff_tree_to_tree,
 	const Resource& repo,
 	const Resource& old_tree,
 	const Resource& new_tree,
 	const Resource& opts);
 
-int64_t HHVM_FUNCTION(git_diff_tree_to_index,
-    const Resource& repo,
+Resource HHVM_FUNCTION(git_diff_tree_to_index,
+	const Resource& repo,
 	const Resource& old_tree,
 	const Resource& index,
 	const Resource& opts);
 
-int64_t HHVM_FUNCTION(git_diff_index_to_workdir,
-    const Resource& repo,
+Resource HHVM_FUNCTION(git_diff_index_to_workdir,
+	const Resource& repo,
 	const Resource& index,
 	const Resource& opts);
 
-int64_t HHVM_FUNCTION(git_diff_tree_to_workdir,
+Resource HHVM_FUNCTION(git_diff_tree_to_workdir,
 	const Resource& repo,
 	const Resource& old_tree,
 	const Resource& opts);
 
-int64_t HHVM_FUNCTION(git_diff_tree_to_workdir_with_index,
+Resource HHVM_FUNCTION(git_diff_tree_to_workdir_with_index,
 	const Resource& repo,
 	const Resource& old_tree,
-	const Resource& opts); */
+	const Resource& opts);
 
 int64_t HHVM_FUNCTION(git_diff_merge,
 	const Resource& onto,
@@ -95,8 +95,7 @@ int64_t HHVM_FUNCTION(git_diff_blobs,
 	const Variant& line_cb,
 	const Variant& payload);
 
-int64_t HHVM_FUNCTION(git_diff_blob_to_buffer,
-	const Resource& old_blob,
+Resource HHVM_FUNCTION(git_diff_blob_to_buffer,
 	const String& old_as_path,
 	const String& buffer,
 	int64_t buffer_len,

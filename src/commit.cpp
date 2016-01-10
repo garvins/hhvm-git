@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "commit.h"
 
 using namespace HPHP;
@@ -17,7 +15,7 @@ Resource HHVM_FUNCTION(git_commit_lookup,
 	const Resource& repo,
 	const String& id)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_commit **commit = NULL;
 	git_oid *id_ = NULL;
@@ -38,7 +36,7 @@ Resource HHVM_FUNCTION(git_commit_lookup_prefix,
 	const String& id,
 	int64_t len)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_commit **commit = NULL;
 	git_oid *id_ = NULL;
@@ -80,7 +78,7 @@ Resource HHVM_FUNCTION(git_commit_owner,
 	const Resource& commit)
 {
 	git_repository *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto commit_ = dyn_cast<Git2Resource>(commit);
 
@@ -158,7 +156,7 @@ Resource HHVM_FUNCTION(git_commit_committer,
 	const Resource& commit)
 {
 	const git_signature *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto commit_ = dyn_cast<Git2Resource>(commit);
 
@@ -171,7 +169,7 @@ Resource HHVM_FUNCTION(git_commit_author,
 	const Resource& commit)
 {
 	const git_signature *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto commit_ = dyn_cast<Git2Resource>(commit);
 
@@ -196,7 +194,7 @@ String HHVM_FUNCTION(git_commit_raw_header,
 Resource HHVM_FUNCTION(git_commit_tree,
 	const Resource& commit)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_tree **tree_out = NULL;
 
@@ -237,7 +235,7 @@ Resource HHVM_FUNCTION(git_commit_parent,
 	const Resource& commit,
 	int64_t n)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_commit **out = NULL;
 
@@ -266,19 +264,18 @@ Resource HHVM_FUNCTION(git_commit_nth_gen_ancestor,
 	const Resource& commit,
 	int64_t n)
 {
-    Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
-	git_commit **ancestor;
+	git_commit **ancestor = NULL;
 
 	auto commit_ = dyn_cast<Git2Resource>(commit);
 
-    git_commit_nth_gen_ancestor(ancestor, HHVM_GIT2_V(commit_, commit), (unsigned int) n);
-    HHVM_GIT2_V(return_value, commit) = *ancestor;
-    return Resource(return_value);
+	git_commit_nth_gen_ancestor(ancestor, HHVM_GIT2_V(commit_, commit), (unsigned int) n);
+	HHVM_GIT2_V(return_value, commit) = *ancestor;
+	return Resource(return_value);
 }
 
-int64_t HHVM_FUNCTION(git_commit_create,
-	const String& id,
+String HHVM_FUNCTION(git_commit_create,
 	const Resource& repo,
 	const String& update_ref,
 	const Resource& author,
@@ -287,31 +284,24 @@ int64_t HHVM_FUNCTION(git_commit_create,
 	const String& message,
 	const Resource& tree,
 	int64_t parent_count,
-	const Array& parents)
+	const Resource& parents)
 {
-	int result;
-	int64_t return_value;
+	char *return_value;
 
-	git_oid *id_ = NULL;
+	git_oid *id = NULL;
 
-	if (git_oid_fromstrn(id_, id.c_str(), id.length())) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
-	}
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto author_ = dyn_cast<Git2Resource>(author);
 	auto committer_ = dyn_cast<Git2Resource>(committer);
 	auto tree_ = dyn_cast<Git2Resource>(tree);
-	// auto parents_ = dyn_cast<Git2Resource>(parents); todo get array values
+	auto parents_ = dyn_cast<Git2Resource>(parents);
 
-	result = git_commit_create(id_, HHVM_GIT2_V(repo_, repository), update_ref.c_str(), HHVM_GIT2_V(author_, signature), HHVM_GIT2_V(committer_, signature), message_encoding.c_str(), message.c_str(), HHVM_GIT2_V(tree_, tree), (int) parent_count, NULL /*HHVM_GIT2_V(parents_, commit) todo */);
-	return_value = (int64_t) result;
-	return return_value;
+	git_commit_create(id, HHVM_GIT2_V(repo_, repository), update_ref.c_str(), HHVM_GIT2_V(author_, signature), HHVM_GIT2_V(committer_, signature), message_encoding.c_str(), message.c_str(), HHVM_GIT2_V(tree_, tree), (int) parent_count, NULL /*HHVM_GIT2_V(parents_, commit) todo */);
+	git_oid_fmt(return_value, id);
+	return String(return_value);
 }
 
-// todo
-/* int64_t HHVM_FUNCTION(git_commit_create_v,
-	const String& id,
+String HHVM_FUNCTION(git_commit_create_v,
 	const Resource& repo,
 	const String& update_ref,
 	const Resource& author,
@@ -319,25 +309,19 @@ int64_t HHVM_FUNCTION(git_commit_create,
 	const String& message_encoding,
 	const String& message,
 	const Resource& tree,
-	int64_t parent_count,
-	const Variant& )
+	int64_t parent_count)
 {
-	int result;
-	int64_t return_value;
+	char *return_value;
 
-	git_oid *id_ = NULL;
-	... _ = NULL;
+	git_oid *id = NULL;
 
-	if (git_oid_fromstrn(id_, id.c_str(), id.length())) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
-	}
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto author_ = dyn_cast<Git2Resource>(author);
 	auto committer_ = dyn_cast<Git2Resource>(committer);
 	auto tree_ = dyn_cast<Git2Resource>(tree);
 
-	result = git_commit_create_v(id_, HHVM_GIT2_V(repo_, repository), update_ref.c_str(), HHVM_GIT2_V(author_, signature), HHVM_GIT2_V(committer_, signature), message_encoding.c_str(), message.c_str(), HHVM_GIT2_V(tree_, tree), (int) parent_count, _);
-	return_value = (int64_t) result;
-	return return_value;
-} */
+	git_commit_create_v(id, HHVM_GIT2_V(repo_, repository), update_ref.c_str(), HHVM_GIT2_V(author_, signature), HHVM_GIT2_V(committer_, signature), message_encoding.c_str(), message.c_str(), HHVM_GIT2_V(tree_, tree), (int) parent_count);
+	git_oid_fmt(return_value, id);
+	return String(return_value);
+}
+

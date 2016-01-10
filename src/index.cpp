@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "index.h"
 
 using namespace HPHP;
@@ -16,7 +14,7 @@ using namespace HPHP;
 Resource HHVM_FUNCTION(git_index_open,
 	const String& index_path)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_index **out = NULL;
 
@@ -27,7 +25,7 @@ Resource HHVM_FUNCTION(git_index_open,
 
 Resource HHVM_FUNCTION(git_index_new)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_index **out = NULL;
 
@@ -49,7 +47,7 @@ Resource HHVM_FUNCTION(git_index_owner,
 	const Resource& index)
 {
 	git_repository *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto index_ = dyn_cast<Git2Resource>(index);
 
@@ -197,7 +195,7 @@ Resource HHVM_FUNCTION(git_index_get_byindex,
 	int64_t n)
 {
 	const git_index_entry *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto index_ = dyn_cast<Git2Resource>(index);
 
@@ -212,7 +210,7 @@ Resource HHVM_FUNCTION(git_index_get_bypath,
 	int64_t stage)
 {
 	const git_index_entry *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto index_ = dyn_cast<Git2Resource>(index);
 
@@ -409,7 +407,7 @@ Resource HHVM_FUNCTION(git_index_conflict_get,
 	const Resource& index,
 	const String& path)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	const git_index_entry **ancestor_out = NULL;
 	const git_index_entry **our_out = NULL;
@@ -461,7 +459,7 @@ int64_t HHVM_FUNCTION(git_index_has_conflicts,
 Resource HHVM_FUNCTION(git_index_conflict_iterator_new,
 	const Resource& index)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_index_conflict_iterator **iterator_out = NULL;
 
@@ -475,7 +473,7 @@ Resource HHVM_FUNCTION(git_index_conflict_iterator_new,
 Resource HHVM_FUNCTION(git_index_conflict_next,
 	const Resource& iterator)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	const git_index_entry **ancestor_out = NULL;
     const git_index_entry **our_out;

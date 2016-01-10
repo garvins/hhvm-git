@@ -8,6 +8,7 @@
 #ifndef HHVM_GIT2_OBJECT_H
 #define HHVM_GIT2_OBJECT_H
 
+#include "../ext_git2.h"
 
 using namespace HPHP;
 

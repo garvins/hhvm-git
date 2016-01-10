@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "submodule.h"
 
 using namespace HPHP;
@@ -17,7 +15,7 @@ Resource HHVM_FUNCTION(git_submodule_lookup,
 	const Resource& repo,
 	const String& name)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_submodule **submodule = NULL;
 
@@ -106,7 +104,7 @@ Resource HHVM_FUNCTION(git_submodule_owner,
 	const Resource& submodule)
 {
 	git_repository *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto submodule_ = dyn_cast<Git2Resource>(submodule);
 
@@ -318,15 +316,15 @@ int64_t HHVM_FUNCTION(git_submodule_sync,
 Resource HHVM_FUNCTION(git_submodule_open,
 	const Resource& submodule)
 {
-    Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
-	git_repository **repo;
+	git_repository **repo = NULL;
 
 	auto submodule_ = dyn_cast<Git2Resource>(submodule);
 
-    git_submodule_open(repo, HHVM_GIT2_V(submodule_, submodule));
-    HHVM_GIT2_V(return_value, repository) = *repo;
-    return Resource(return_value);
+	git_submodule_open(repo, HHVM_GIT2_V(submodule_, submodule));
+	HHVM_GIT2_V(return_value, repository) = *repo;
+	return Resource(return_value);
 }
 
 int64_t HHVM_FUNCTION(git_submodule_reload,

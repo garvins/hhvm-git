@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "transport.h"
 
 using namespace HPHP;
@@ -30,7 +28,7 @@ Resource HHVM_FUNCTION(git_cred_userpass_plaintext_new,
 	const String& username,
 	const String& password)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_cred **out = NULL;
 
@@ -45,7 +43,7 @@ Resource HHVM_FUNCTION(git_cred_ssh_key_new,
 	const String& privatekey,
 	const String& passphrase)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_cred **out = NULL;
 
@@ -61,7 +59,7 @@ Resource HHVM_FUNCTION(git_cred_ssh_custom_new,
 	const Variant& sign_fn,
 	const Variant& sign_data)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_cred **out = NULL;
 	git_cred_sign_callback sign_fn_ = NULL;
@@ -76,7 +74,7 @@ Resource HHVM_FUNCTION(git_cred_ssh_custom_new,
 
 Resource HHVM_FUNCTION(git_cred_default_new)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_cred **out = NULL;
 
@@ -89,7 +87,7 @@ Resource HHVM_FUNCTION(git_transport_new,
 	const Resource& owner,
 	const String& url)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_transport **out = NULL;
 
@@ -135,7 +133,7 @@ Resource HHVM_FUNCTION(git_transport_dummy,
 	const Resource& owner,
 	const Variant& payload)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_transport **out = NULL;
 	void *payload_ = NULL;
@@ -151,7 +149,7 @@ Resource HHVM_FUNCTION(git_transport_local,
 	const Resource& owner,
 	const Variant& payload)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_transport **out = NULL;
 	void *payload_ = NULL;
@@ -167,7 +165,7 @@ Resource HHVM_FUNCTION(git_transport_smart,
 	const Resource& owner,
 	const Variant& payload)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_transport **out = NULL;
 	void *payload_ = NULL;
@@ -182,7 +180,7 @@ Resource HHVM_FUNCTION(git_transport_smart,
 Resource HHVM_FUNCTION(git_smart_subtransport_http,
 	const Resource& owner)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_smart_subtransport **out = NULL;
 
@@ -196,7 +194,7 @@ Resource HHVM_FUNCTION(git_smart_subtransport_http,
 Resource HHVM_FUNCTION(git_smart_subtransport_git,
 	const Resource& owner)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_smart_subtransport **out = NULL;
 
@@ -210,7 +208,7 @@ Resource HHVM_FUNCTION(git_smart_subtransport_git,
 Resource HHVM_FUNCTION(git_smart_subtransport_ssh,
 	const Resource& owner)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_smart_subtransport **out = NULL;
 

@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "common.h"
 
 using namespace HPHP;
@@ -18,35 +16,28 @@ void HHVM_FUNCTION(git_libgit2_version,
 	int64_t minor,
 	int64_t rev)
 {
+
 	git_libgit2_version((int*) major, (int*) minor, (int*) rev);
 }
 
-// todo
-/*
-int64_t HHVM_FUNCTION(git_libgit2_capabilities,
-	const Variant& )
+int64_t HHVM_FUNCTION(git_libgit2_capabilities)
 {
 	int result;
 	int64_t return_value;
 
-	void _ = NULL;
-
-	result = git_libgit2_capabilities(_);
+	result = git_libgit2_capabilities();
 	return_value = (int64_t) result;
 	return return_value;
 }
 
- int64_t HHVM_FUNCTION(git_libgit2_opts,
-	int64_t option,
-	const Variant& )
+int64_t HHVM_FUNCTION(git_libgit2_opts,
+	int64_t option)
 {
 	int result;
 	int64_t return_value;
 
-	... _ = NULL;
-
-	result = git_libgit2_opts((int) option, _);
+	result = git_libgit2_opts((int) option);
 	return_value = (int64_t) result;
 	return return_value;
-} */
+}
 

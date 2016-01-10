@@ -8,6 +8,7 @@
 #ifndef HHVM_GIT2_SYS_REFDB_BACKEND_H
 #define HHVM_GIT2_SYS_REFDB_BACKEND_H
 
+#include "../ext_git2.h"
 
 using namespace HPHP;
 

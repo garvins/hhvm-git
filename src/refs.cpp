@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "refs.h"
 
 using namespace HPHP;
@@ -17,7 +15,7 @@ Resource HHVM_FUNCTION(git_reference_lookup,
 	const Resource& repo,
 	const String& name)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_reference **out = NULL;
 
@@ -47,7 +45,7 @@ Resource HHVM_FUNCTION(git_reference_dwim,
 	const Resource& repo,
 	const String& shorthand)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_reference **out = NULL;
 
@@ -64,7 +62,7 @@ Resource HHVM_FUNCTION(git_reference_symbolic_create,
 	const String& target,
 	int64_t force)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_reference **out = NULL;
 
@@ -81,7 +79,7 @@ Resource HHVM_FUNCTION(git_reference_create,
 	const String& id,
 	int64_t force)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_reference **out = NULL;
 	git_oid *id_ = NULL;
@@ -165,7 +163,7 @@ String HHVM_FUNCTION(git_reference_name,
 Resource HHVM_FUNCTION(git_reference_resolve,
 	const Resource& ref)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_reference **out = NULL;
 
@@ -180,7 +178,7 @@ Resource HHVM_FUNCTION(git_reference_owner,
 	const Resource& ref)
 {
 	git_repository *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto ref_ = dyn_cast<Git2Resource>(ref);
 
@@ -193,7 +191,7 @@ Resource HHVM_FUNCTION(git_reference_symbolic_set_target,
 	const Resource& ref,
 	const String& target)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_reference **out = NULL;
 
@@ -208,7 +206,7 @@ Resource HHVM_FUNCTION(git_reference_set_target,
 	const Resource& ref,
 	const String& id)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_reference **out = NULL;
 	git_oid *id_ = NULL;
@@ -229,15 +227,15 @@ Resource HHVM_FUNCTION(git_reference_rename,
 	const String& new_name,
 	int64_t force)
 {
-    Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
-	git_reference **new_ref;
-    
+	git_reference **new_ref = NULL;
+
 	auto ref_ = dyn_cast<Git2Resource>(ref);
 
-    git_reference_rename(new_ref, HHVM_GIT2_V(ref_, reference), new_name.c_str(), (int) force);
-    HHVM_GIT2_V(return_value, reference) = *new_ref;
-    return Resource(return_value);
+	git_reference_rename(new_ref, HHVM_GIT2_V(ref_, reference), new_name.c_str(), (int) force);
+	HHVM_GIT2_V(return_value, reference) = *new_ref;
+	return Resource(return_value);
 }
 
 int64_t HHVM_FUNCTION(git_reference_delete,
@@ -333,7 +331,7 @@ int64_t HHVM_FUNCTION(git_reference_cmp,
 Resource HHVM_FUNCTION(git_reference_iterator_new,
 	const Resource& repo)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_reference_iterator **out = NULL;
 
@@ -348,7 +346,7 @@ Resource HHVM_FUNCTION(git_reference_iterator_glob_new,
 	const Resource& repo,
 	const String& glob)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_reference_iterator **out = NULL;
 
@@ -362,7 +360,7 @@ Resource HHVM_FUNCTION(git_reference_iterator_glob_new,
 Resource HHVM_FUNCTION(git_reference_next,
 	const Resource& iter)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_reference **out = NULL;
 
@@ -486,7 +484,7 @@ Resource HHVM_FUNCTION(git_reference_peel,
 	const Resource& ref,
 	int64_t type)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_object **out = NULL;
 

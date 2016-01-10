@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "cred_helpers.h"
 
 using namespace HPHP;
@@ -19,8 +17,8 @@ Resource HHVM_FUNCTION(git_cred_userpass,
 	int64_t allowed_types,
 	const Variant& payload)
 {
-    Git2Resource *return_value = new Git2Resource();
-
+    auto return_value = req::make<Git2Resource>();
+    
 	git_cred **cred;
 	void *payload_ = NULL;
 

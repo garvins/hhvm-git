@@ -8,6 +8,7 @@
 #ifndef HHVM_GIT2_BLOB_H
 #define HHVM_GIT2_BLOB_H
 
+#include "../ext_git2.h"
 
 using namespace HPHP;
 
@@ -40,25 +41,21 @@ Resource HHVM_FUNCTION(git_blob_filtered_content,
 	const String& as_path,
 	int64_t check_for_binary_data);
 
-int64_t HHVM_FUNCTION(git_blob_create_fromworkdir,
-	const String& id,
+String HHVM_FUNCTION(git_blob_create_fromworkdir,
 	const Resource& repo,
 	const String& relative_path);
 
-int64_t HHVM_FUNCTION(git_blob_create_fromdisk,
-	const String& id,
+String HHVM_FUNCTION(git_blob_create_fromdisk,
 	const Resource& repo,
 	const String& path);
 
-int64_t HHVM_FUNCTION(git_blob_create_fromchunks,
-	const String& id,
+String HHVM_FUNCTION(git_blob_create_fromchunks,
 	const Resource& repo,
 	const String& hintpath,
 	const Variant& callback,
 	const Variant& payload);
 
-int64_t HHVM_FUNCTION(git_blob_create_frombuffer,
-	const String& oid,
+String HHVM_FUNCTION(git_blob_create_frombuffer,
 	const Resource& repo,
 	const Variant& buffer,
 	int64_t len);

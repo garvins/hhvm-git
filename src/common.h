@@ -8,6 +8,7 @@
 #ifndef HHVM_GIT2_COMMON_H
 #define HHVM_GIT2_COMMON_H
 
+#include "../ext_git2.h"
 
 using namespace HPHP;
 
@@ -16,13 +17,10 @@ void HHVM_FUNCTION(git_libgit2_version,
 	int64_t minor,
 	int64_t rev);
 
-// todo
-/* int64_t HHVM_FUNCTION(git_libgit2_capabilities,
-	const Variant& );
+int64_t HHVM_FUNCTION(git_libgit2_capabilities);
 
 int64_t HHVM_FUNCTION(git_libgit2_opts,
-	int64_t option,
-	const Variant& ); */
+	int64_t option);
 
 #endif
 

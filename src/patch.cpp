@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "patch.h"
 
 using namespace HPHP;
@@ -17,7 +15,7 @@ Resource HHVM_FUNCTION(git_patch_from_diff,
 	const Resource& diff,
 	int64_t idx)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_patch **out = NULL;
 
@@ -35,7 +33,7 @@ Resource HHVM_FUNCTION(git_patch_from_blobs,
 	const String& new_as_path,
 	const Resource& opts)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_patch **out = NULL;
 
@@ -56,7 +54,7 @@ Resource HHVM_FUNCTION(git_patch_from_blob_and_buffer,
 	const String& buffer_as_path,
 	const Resource& opts)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_patch **out = NULL;
 
@@ -81,7 +79,7 @@ Resource HHVM_FUNCTION(git_patch_get_delta,
 	const Resource& patch)
 {
 	const git_diff_delta *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto patch_ = dyn_cast<Git2Resource>(patch);
 
@@ -123,14 +121,14 @@ Resource HHVM_FUNCTION(git_patch_get_hunk,
 	const Resource& patch,
 	int64_t hunk_idx)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
-	const git_diff_hunk *out = NULL;
+	const git_diff_hunk **out = NULL;
 
 	auto patch_ = dyn_cast<Git2Resource>(patch);
 
-	git_patch_get_hunk(&out, (size_t*) lines_in_hunk, HHVM_GIT2_V(patch_, patch), (size_t) hunk_idx);
-	HHVM_GIT2_V(return_value, diff_hunk) = const_cast<git_diff_hunk*>(out);
+	git_patch_get_hunk(out, (size_t*) lines_in_hunk, HHVM_GIT2_V(patch_, patch), (size_t) hunk_idx);
+	//HHVM_GIT2_V(return_value, diff_hunk) = *out; todo return as array
 	return Resource(return_value);
 }
 
@@ -153,14 +151,14 @@ Resource HHVM_FUNCTION(git_patch_get_line_in_hunk,
 	int64_t hunk_idx,
 	int64_t line_of_hunk)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	const git_diff_line **out = NULL;
 
 	auto patch_ = dyn_cast<Git2Resource>(patch);
 
 	git_patch_get_line_in_hunk(out, HHVM_GIT2_V(patch_, patch), (size_t) hunk_idx, (size_t) line_of_hunk);
-	HHVM_GIT2_V(return_value, diff_line) = const_cast<git_diff_line*>(*out);
+	//HHVM_GIT2_V(return_value, diff_line) = *out; todo return as array
 	return Resource(return_value);
 }
 

@@ -8,6 +8,7 @@
 #ifndef HHVM_GIT2_NOTES_H
 #define HHVM_GIT2_NOTES_H
 
+#include "../ext_git2.h"
 
 using namespace HPHP;
 
@@ -18,8 +19,7 @@ Resource HHVM_FUNCTION(git_note_iterator_new,
 void HHVM_FUNCTION(git_note_iterator_free,
 	const Resource& it);
 
-int64_t HHVM_FUNCTION(git_note_next,
-	const String& note_id,
+String HHVM_FUNCTION(git_note_next,
 	const String& annotated_id,
 	const Resource& it);
 

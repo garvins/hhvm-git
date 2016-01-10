@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "blame.h"
 
 using namespace HPHP;
@@ -31,7 +29,7 @@ Resource HHVM_FUNCTION(git_blame_get_hunk_byindex,
 	int64_t index)
 {
 	const git_blame_hunk *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto blame_ = dyn_cast<Git2Resource>(blame);
 
@@ -45,7 +43,7 @@ Resource HHVM_FUNCTION(git_blame_get_hunk_byline,
 	int64_t lineno)
 {
 	const git_blame_hunk *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto blame_ = dyn_cast<Git2Resource>(blame);
 
@@ -59,7 +57,7 @@ Resource HHVM_FUNCTION(git_blame_file,
 	const String& path,
 	const Resource& options)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_blame **out = NULL;
 
@@ -76,7 +74,7 @@ Resource HHVM_FUNCTION(git_blame_buffer,
 	const String& buffer,
 	int64_t buffer_len)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_blame **out = NULL;
 

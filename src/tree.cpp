@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "tree.h"
 
 using namespace HPHP;
@@ -17,7 +15,7 @@ Resource HHVM_FUNCTION(git_tree_lookup,
 	const Resource& repo,
 	const String& id)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_tree **out = NULL;
 	git_oid *id_ = NULL;
@@ -38,7 +36,7 @@ Resource HHVM_FUNCTION(git_tree_lookup_prefix,
 	const String& id,
 	int64_t len)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_tree **out = NULL;
 	git_oid *id_ = NULL;
@@ -80,7 +78,7 @@ Resource HHVM_FUNCTION(git_tree_owner,
 	const Resource& tree)
 {
 	git_repository *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto tree_ = dyn_cast<Git2Resource>(tree);
 
@@ -107,12 +105,12 @@ Resource HHVM_FUNCTION(git_tree_entry_byname,
 	const String& filename)
 {
 	const git_tree_entry *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto tree_ = dyn_cast<Git2Resource>(tree);
 
 	result = git_tree_entry_byname(HHVM_GIT2_V(tree_, tree), filename.c_str());
-	HHVM_GIT2_V(return_value, tree_entry) = const_cast<git_tree_entry*>(result);
+	//HHVM_GIT2_V(return_value, tree_entry) = result; todo return as array
 	return Resource(return_value);
 }
 
@@ -121,12 +119,12 @@ Resource HHVM_FUNCTION(git_tree_entry_byindex,
 	int64_t idx)
 {
 	const git_tree_entry *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto tree_ = dyn_cast<Git2Resource>(tree);
 
 	result = git_tree_entry_byindex(HHVM_GIT2_V(tree_, tree), (size_t) idx);
-	HHVM_GIT2_V(return_value, tree_entry) = const_cast<git_tree_entry*>(result);
+	//HHVM_GIT2_V(return_value, tree_entry) = result; todo return as array
 	return Resource(return_value);
 }
 
@@ -135,7 +133,7 @@ Resource HHVM_FUNCTION(git_tree_entry_byoid,
 	const String& oid)
 {
 	const git_tree_entry *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_oid *oid_ = NULL;
 
@@ -146,7 +144,7 @@ Resource HHVM_FUNCTION(git_tree_entry_byoid,
 	}
 
 	result = git_tree_entry_byoid(HHVM_GIT2_V(tree_, tree), oid_);
-	HHVM_GIT2_V(return_value, tree_entry) = const_cast<git_tree_entry*>(result);
+	//HHVM_GIT2_V(return_value, tree_entry) = result; todo return as array
 	return Resource(return_value);
 }
 
@@ -154,7 +152,7 @@ Resource HHVM_FUNCTION(git_tree_entry_bypath,
 	const Resource& root,
 	const String& path)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_tree_entry **out = NULL;
 
@@ -169,7 +167,7 @@ Resource HHVM_FUNCTION(git_tree_entry_dup,
 	const Resource& entry)
 {
 	git_tree_entry *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto entry_ = dyn_cast<Git2Resource>(entry);
 
@@ -271,7 +269,7 @@ Resource HHVM_FUNCTION(git_tree_entry_to_object,
 	const Resource& repo,
 	const Resource& entry)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_object **object_out = NULL;
 
@@ -286,7 +284,7 @@ Resource HHVM_FUNCTION(git_tree_entry_to_object,
 Resource HHVM_FUNCTION(git_treebuilder_create,
 	const Resource& source)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_treebuilder **out = NULL;
 
@@ -333,12 +331,12 @@ Resource HHVM_FUNCTION(git_treebuilder_get,
 	const String& filename)
 {
 	const git_tree_entry *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto bld_ = dyn_cast<Git2Resource>(bld);
 
 	result = git_treebuilder_get(HHVM_GIT2_V(bld_, treebuilder), filename.c_str());
-	HHVM_GIT2_V(return_value, tree_entry) = const_cast<git_tree_entry*>(result);
+	//HHVM_GIT2_V(return_value, tree_entry) = result; todo return as array
 	return Resource(return_value);
 }
 
@@ -348,7 +346,7 @@ Resource HHVM_FUNCTION(git_treebuilder_insert,
 	const String& id,
 	int64_t filemode)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	const git_tree_entry **out = NULL;
 	git_oid *id_ = NULL;
@@ -360,7 +358,7 @@ Resource HHVM_FUNCTION(git_treebuilder_insert,
 	}
 
 	git_treebuilder_insert(out, HHVM_GIT2_V(bld_, treebuilder), filename.c_str(), id_, (git_filemode_t) filemode);
-	HHVM_GIT2_V(return_value, tree_entry) = const_cast<git_tree_entry*>(*out);
+	//HHVM_GIT2_V(return_value, tree_entry) = *out; todo return as array
 	return Resource(return_value);
 }
 

@@ -8,6 +8,7 @@
 #ifndef HHVM_GIT2_COMMIT_H
 #define HHVM_GIT2_COMMIT_H
 
+#include "../ext_git2.h"
 
 using namespace HPHP;
 
@@ -74,8 +75,7 @@ Resource HHVM_FUNCTION(git_commit_nth_gen_ancestor,
 	const Resource& commit,
 	int64_t n);
 
-int64_t HHVM_FUNCTION(git_commit_create,
-	const String& id,
+String HHVM_FUNCTION(git_commit_create,
 	const Resource& repo,
 	const String& update_ref,
 	const Resource& author,
@@ -84,11 +84,9 @@ int64_t HHVM_FUNCTION(git_commit_create,
 	const String& message,
 	const Resource& tree,
 	int64_t parent_count,
-	const Array& parents);
+	const Resource& parents);
 
-// todo
-/* int64_t HHVM_FUNCTION(git_commit_create_v,
-	const String& id,
+String HHVM_FUNCTION(git_commit_create_v,
 	const Resource& repo,
 	const String& update_ref,
 	const Resource& author,
@@ -96,8 +94,7 @@ int64_t HHVM_FUNCTION(git_commit_create,
 	const String& message_encoding,
 	const String& message,
 	const Resource& tree,
-	int64_t parent_count,
-	const Variant& ); */
+	int64_t parent_count);
 
 #endif
 

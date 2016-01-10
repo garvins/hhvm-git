@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "odb_backend.h"
 
 using namespace HPHP;
@@ -16,7 +14,7 @@ using namespace HPHP;
 Resource HHVM_FUNCTION(git_odb_backend_pack,
 	const String& objects_dir)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_odb_backend **out = NULL;
 
@@ -32,7 +30,7 @@ Resource HHVM_FUNCTION(git_odb_backend_loose,
 	int64_t dir_mode,
 	int64_t file_mode)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_odb_backend **out = NULL;
 
@@ -44,7 +42,7 @@ Resource HHVM_FUNCTION(git_odb_backend_loose,
 Resource HHVM_FUNCTION(git_odb_backend_one_pack,
 	const String& index_file)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_odb_backend **out = NULL;
 

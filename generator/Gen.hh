@@ -28,11 +28,10 @@ class Gen {
     
     public function generateExtRegFile(array<string, array<string, array<string>>> $enums) : void {
         if ($handle = opendir(dirname(__FILE__)."/../src")) {
-            $pattern = "/(\w+) HHVM_FUNCTION\((\w+),((?:\s*(?:const \w+&|\w+)\s*\**\w+(?:,\n|\);))*)/";
+            $pattern = "/(\w+)\s+HHVM_FUNCTION\((\w+)((?:,[\s\S]+?)*)?\);/";
             $ignore = "/([^h]|[^\.]h)$/";
             
-            $content = "#include \"hphp/runtime/ext/extension.h\"\n" .
-            	"#include \"ext_git2.h\"\n\n";
+            $content = "#include \"ext_git2.h\"\n\n";
             
             $entries = $this->getFileList();
             
@@ -43,8 +42,9 @@ class Gen {
             // todo add preprocessor hhvm version check
             $content .= "#define HHVM_RC_INT_SAME(const_name)                  \\\n" .
             	"Native::registerConstant<KindOfInt64>(                \\\n" .
-            	"makeStaticString(#const_name), (int64_t)const_name);\n\n" .
-            	"namespace HPHP {\n" .
+           	 	"makeStaticString(#const_name), (int64_t)const_name);\n\n" .
+            	"namespace HPHP {\n\n" .
+        		"IMPLEMENT_RESOURCE_ALLOCATION(Git2Resource)\n\n" .
             	"static class Git2Extension : public Extension  {\n" .
             	"  public:\n" .
             	"    Git2Extension() : Extension(\"git2\") {}\n" .
@@ -120,7 +120,7 @@ class Gen {
         }
         
         $content .= "};\n\n" .
-            "\nusing namespace HPHP;\n" .
+            "\nnamespace HPHP {\n" .
             "class Git2Resource : public SweepableResourceData {\n" .
             "public:\n" .
             "\tDECLARE_RESOURCE_ALLOCATION(Git2Resource)\n" .
@@ -135,7 +135,7 @@ class Gen {
         }
             
         $content .= "\t};\n" .
-            "};\n" .
+            "};\n}\n" .
             "#endif /* EXT_GIT2_H */\n";
             
         file_put_contents(dirname(__FILE__)."/../ext_git2.h", $content);
@@ -143,7 +143,7 @@ class Gen {
     
     public function generateSysLib() : void {
         $entries = $this->getFileList();
-        $pattern = "/(\w+) HHVM_FUNCTION\((\w+),((?:\s*(?:const \w+&|\w+)\s*\**\w+(?:,\n|\);))*)/";
+        $pattern = "/(\w+)\s+HHVM_FUNCTION\((\w+)((?:,[\s\S]+?)*)?\);/";
         
         $content = "<?hh\n";
         
@@ -155,7 +155,7 @@ class Gen {
                 $content .= "\n\n// --------------- ". $entry . " ---------------\n";
                 
                 foreach ($match[3] as $k => $v) {
-                    $v = rtrim($v, ';)');
+                    $v = ltrim($v, ',');
                     $v = explode(",\n", $v);
                     
                     $content .= "\n<<__Native>>\n";
@@ -172,7 +172,9 @@ class Gen {
                         if (preg_match("/^([\s\S]+?)\s+\**(\w+)$/", $v1, $match2)) {
                             $content .= Type::hhvmTypeToHack(trim($match2[1]))." $".$match2[2];
                         } else {
-                            $content .= "ERROR";
+                            if (strlen(trim($v1) > 0)) {
+                                $content .= "ERROR";
+                            }
                         }
                     }
                     
@@ -188,7 +190,7 @@ class Gen {
         $entries = $this->getFileList();
         
         /* build config.cmake file */
-        $content = "HHVM_ADD_INCLUDES(git2 ./libgit2/include)\n\n" .
+        $content = "HHVM_ADD_INCLUDES(git2 ./libgit2/include ./ ./src/. ./../../../..)\n\n" .
         	"HHVM_EXTENSION(git2 ext_git2.cpp";
         
         foreach ($entries as $entry) {

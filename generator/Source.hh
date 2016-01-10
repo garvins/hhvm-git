@@ -35,9 +35,7 @@ class Source extends Printer {
     }
     
     protected function printIncludes() : void {
-        $this->add("#include \"hphp/runtime/ext/extension.h\"");
         $this->add("#include \"hphp/system/systemlib.h\"\n");
-        $this->add("#include \"../ext_git2.h\"");
         $this->add("#include \"". $this->fileName .".h\"");
     }
     
@@ -51,7 +49,7 @@ class Source extends Printer {
 
             if (count($function->getParams()) &&
                 	(preg_match("/out/" ,$function->getParams()[0]->getName()) ||
-                    (preg_match("/_((dup|lookup|open|peel)($|_)|diff_[\w]*?_to_)/", $function->getName()) && count($function->getParams()) > 1))) {
+                    (preg_match("/_((dup|lookup|open|peel|gen_ancestor|create|next|load|rename)($|_)|diff_[\w]*?_to_)/", $function->getName()) && count($function->getParams()) > 1))) {
                 $returnType = $function->getParams()[0]->getType();
                 $hasOutValue = true;
             } else {
@@ -79,7 +77,7 @@ class Source extends Printer {
                 }
                 
                 if ($returnType->typeToHackType() == HackType::RESOURCE) {
-                    $body .= "\n\tGit2Resource *return_value = new Git2Resource();\n";
+                    $body .= "\n\tauto return_value = req::make<Git2Resource>();\n";
                 } else if ($returnType->getType() == "git_oid" || ($hasOutValue && $k == 0 && $param->getType()->getType() == "git_oid")) {
                     $body .= "\n\tchar *return_value;\n";
                 } else {
@@ -214,7 +212,7 @@ class Source extends Printer {
                             $body .= "\tgit_oid_fmt(return_value, " . $function->getParams()[0]->getName() . ");\n";
                         } else {
                             $body .= "\treturn_value = ";
-                            $body .= "String(" . ($hasOutValue ? (str_repeat("*", $function->getParams()[0]->getPointerLvl() - 1) . $function->getParams()[0]->getName()) : "result") . ");\n";
+                            $body .= "String(" . ($hasOutValue ? (str_repeat("*", $function->getParams()[0]->getPointerLvl() - 1) . $function->getParams()[0]->getName()) : ($function->getPointerLvl() == 0 ? "&" : "") . "result") . ");\n";
                         } break;
                     case HackType::ARR :
                         $body .= "\treturn_value = ";

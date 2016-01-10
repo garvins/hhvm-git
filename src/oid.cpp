@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "oid.h"
 
 using namespace HPHP;
@@ -281,7 +279,7 @@ Resource HHVM_FUNCTION(git_oid_shorten_new,
 	int64_t min_length)
 {
 	git_oid_shorten *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	result = git_oid_shorten_new((size_t) min_length);
 	HHVM_GIT2_V(return_value, oid_shorten) = result;

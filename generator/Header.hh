@@ -22,17 +22,19 @@ class Header extends Printer {
     
     protected function printDefines() : void { }
     
-    protected function printIncludes() : void { }
+    protected function printIncludes() : void {
+        $this->add("#include \"../ext_git2.h\"");
+    }
     
     protected function printBody() : void {
-        $hasOutValue = false;
-        
         $body = "\nusing namespace HPHP;\n";
         
         foreach ($this->functions as $function) {
+            $hasOutValue = false;
+            
             if(count($function->getParams()) &&
                (preg_match("/out/" ,$function->getParams()[0]->getName()) ||
-                (preg_match("/_((dup|lookup|open|peel)($|_)|diff_[\w]*?_to_)/", $function->getName()) && count($function->getParams()) > 1))) {
+                (preg_match("/_((dup|lookup|open|peel|gen_ancestor|create|next|load|rename)($|_)|diff_[\w]*?_to_)/", $function->getName()) && count($function->getParams()) > 1))) {
                 $hasOutValue = true;
                 $returnType = $function->getParams()[0]->getType()->getHHVMReturnType();
             } else {

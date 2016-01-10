@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "status.h"
 
 using namespace HPHP;
@@ -72,7 +70,7 @@ Resource HHVM_FUNCTION(git_status_list_new,
 	const Resource& repo,
 	const Resource& opts)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_status_list **out = NULL;
 
@@ -102,7 +100,7 @@ Resource HHVM_FUNCTION(git_status_byindex,
 	int64_t idx)
 {
 	const git_status_entry *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto statuslist_ = dyn_cast<Git2Resource>(statuslist);
 

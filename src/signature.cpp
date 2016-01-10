@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "signature.h"
 
 using namespace HPHP;
@@ -19,7 +17,7 @@ Resource HHVM_FUNCTION(git_signature_new,
 	int64_t time,
 	int64_t offset)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_signature **out = NULL;
 
@@ -32,7 +30,7 @@ Resource HHVM_FUNCTION(git_signature_now,
 	const String& name,
 	const String& email)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_signature **out = NULL;
 
@@ -44,7 +42,7 @@ Resource HHVM_FUNCTION(git_signature_now,
 Resource HHVM_FUNCTION(git_signature_default,
 	const Resource& repo)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_signature **out = NULL;
 
@@ -59,7 +57,7 @@ Resource HHVM_FUNCTION(git_signature_dup,
 	const Resource& sig)
 {
 	git_signature *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto sig_ = dyn_cast<Git2Resource>(sig);
 

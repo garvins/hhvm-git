@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "filter.h"
 
 using namespace HPHP;
@@ -19,23 +17,23 @@ Resource HHVM_FUNCTION(git_filter_list_load,
 	const String& path,
 	int64_t mode)
 {
-    Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
-	git_filter_list **filters;
+	git_filter_list **filters = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto blob_ = dyn_cast<Git2Resource>(blob);
 
-    git_filter_list_load(filters, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(blob_, blob), path.c_str(), (git_filter_mode_t) mode);
-    HHVM_GIT2_V(return_value, filter_list) = *filters;
-    return Resource(return_value);
+	git_filter_list_load(filters, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(blob_, blob), path.c_str(), (git_filter_mode_t) mode);
+	HHVM_GIT2_V(return_value, filter_list) = *filters;
+	return Resource(return_value);
 }
 
 Resource HHVM_FUNCTION(git_filter_list_apply_to_data,
 	const Resource& filters,
 	const Resource& in)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_buf *out = NULL;
 
@@ -52,7 +50,7 @@ Resource HHVM_FUNCTION(git_filter_list_apply_to_file,
 	const Resource& repo,
 	const String& path)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_buf *out = NULL;
 
@@ -68,7 +66,7 @@ Resource HHVM_FUNCTION(git_filter_list_apply_to_blob,
 	const Resource& filters,
 	const Resource& blob)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_buf *out = NULL;
 

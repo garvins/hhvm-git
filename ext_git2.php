@@ -94,27 +94,23 @@ function git_blob_filtered_content(resource $blob,
                                    int $check_for_binary_data): resource;
 
 <<__Native>>
-function git_blob_create_fromworkdir(string $id,
-                                     resource $repo,
-                                     string $relative_path): int;
+function git_blob_create_fromworkdir(resource $repo,
+                                     string $relative_path): string;
 
 <<__Native>>
-function git_blob_create_fromdisk(string $id,
-                                  resource $repo,
-                                  string $path): int;
+function git_blob_create_fromdisk(resource $repo,
+                                  string $path): string;
 
 <<__Native>>
-function git_blob_create_fromchunks(string $id,
-                                    resource $repo,
+function git_blob_create_fromchunks(resource $repo,
                                     string $hintpath,
                                     mixed $callback,
-                                    mixed $payload): int;
+                                    mixed $payload): string;
 
 <<__Native>>
-function git_blob_create_frombuffer(string $oid,
-                                    resource $repo,
+function git_blob_create_frombuffer(resource $repo,
                                     mixed $buffer,
-                                    int $len): int;
+                                    int $len): string;
 
 <<__Native>>
 function git_blob_is_binary(resource $blob): int;
@@ -288,8 +284,7 @@ function git_commit_nth_gen_ancestor(resource $commit,
                                      int $n): resource;
 
 <<__Native>>
-function git_commit_create(string $id,
-                           resource $repo,
+function git_commit_create(resource $repo,
                            string $update_ref,
                            resource $author,
                            resource $committer,
@@ -297,19 +292,17 @@ function git_commit_create(string $id,
                            string $message,
                            resource $tree,
                            int $parent_count,
-                           array $parents): int;
+                           resource $parents): string;
 
 <<__Native>>
-function git_commit_create_v(string $id,
-                             resource $repo,
+function git_commit_create_v(resource $repo,
                              string $update_ref,
                              resource $author,
                              resource $committer,
                              string $message_encoding,
                              string $message,
                              resource $tree,
-                             int $parent_count,
-                             ERROR): int;
+                             int $parent_count): string;
 
 
 // --------------- common.h ---------------
@@ -320,11 +313,10 @@ function git_libgit2_version(int $major,
                              int $rev): void;
 
 <<__Native>>
-function git_libgit2_capabilities(ERROR): int;
+function git_libgit2_capabilities(): int;
 
 <<__Native>>
-function git_libgit2_opts(int $option,
-                          ERROR): int;
+function git_libgit2_opts(int $option): int;
 
 
 // --------------- config.h ---------------
@@ -337,6 +329,12 @@ function git_config_find_xdg(int $length): string;
 
 <<__Native>>
 function git_config_find_system(int $length): string;
+
+<<__Native>>
+function git_config_open_default(): resource;
+
+<<__Native>>
+function git_config_new(): resource;
 
 <<__Native>>
 function git_config_add_file_ondisk(resource $cfg,
@@ -496,28 +494,28 @@ function git_diff_free(resource $diff): void;
 function git_diff_tree_to_tree(resource $repo,
                                resource $old_tree,
                                resource $new_tree,
-                               resource $opts): int;
+                               resource $opts): resource;
 
 <<__Native>>
 function git_diff_tree_to_index(resource $repo,
                                 resource $old_tree,
                                 resource $index,
-                                resource $opts): int;
+                                resource $opts): resource;
 
 <<__Native>>
 function git_diff_index_to_workdir(resource $repo,
                                    resource $index,
-                                   resource $opts): int;
+                                   resource $opts): resource;
 
 <<__Native>>
 function git_diff_tree_to_workdir(resource $repo,
                                   resource $old_tree,
-                                  resource $opts): int;
+                                  resource $opts): resource;
 
 <<__Native>>
 function git_diff_tree_to_workdir_with_index(resource $repo,
                                              resource $old_tree,
-                                             resource $opts): int;
+                                             resource $opts): resource;
 
 <<__Native>>
 function git_diff_merge(resource $onto,
@@ -573,8 +571,7 @@ function git_diff_blobs(resource $old_blob,
                         mixed $payload): int;
 
 <<__Native>>
-function git_diff_blob_to_buffer(resource $old_blob,
-                                 string $old_as_path,
+function git_diff_blob_to_buffer(string $old_as_path,
                                  string $buffer,
                                  int $buffer_len,
                                  string $buffer_as_path,
@@ -582,10 +579,16 @@ function git_diff_blob_to_buffer(resource $old_blob,
                                  mixed $file_cb,
                                  mixed $hunk_cb,
                                  mixed $line_cb,
-                                 mixed $payload): int;
+                                 mixed $payload): resource;
 
 
 // --------------- errors.h ---------------
+
+<<__Native>>
+function giterr_last(): resource;
+
+<<__Native>>
+function giterr_clear(): void;
 
 <<__Native>>
 function giterr_detach(resource $cpy): int;
@@ -593,6 +596,9 @@ function giterr_detach(resource $cpy): int;
 <<__Native>>
 function giterr_set_str(int $error_class,
                         string $string): void;
+
+<<__Native>>
+function giterr_set_oom(): void;
 
 
 // --------------- filter.h ---------------
@@ -649,6 +655,9 @@ function git_ignore_path_is_ignored(int $ignored,
 
 <<__Native>>
 function git_index_open(string $index_path): resource;
+
+<<__Native>>
+function git_index_new(): resource;
 
 <<__Native>>
 function git_index_free(resource $index): void;
@@ -876,9 +885,8 @@ function git_note_iterator_new(resource $repo,
 function git_note_iterator_free(resource $it): void;
 
 <<__Native>>
-function git_note_next(string $note_id,
-                       string $annotated_id,
-                       resource $it): int;
+function git_note_next(string $annotated_id,
+                       resource $it): string;
 
 <<__Native>>
 function git_note_read(resource $repo,
@@ -971,6 +979,9 @@ function git_object_dup(resource $source): resource;
 
 
 // --------------- odb.h ---------------
+
+<<__Native>>
+function git_odb_new(): resource;
 
 <<__Native>>
 function git_odb_open(string $objects_dir): resource;
@@ -1254,7 +1265,10 @@ function git_patch_get_delta(resource $patch): resource;
 function git_patch_num_hunks(resource $patch): int;
 
 <<__Native>>
-function git_patch_line_stats(resource $patch): int;
+function git_patch_line_stats(int $total_context,
+                              int $total_additions,
+                              int $total_deletions,
+                              resource $patch): int;
 
 <<__Native>>
 function git_patch_get_hunk(int $lines_in_hunk,
@@ -1921,7 +1935,8 @@ function git_revparse_single(resource $repo,
                              string $spec): resource;
 
 <<__Native>>
-function git_revparse_ext(resource $repo,
+function git_revparse_ext(array $reference_out,
+                          resource $repo,
                           string $spec): resource;
 
 <<__Native>>
@@ -2089,10 +2104,11 @@ function git_submodule_foreach(resource $repo,
                                mixed $payload): int;
 
 <<__Native>>
-function git_submodule_add_setup(resource $repo,
+function git_submodule_add_setup(array $submodule,
+                                 resource $repo,
                                  string $url,
                                  string $path,
-                                 int $use_gitlink): resource;
+                                 int $use_gitlink): int;
 
 <<__Native>>
 function git_submodule_add_finalize(resource $submodule): int;
@@ -2178,8 +2194,7 @@ function git_submodule_location(int $location_status,
 // --------------- sys_commit.h ---------------
 
 <<__Native>>
-function git_commit_create_from_oids(string $oid,
-                                     resource $repo,
+function git_commit_create_from_oids(resource $repo,
                                      string $update_ref,
                                      resource $author,
                                      resource $committer,
@@ -2187,7 +2202,7 @@ function git_commit_create_from_oids(string $oid,
                                      string $message,
                                      string $tree,
                                      int $parent_count,
-                                     string $parents): int;
+                                     string $parents): string;
 
 
 // --------------- sys_config.h ---------------
@@ -2312,7 +2327,7 @@ function git_refdb_set_backend(resource $refdb,
 // --------------- sys_reflog.h ---------------
 
 <<__Native>>
-function git_reflog_entry__alloc(ERROR): resource;
+function git_reflog_entry__alloc(): resource;
 
 <<__Native>>
 function git_reflog_entry__free(resource $entry): void;
@@ -2331,6 +2346,9 @@ function git_reference__alloc_symbolic(string $name,
 
 
 // --------------- sys_repository.h ---------------
+
+<<__Native>>
+function git_repository_new(): resource;
 
 <<__Native>>
 function git_repository__cleanup(resource $repo): void;
@@ -2395,34 +2413,30 @@ function git_tag_tagger(resource $tag): resource;
 function git_tag_message(resource $tag): string;
 
 <<__Native>>
-function git_tag_create(string $oid,
-                        resource $repo,
+function git_tag_create(resource $repo,
                         string $tag_name,
                         resource $target,
                         resource $tagger,
                         string $message,
-                        int $force): int;
+                        int $force): string;
 
 <<__Native>>
-function git_tag_annotation_create(string $oid,
-                                   resource $repo,
+function git_tag_annotation_create(resource $repo,
                                    string $tag_name,
                                    resource $target,
                                    resource $tagger,
-                                   string $message): int;
+                                   string $message): string;
 
 <<__Native>>
-function git_tag_create_frombuffer(string $oid,
-                                   resource $repo,
+function git_tag_create_frombuffer(resource $repo,
                                    string $buffer,
-                                   int $force): int;
+                                   int $force): string;
 
 <<__Native>>
-function git_tag_create_lightweight(string $oid,
-                                    resource $repo,
+function git_tag_create_lightweight(resource $repo,
                                     string $tag_name,
                                     resource $target,
-                                    int $force): int;
+                                    int $force): string;
 
 <<__Native>>
 function git_tag_delete(resource $repo,
@@ -2449,10 +2463,10 @@ function git_tag_peel(resource $tag): resource;
 // --------------- threads.h ---------------
 
 <<__Native>>
-function git_threads_init(ERROR): int;
+function git_threads_init(): int;
 
 <<__Native>>
-function git_threads_shutdown(ERROR): void;
+function git_threads_shutdown(): void;
 
 
 // --------------- trace.h ---------------
@@ -2483,6 +2497,9 @@ function git_cred_ssh_custom_new(string $username,
                                  int $publickey_len,
                                  mixed $sign_fn,
                                  mixed $sign_data): resource;
+
+<<__Native>>
+function git_cred_default_new(): resource;
 
 <<__Native>>
 function git_transport_new(resource $owner,

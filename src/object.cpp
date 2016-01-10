@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "object.h"
 
 using namespace HPHP;
@@ -18,7 +16,7 @@ Resource HHVM_FUNCTION(git_object_lookup,
 	const String& id,
 	int64_t type)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_object **object = NULL;
 	git_oid *id_ = NULL;
@@ -40,7 +38,7 @@ Resource HHVM_FUNCTION(git_object_lookup_prefix,
 	int64_t len,
 	int64_t type)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_object **object_out = NULL;
 	git_oid *id_ = NULL;
@@ -61,7 +59,7 @@ Resource HHVM_FUNCTION(git_object_lookup_bypath,
 	const String& path,
 	int64_t type)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_object **out = NULL;
 
@@ -102,7 +100,7 @@ Resource HHVM_FUNCTION(git_object_owner,
 	const Resource& obj)
 {
 	git_repository *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto obj_ = dyn_cast<Git2Resource>(obj);
 
@@ -168,7 +166,7 @@ Resource HHVM_FUNCTION(git_object_peel,
 	const Resource& object,
 	int64_t target_type)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_object **peeled = NULL;
 
@@ -182,7 +180,7 @@ Resource HHVM_FUNCTION(git_object_peel,
 Resource HHVM_FUNCTION(git_object_dup,
 	const Resource& source)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_object **dest = NULL;
 

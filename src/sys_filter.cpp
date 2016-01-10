@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "sys_filter.h"
 
 using namespace HPHP;
@@ -17,7 +15,7 @@ Resource HHVM_FUNCTION(git_filter_lookup,
 	const String& name)
 {
 	git_filter *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	result = git_filter_lookup(name.c_str());
 	HHVM_GIT2_V(return_value, filter) = result;
@@ -28,7 +26,7 @@ Resource HHVM_FUNCTION(git_filter_list_new,
 	const Resource& repo,
 	int64_t mode)
 {
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	git_filter_list **out = NULL;
 
@@ -74,7 +72,7 @@ Resource HHVM_FUNCTION(git_filter_source_repo,
 	const Resource& src)
 {
 	git_repository *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto src_ = dyn_cast<Git2Resource>(src);
 

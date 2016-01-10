@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "graph.h"
 
 using namespace HPHP;
@@ -38,6 +36,6 @@ int64_t HHVM_FUNCTION(git_graph_ahead_behind,
 
 	result = git_graph_ahead_behind((size_t*) ahead, (size_t*) behind, HHVM_GIT2_V(repo_, repository), local_, upstream_);
 	return_value = (int64_t) result;
-	return return_value; // todo like php-git
+	return return_value;
 }
 

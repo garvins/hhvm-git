@@ -5,10 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/runtime/ext/extension.h"
 #include "hphp/system/systemlib.h"
 
-#include "../ext_git2.h"
 #include "sys_index.h"
 
 using namespace HPHP;
@@ -31,12 +29,12 @@ Resource HHVM_FUNCTION(git_index_name_get_byindex,
 	int64_t n)
 {
 	const git_index_name_entry *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto index_ = dyn_cast<Git2Resource>(index);
 
 	result = git_index_name_get_byindex(HHVM_GIT2_V(index_, index), (size_t) n);
-	HHVM_GIT2_V(return_value, index_name_entry) = const_cast<git_index_name_entry*>(result);
+	//HHVM_GIT2_V(return_value, index_name_entry) = result; todo return as array
 	return Resource(return_value);
 }
 
@@ -98,12 +96,12 @@ Resource HHVM_FUNCTION(git_index_reuc_get_bypath,
 	const String& path)
 {
 	const git_index_reuc_entry *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto index_ = dyn_cast<Git2Resource>(index);
 
 	result = git_index_reuc_get_bypath(HHVM_GIT2_V(index_, index), path.c_str());
-	HHVM_GIT2_V(return_value, index_reuc_entry) = const_cast<git_index_reuc_entry*>(result);
+	//HHVM_GIT2_V(return_value, index_reuc_entry) = result; todo return as array
 	return Resource(return_value);
 }
 
@@ -112,12 +110,12 @@ Resource HHVM_FUNCTION(git_index_reuc_get_byindex,
 	int64_t n)
 {
 	const git_index_reuc_entry *result;
-	Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
 	auto index_ = dyn_cast<Git2Resource>(index);
 
 	result = git_index_reuc_get_byindex(HHVM_GIT2_V(index_, index), (size_t) n);
-	HHVM_GIT2_V(return_value, index_reuc_entry) = const_cast<git_index_reuc_entry*>(result);
+	//HHVM_GIT2_V(return_value, index_reuc_entry) = result; todo return as array
 	return Resource(return_value);
 }
 

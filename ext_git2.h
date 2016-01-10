@@ -3,6 +3,7 @@
 
 #define HHVM_GIT2_V(git2, type) git2->type
 #define HHVM_GIT2_V_N(git2, type) (git2 && git2->type) ? git2->type : NULL
+
 #include "git2.h"
 #include "git2/cred_helpers.h"
 #include "git2/odb_backend.h"
@@ -114,7 +115,7 @@ enum hhvm_git2_resource_type {
 };
 
 
-using namespace HPHP;
+namespace HPHP {
 class Git2Resource : public SweepableResourceData {
 public:
 	DECLARE_RESOURCE_ALLOCATION(Git2Resource)
@@ -214,4 +215,5 @@ public:
 		git_index_reuc_entry *index_reuc_entry;
 	};
 };
+}
 #endif /* EXT_GIT2_H */
