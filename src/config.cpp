@@ -161,7 +161,7 @@ Resource HHVM_FUNCTION(git_config_get_entry,
 	auto cfg_ = dyn_cast<Git2Resource>(cfg);
 
 	git_config_get_entry(out, HHVM_GIT2_V(cfg_, config), name.c_str());
-	//HHVM_GIT2_V(return_value, config_entry) = *out; return as array
+	//HHVM_GIT2_V(return_value, config_entry) = *out; todo return as array
 	return Resource(return_value);
 }
 

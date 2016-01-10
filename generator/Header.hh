@@ -20,39 +20,38 @@ class Header extends Printer {
         return $this;
     }
     
-    public function add2Functions(Func $function) : this {
-        if (is_array($this->functions)) {
-            $this->functions[] = $function;
-        } else {
-            $this->functions = array($function);
-        }
-        
-        return $this;
-    }
-    
     protected function printDefines() : void { }
     
     protected function printIncludes() : void { }
     
     protected function printBody() : void {
-        $body = "";
+        $hasOutValue = false;
+        
+        $body = "\nusing namespace HPHP;\n";
         
         foreach ($this->functions as $function) {
-            if (count($function->getParams()) && preg_match("/out/" ,$function->getParams()[0]->getName())) {
+            if(count($function->getParams()) &&
+               (preg_match("/out/" ,$function->getParams()[0]->getName()) ||
+                (preg_match("/_((dup|lookup|open|peel)($|_)|diff_[\w]*?_to_)/", $function->getName()) && count($function->getParams()) > 1))) {
+                $hasOutValue = true;
                 $returnType = $function->getParams()[0]->getType()->getHHVMReturnType();
             } else {
                 $returnType = $function->getReturnType()->getHHVMReturnType();
             }
             
             $body .= "\n";
-            $body .= $returnType." HHVM_FUNCTION(".$function->getName().",";
+            $body .= $returnType . " HHVM_FUNCTION(" . $function->getName() . ",";
             
             foreach ($function->getParams() as $k => $param) {
-                if($k == 0 && preg_match("/out/" ,$param->getName())) {
+                if ($k == 0 && $hasOutValue) {
                     continue;
                 }
                 
-                $body .= "\n\t" . $param->getType()->getHHVMType() . str_repeat("*", $param->getPointerLvl()) . " " .  $param->getName() .",";
+                if ($param->getPointerLvl() > 1) {
+                    $body .= "\n\tconst Array& " . $param->getName() . ",";
+                } else {
+                    $body .= "\n\t" . $param->getType()->getHHVMType() . " " . $param->getName() . ",";
+                }
             }
             
             $body = rtrim($body, ",");

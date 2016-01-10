@@ -165,7 +165,7 @@ Resource HHVM_FUNCTION(git_pathspec_match_list_diff_entry,
 	auto m_ = dyn_cast<Git2Resource>(m);
 
 	result = git_pathspec_match_list_diff_entry(HHVM_GIT2_V(m_, pathspec_match_list), (size_t) pos);
-	//HHVM_GIT2_V(return_value, diff_delta) = result; convert to array
+	//HHVM_GIT2_V(return_value, diff_delta) = result; todo return as array
 	return Resource(return_value);
 }
 

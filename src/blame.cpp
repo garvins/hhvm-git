@@ -36,7 +36,7 @@ Resource HHVM_FUNCTION(git_blame_get_hunk_byindex,
 	auto blame_ = dyn_cast<Git2Resource>(blame);
 
 	result = git_blame_get_hunk_byindex(HHVM_GIT2_V(blame_, blame), (uint32_t) index);
-	//HHVM_GIT2_V(return_value, blame_hunk) = result; todo return an array
+	//HHVM_GIT2_V(return_value, blame_hunk) = result; todo return as array
 	return Resource(return_value);
 }
 
@@ -50,7 +50,7 @@ Resource HHVM_FUNCTION(git_blame_get_hunk_byline,
 	auto blame_ = dyn_cast<Git2Resource>(blame);
 
 	result = git_blame_get_hunk_byline(HHVM_GIT2_V(blame_, blame), (uint32_t) lineno);
-	//HHVM_GIT2_V(return_value, blame_hunk) = result; todo return an array
+	//HHVM_GIT2_V(return_value, blame_hunk) = result; todo return as array
 	return Resource(return_value);
 }
 

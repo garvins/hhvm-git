@@ -19,7 +19,7 @@ Resource HHVM_FUNCTION(giterr_last)
 	Git2Resource *return_value = new Git2Resource();
 
 	result = giterr_last();
-	//HHVM_GIT2_V(return_value, error) = result; todo change to array
+	//HHVM_GIT2_V(return_value, error) = result; todo return as array
 	return Resource(return_value);
 }
 

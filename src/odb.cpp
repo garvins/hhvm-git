@@ -330,15 +330,15 @@ String HHVM_FUNCTION(git_odb_hashfile,
 Resource HHVM_FUNCTION(git_odb_object_dup,
 	const Resource& source)
 {
-    Git2Resource *return_value = new Git2Resource();
+	Git2Resource *return_value = new Git2Resource();
 
-	git_odb_object **dest;
+	git_odb_object **dest = NULL;
 
 	auto source_ = dyn_cast<Git2Resource>(source);
 
-    git_odb_object_dup(dest, HHVM_GIT2_V(source_, odb_object));
-    HHVM_GIT2_V(return_value, odb_object) = *dest;
-    return Resource(return_value);
+	git_odb_object_dup(dest, HHVM_GIT2_V(source_, odb_object));
+	HHVM_GIT2_V(return_value, odb_object) = *dest;
+	return Resource(return_value);
 }
 
 void HHVM_FUNCTION(git_odb_object_free,

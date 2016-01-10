@@ -168,15 +168,15 @@ Resource HHVM_FUNCTION(git_object_peel,
 	const Resource& object,
 	int64_t target_type)
 {
-    Git2Resource *return_value = new Git2Resource();
+	Git2Resource *return_value = new Git2Resource();
 
-	git_object **peeled;
+	git_object **peeled = NULL;
 
 	auto object_ = dyn_cast<Git2Resource>(object);
 
-    git_object_peel(peeled, HHVM_GIT2_V(object_, object), (git_otype) target_type);
-    HHVM_GIT2_V(return_value, object) = *peeled;
-    return Resource(return_value);
+	git_object_peel(peeled, HHVM_GIT2_V(object_, object), (git_otype) target_type);
+	HHVM_GIT2_V(return_value, object) = *peeled;
+	return Resource(return_value);
 }
 
 Resource HHVM_FUNCTION(git_object_dup,

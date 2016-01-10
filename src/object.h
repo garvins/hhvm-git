@@ -52,11 +52,11 @@ int64_t HHVM_FUNCTION(git_object__size,
 	int64_t type);
 
 Resource HHVM_FUNCTION(git_object_peel,
-    const Resource& object,
+	const Resource& object,
 	int64_t target_type);
 
 Resource HHVM_FUNCTION(git_object_dup,
-    const Resource& source);
+	const Resource& source);
 
 #endif
 
