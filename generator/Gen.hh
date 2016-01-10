@@ -90,55 +90,55 @@ class Gen {
             
             file_put_contents(dirname(__FILE__)."/../ext_git2.cpp", $content);
         }
+    }
         
-        public function generateExtHeader() : void {
-            /* build file for handeling of git2 resources */
-            $content = "#ifndef EXT_GIT2_H\n" .
-            	"#define EXT_GIT2_H\n\n" .
-            	"#define HHVM_GIT2_V(git2, type) git2->type\n" .
-            	"#define HHVM_GIT2_V_N(git2, type) (git2 && git2->type) ? git2->type : NULL\n\n" .
-            	"#include \"git2.h\"\n" .
-            	"#include \"git2/cred_helpers.h\"\n" .
-            	"#include \"git2/odb_backend.h\"\n" .
-            	"#include \"git2/trace.h\"\n" .
-            	"#include \"git2/sys/commit.h\"\n" .
-            	"#include \"git2/sys/config.h\"\n" .
-            	"#include \"git2/sys/filter.h\"\n" .
-            	"#include \"git2/sys/index.h\"\n" .
-            	"#include \"git2/sys/odb_backend.h\"\n" .
-            	"#include \"git2/sys/refdb_backend.h\"\n" .
-            	"#include \"git2/sys/reflog.h\"\n" .
-            	"#include \"git2/sys/refs.h\"\n" .
-            	"#include \"git2/sys/repository.h\"\n\n" .
-            	"#include \"hphp/runtime/ext/extension.h\"\n\n" .
-            	"#include <stdlib.h>\n\n" .
-            	"enum hhvm_git2_resource_type {\n";
+	public function generateExtHeader() : void {
+        /* build file for handeling of git2 resources */
+        $content = "#ifndef EXT_GIT2_H\n" .
+            "#define EXT_GIT2_H\n\n" .
+            "#define HHVM_GIT2_V(git2, type) git2->type\n" .
+            "#define HHVM_GIT2_V_N(git2, type) (git2 && git2->type) ? git2->type : NULL\n\n" .
+            "#include \"git2.h\"\n" .
+            "#include \"git2/cred_helpers.h\"\n" .
+            "#include \"git2/odb_backend.h\"\n" .
+            "#include \"git2/trace.h\"\n" .
+            "#include \"git2/sys/commit.h\"\n" .
+            "#include \"git2/sys/config.h\"\n" .
+            "#include \"git2/sys/filter.h\"\n" .
+            "#include \"git2/sys/index.h\"\n" .
+            "#include \"git2/sys/odb_backend.h\"\n" .
+            "#include \"git2/sys/refdb_backend.h\"\n" .
+            "#include \"git2/sys/reflog.h\"\n" .
+            "#include \"git2/sys/refs.h\"\n" .
+            "#include \"git2/sys/repository.h\"\n\n" .
+            "#include \"hphp/runtime/ext/extension.h\"\n\n" .
+            "#include <stdlib.h>\n\n" .
+            "enum hhvm_git2_resource_type {\n";
             
-            foreach (Type::$knownTypes[HackType::RESOURCE] as $resName) {
-                $content .= "\t" . strtoupper("HHVM_GIT2_TYPE_" . preg_replace("/^git_/", "", $resName)) . ",\n";
-            }
-            
-            $content .= "};\n\n" .
-            	"\nusing namespace HPHP;\n" .
-            	"class Git2Resource : public SweepableResourceData {\n" .
-            	"public:\n" .
-            	"\tDECLARE_RESOURCE_ALLOCATION(Git2Resource)\n" .
-            	"\tGit2Resource() {};\n" .
-            	"\tvirtual ~Git2Resource();\n" .
-            	"\tCLASSNAME_IS(\"git2\");\n" .
-            	"\tenum hhvm_git2_resource_type type;\n" .
-            	"\tunion {\n";
-            
-            foreach (Type::$knownTypes[HackType::RESOURCE] as $resName) {
-                $content .= "\t\t" . $resName . " " . preg_replace("/^git_/", "*", $resName) . ";\n";
-            }
-            
-            $content .= "\t};\n" .
-            	"};\n" .
-            	"#endif /* EXT_GIT2_H */\n";
-            
-            file_put_contents(dirname(__FILE__)."/../ext_git2.h", $content);
+        foreach (Type::$knownTypes[HackType::RESOURCE] as $resName) {
+            $content .= "\t" . strtoupper("HHVM_GIT2_TYPE_" . preg_replace("/^git_/", "", $resName)) . ",\n";
         }
+        
+        $content .= "};\n\n" .
+            "\nusing namespace HPHP;\n" .
+            "class Git2Resource : public SweepableResourceData {\n" .
+            "public:\n" .
+            "\tDECLARE_RESOURCE_ALLOCATION(Git2Resource)\n" .
+            "\tGit2Resource() {};\n" .
+            "\tvirtual ~Git2Resource();\n" .
+            "\tCLASSNAME_IS(\"git2\");\n" .
+            "\tenum hhvm_git2_resource_type type;\n" .
+            "\tunion {\n";
+            
+        foreach (Type::$knownTypes[HackType::RESOURCE] as $resName) {
+            $content .= "\t\t" . $resName . " " . preg_replace("/^git_/", "*", $resName) . ";\n";
+        }
+            
+        $content .= "\t};\n" .
+            "};\n" .
+            "#endif /* EXT_GIT2_H */\n";
+            
+        file_put_contents(dirname(__FILE__)."/../ext_git2.h", $content);
     }
     
     public function generateSysLib() : void {
@@ -201,7 +201,7 @@ class Gen {
         file_put_contents(dirname(__FILE__)."/../config.cmake", $content);
     }
     
-    private function getFileList(): array<string> {
+    private function getFileList() : array<string> {
         $entries = array();
         
         if ($handle = opendir(dirname(__FILE__)."/../src")) {
@@ -216,6 +216,6 @@ class Gen {
             closedir($handle);
         }
         
-        return $entires;
+        return $entries;
     }
 }
