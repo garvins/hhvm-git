@@ -15,10 +15,10 @@ Resource HHVM_FUNCTION(git_repository_new)
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_repository **out = NULL;
+	git_repository *out = NULL;
 
-	git_repository_new(out);
-	HHVM_GIT2_V(return_value, repository) = *out;
+	git_repository_new(&out);
+	HHVM_GIT2_V(return_value, repository) = out;
 	return Resource(return_value);
 }
 

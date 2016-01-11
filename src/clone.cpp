@@ -18,12 +18,12 @@ Resource HHVM_FUNCTION(git_clone,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_repository **out = NULL;
+	git_repository *out = NULL;
 
 	auto options_ = dyn_cast<Git2Resource>(options);
 
-	git_clone(out, url.c_str(), local_path.c_str(), HHVM_GIT2_V(options_, clone_options));
-	HHVM_GIT2_V(return_value, repository) = *out;
+	git_clone(&out, url.c_str(), local_path.c_str(), HHVM_GIT2_V(options_, clone_options));
+	HHVM_GIT2_V(return_value, repository) = out;
 	return Resource(return_value);
 }
 

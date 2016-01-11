@@ -72,13 +72,13 @@ Resource HHVM_FUNCTION(git_status_list_new,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_status_list **out = NULL;
+	git_status_list *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto opts_ = dyn_cast<Git2Resource>(opts);
 
-	git_status_list_new(out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(opts_, status_options));
-	HHVM_GIT2_V(return_value, status_list) = *out;
+	git_status_list_new(&out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(opts_, status_options));
+	HHVM_GIT2_V(return_value, status_list) = out;
 	return Resource(return_value);
 }
 

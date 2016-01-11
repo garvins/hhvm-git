@@ -17,7 +17,7 @@ Resource HHVM_FUNCTION(git_commit_lookup,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_commit **commit = NULL;
+	git_commit *commit = NULL;
 	git_oid *id_ = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
@@ -26,8 +26,8 @@ Resource HHVM_FUNCTION(git_commit_lookup,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_commit_lookup(commit, HHVM_GIT2_V(repo_, repository), id_);
-	HHVM_GIT2_V(return_value, commit) = *commit;
+	git_commit_lookup(&commit, HHVM_GIT2_V(repo_, repository), id_);
+	HHVM_GIT2_V(return_value, commit) = commit;
 	return Resource(return_value);
 }
 
@@ -38,7 +38,7 @@ Resource HHVM_FUNCTION(git_commit_lookup_prefix,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_commit **commit = NULL;
+	git_commit *commit = NULL;
 	git_oid *id_ = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
@@ -47,8 +47,8 @@ Resource HHVM_FUNCTION(git_commit_lookup_prefix,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_commit_lookup_prefix(commit, HHVM_GIT2_V(repo_, repository), id_, (size_t) len);
-	HHVM_GIT2_V(return_value, commit) = *commit;
+	git_commit_lookup_prefix(&commit, HHVM_GIT2_V(repo_, repository), id_, (size_t) len);
+	HHVM_GIT2_V(return_value, commit) = commit;
 	return Resource(return_value);
 }
 
@@ -196,12 +196,12 @@ Resource HHVM_FUNCTION(git_commit_tree,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_tree **tree_out = NULL;
+	git_tree *tree_out = NULL;
 
 	auto commit_ = dyn_cast<Git2Resource>(commit);
 
-	git_commit_tree(tree_out, HHVM_GIT2_V(commit_, commit));
-	HHVM_GIT2_V(return_value, tree) = *tree_out;
+	git_commit_tree(&tree_out, HHVM_GIT2_V(commit_, commit));
+	HHVM_GIT2_V(return_value, tree) = tree_out;
 	return Resource(return_value);
 }
 
@@ -237,12 +237,12 @@ Resource HHVM_FUNCTION(git_commit_parent,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_commit **out = NULL;
+	git_commit *out = NULL;
 
 	auto commit_ = dyn_cast<Git2Resource>(commit);
 
-	git_commit_parent(out, HHVM_GIT2_V(commit_, commit), (unsigned int) n);
-	HHVM_GIT2_V(return_value, commit) = *out;
+	git_commit_parent(&out, HHVM_GIT2_V(commit_, commit), (unsigned int) n);
+	HHVM_GIT2_V(return_value, commit) = out;
 	return Resource(return_value);
 }
 
@@ -266,12 +266,12 @@ Resource HHVM_FUNCTION(git_commit_nth_gen_ancestor,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_commit **ancestor = NULL;
+	git_commit *ancestor = NULL;
 
 	auto commit_ = dyn_cast<Git2Resource>(commit);
 
-	git_commit_nth_gen_ancestor(ancestor, HHVM_GIT2_V(commit_, commit), (unsigned int) n);
-	HHVM_GIT2_V(return_value, commit) = *ancestor;
+	git_commit_nth_gen_ancestor(&ancestor, HHVM_GIT2_V(commit_, commit), (unsigned int) n);
+	HHVM_GIT2_V(return_value, commit) = ancestor;
 	return Resource(return_value);
 }
 
@@ -288,7 +288,7 @@ String HHVM_FUNCTION(git_commit_create,
 {
 	char *return_value;
 
-	git_oid *id = NULL;
+	git_oid id;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto author_ = dyn_cast<Git2Resource>(author);
@@ -296,8 +296,8 @@ String HHVM_FUNCTION(git_commit_create,
 	auto tree_ = dyn_cast<Git2Resource>(tree);
 	auto parents_ = dyn_cast<Git2Resource>(parents);
 
-	git_commit_create(id, HHVM_GIT2_V(repo_, repository), update_ref.c_str(), HHVM_GIT2_V(author_, signature), HHVM_GIT2_V(committer_, signature), message_encoding.c_str(), message.c_str(), HHVM_GIT2_V(tree_, tree), (int) parent_count, NULL /*HHVM_GIT2_V(parents_, commit) todo */);
-	git_oid_fmt(return_value, id);
+	git_commit_create(&id, HHVM_GIT2_V(repo_, repository), update_ref.c_str(), HHVM_GIT2_V(author_, signature), HHVM_GIT2_V(committer_, signature), message_encoding.c_str(), message.c_str(), HHVM_GIT2_V(tree_, tree), (int) parent_count, NULL /*HHVM_GIT2_V(parents_, commit) todo */);
+	git_oid_fmt(return_value, &id);
 	return String(return_value);
 }
 
@@ -313,15 +313,15 @@ String HHVM_FUNCTION(git_commit_create_v,
 {
 	char *return_value;
 
-	git_oid *id = NULL;
+	git_oid id;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto author_ = dyn_cast<Git2Resource>(author);
 	auto committer_ = dyn_cast<Git2Resource>(committer);
 	auto tree_ = dyn_cast<Git2Resource>(tree);
 
-	git_commit_create_v(id, HHVM_GIT2_V(repo_, repository), update_ref.c_str(), HHVM_GIT2_V(author_, signature), HHVM_GIT2_V(committer_, signature), message_encoding.c_str(), message.c_str(), HHVM_GIT2_V(tree_, tree), (int) parent_count);
-	git_oid_fmt(return_value, id);
+	git_commit_create_v(&id, HHVM_GIT2_V(repo_, repository), update_ref.c_str(), HHVM_GIT2_V(author_, signature), HHVM_GIT2_V(committer_, signature), message_encoding.c_str(), message.c_str(), HHVM_GIT2_V(tree_, tree), (int) parent_count);
+	git_oid_fmt(return_value, &id);
 	return String(return_value);
 }
 

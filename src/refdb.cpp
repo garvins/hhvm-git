@@ -16,12 +16,12 @@ Resource HHVM_FUNCTION(git_refdb_new,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_refdb **out = NULL;
+	git_refdb *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_refdb_new(out, HHVM_GIT2_V(repo_, repository));
-	HHVM_GIT2_V(return_value, refdb) = *out;
+	git_refdb_new(&out, HHVM_GIT2_V(repo_, repository));
+	HHVM_GIT2_V(return_value, refdb) = out;
 	return Resource(return_value);
 }
 
@@ -30,12 +30,12 @@ Resource HHVM_FUNCTION(git_refdb_open,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_refdb **out = NULL;
+	git_refdb *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_refdb_open(out, HHVM_GIT2_V(repo_, repository));
-	HHVM_GIT2_V(return_value, refdb) = *out;
+	git_refdb_open(&out, HHVM_GIT2_V(repo_, repository));
+	HHVM_GIT2_V(return_value, refdb) = out;
 	return Resource(return_value);
 }
 

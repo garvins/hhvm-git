@@ -17,12 +17,12 @@ Resource HHVM_FUNCTION(git_revparse_single,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_object **out = NULL;
+	git_object *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_revparse_single(out, HHVM_GIT2_V(repo_, repository), spec.c_str());
-	HHVM_GIT2_V(return_value, object) = *out;
+	git_revparse_single(&out, HHVM_GIT2_V(repo_, repository), spec.c_str());
+	HHVM_GIT2_V(return_value, object) = out;
 	return Resource(return_value);
 }
 

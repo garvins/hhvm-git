@@ -18,12 +18,12 @@ Resource HHVM_FUNCTION(git_remote_create,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_remote **out = NULL;
+	git_remote *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_remote_create(out, HHVM_GIT2_V(repo_, repository), name.c_str(), url.c_str());
-	HHVM_GIT2_V(return_value, remote) = *out;
+	git_remote_create(&out, HHVM_GIT2_V(repo_, repository), name.c_str(), url.c_str());
+	HHVM_GIT2_V(return_value, remote) = out;
 	return Resource(return_value);
 }
 
@@ -35,12 +35,12 @@ Resource HHVM_FUNCTION(git_remote_create_with_fetchspec,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_remote **out = NULL;
+	git_remote *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_remote_create_with_fetchspec(out, HHVM_GIT2_V(repo_, repository), name.c_str(), url.c_str(), fetch.c_str());
-	HHVM_GIT2_V(return_value, remote) = *out;
+	git_remote_create_with_fetchspec(&out, HHVM_GIT2_V(repo_, repository), name.c_str(), url.c_str(), fetch.c_str());
+	HHVM_GIT2_V(return_value, remote) = out;
 	return Resource(return_value);
 }
 
@@ -51,12 +51,12 @@ Resource HHVM_FUNCTION(git_remote_create_inmemory,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_remote **out = NULL;
+	git_remote *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_remote_create_inmemory(out, HHVM_GIT2_V(repo_, repository), fetch.c_str(), url.c_str());
-	HHVM_GIT2_V(return_value, remote) = *out;
+	git_remote_create_inmemory(&out, HHVM_GIT2_V(repo_, repository), fetch.c_str(), url.c_str());
+	HHVM_GIT2_V(return_value, remote) = out;
 	return Resource(return_value);
 }
 
@@ -66,12 +66,12 @@ Resource HHVM_FUNCTION(git_remote_load,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_remote **out = NULL;
+	git_remote *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_remote_load(out, HHVM_GIT2_V(repo_, repository), name.c_str());
-	HHVM_GIT2_V(return_value, remote) = *out;
+	git_remote_load(&out, HHVM_GIT2_V(repo_, repository), name.c_str());
+	HHVM_GIT2_V(return_value, remote) = out;
 	return Resource(return_value);
 }
 
@@ -312,12 +312,12 @@ Resource HHVM_FUNCTION(git_remote_ls,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	const git_remote_head ***out = NULL;
+	const git_remote_head **out = NULL;
 
 	auto remote_ = dyn_cast<Git2Resource>(remote);
 
-	git_remote_ls(out, (size_t*) size, HHVM_GIT2_V(remote_, remote));
-	//HHVM_GIT2_V(return_value, remote_head) = *out; todo return as array
+	git_remote_ls(&out, (size_t*) size, HHVM_GIT2_V(remote_, remote));
+	//HHVM_GIT2_V(return_value, remote_head) = out; todo return as array
 	return Resource(return_value);
 }
 
@@ -427,12 +427,12 @@ Resource HHVM_FUNCTION(git_remote_list,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_strarray *out = NULL;
+	git_strarray out;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_remote_list(out, HHVM_GIT2_V(repo_, repository));
-	HHVM_GIT2_V(return_value, strarray) = out;
+	git_remote_list(&out, HHVM_GIT2_V(repo_, repository));
+	HHVM_GIT2_V(return_value, strarray) = &out;
 	return Resource(return_value);
 }
 

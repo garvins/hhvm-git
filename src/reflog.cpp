@@ -17,12 +17,12 @@ Resource HHVM_FUNCTION(git_reflog_read,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_reflog **out = NULL;
+	git_reflog *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_reflog_read(out, HHVM_GIT2_V(repo_, repository), name.c_str());
-	HHVM_GIT2_V(return_value, reflog) = *out;
+	git_reflog_read(&out, HHVM_GIT2_V(repo_, repository), name.c_str());
+	HHVM_GIT2_V(return_value, reflog) = out;
 	return Resource(return_value);
 }
 

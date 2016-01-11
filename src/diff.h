@@ -95,7 +95,8 @@ int64_t HHVM_FUNCTION(git_diff_blobs,
 	const Variant& line_cb,
 	const Variant& payload);
 
-Resource HHVM_FUNCTION(git_diff_blob_to_buffer,
+int64_t HHVM_FUNCTION(git_diff_blob_to_buffer,
+    const Resource& old_blob,
 	const String& old_as_path,
 	const String& buffer,
 	int64_t buffer_len,

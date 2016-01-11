@@ -28,12 +28,12 @@ Resource HHVM_FUNCTION(git_filter_list_new,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_filter_list **out = NULL;
+	git_filter_list *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_filter_list_new(out, HHVM_GIT2_V(repo_, repository), (git_filter_mode_t) mode);
-	HHVM_GIT2_V(return_value, filter_list) = *out;
+	git_filter_list_new(&out, HHVM_GIT2_V(repo_, repository), (git_filter_mode_t) mode);
+	HHVM_GIT2_V(return_value, filter_list) = out;
 	return Resource(return_value);
 }
 

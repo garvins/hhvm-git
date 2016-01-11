@@ -111,12 +111,12 @@ String HHVM_FUNCTION(git_refspec_transform,
 {
 	String return_value;
 
-	char *out = NULL;
+	char out;
 
 	auto spec_ = dyn_cast<Git2Resource>(spec);
 
-	git_refspec_transform(out, (size_t) outlen, HHVM_GIT2_V(spec_, refspec), name.c_str());
-	return_value = String(out);
+	git_refspec_transform(&out, (size_t) outlen, HHVM_GIT2_V(spec_, refspec), name.c_str());
+	return_value = String(&out);
 	return return_value;
 }
 
@@ -127,12 +127,12 @@ String HHVM_FUNCTION(git_refspec_rtransform,
 {
 	String return_value;
 
-	char *out = NULL;
+	char out;
 
 	auto spec_ = dyn_cast<Git2Resource>(spec);
 
-	git_refspec_rtransform(out, (size_t) outlen, HHVM_GIT2_V(spec_, refspec), name.c_str());
-	return_value = String(out);
+	git_refspec_rtransform(&out, (size_t) outlen, HHVM_GIT2_V(spec_, refspec), name.c_str());
+	return_value = String(&out);
 	return return_value;
 }
 

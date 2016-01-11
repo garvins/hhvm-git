@@ -17,12 +17,12 @@ Resource HHVM_FUNCTION(git_patch_from_diff,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_patch **out = NULL;
+	git_patch *out = NULL;
 
 	auto diff_ = dyn_cast<Git2Resource>(diff);
 
-	git_patch_from_diff(out, HHVM_GIT2_V(diff_, diff), (size_t) idx);
-	HHVM_GIT2_V(return_value, patch) = *out;
+	git_patch_from_diff(&out, HHVM_GIT2_V(diff_, diff), (size_t) idx);
+	HHVM_GIT2_V(return_value, patch) = out;
 	return Resource(return_value);
 }
 
@@ -35,14 +35,14 @@ Resource HHVM_FUNCTION(git_patch_from_blobs,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_patch **out = NULL;
+	git_patch *out = NULL;
 
 	auto old_blob_ = dyn_cast<Git2Resource>(old_blob);
 	auto new_blob_ = dyn_cast<Git2Resource>(new_blob);
 	auto opts_ = dyn_cast<Git2Resource>(opts);
 
-	git_patch_from_blobs(out, HHVM_GIT2_V(old_blob_, blob), old_as_path.c_str(), HHVM_GIT2_V(new_blob_, blob), new_as_path.c_str(), HHVM_GIT2_V(opts_, diff_options));
-	HHVM_GIT2_V(return_value, patch) = *out;
+	git_patch_from_blobs(&out, HHVM_GIT2_V(old_blob_, blob), old_as_path.c_str(), HHVM_GIT2_V(new_blob_, blob), new_as_path.c_str(), HHVM_GIT2_V(opts_, diff_options));
+	HHVM_GIT2_V(return_value, patch) = out;
 	return Resource(return_value);
 }
 
@@ -56,13 +56,13 @@ Resource HHVM_FUNCTION(git_patch_from_blob_and_buffer,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_patch **out = NULL;
+	git_patch *out = NULL;
 
 	auto old_blob_ = dyn_cast<Git2Resource>(old_blob);
 	auto opts_ = dyn_cast<Git2Resource>(opts);
 
-	git_patch_from_blob_and_buffer(out, HHVM_GIT2_V(old_blob_, blob), old_as_path.c_str(), buffer.c_str(), (size_t) buffer_len, buffer_as_path.c_str(), HHVM_GIT2_V(opts_, diff_options));
-	HHVM_GIT2_V(return_value, patch) = *out;
+	git_patch_from_blob_and_buffer(&out, HHVM_GIT2_V(old_blob_, blob), old_as_path.c_str(), buffer.c_str(), (size_t) buffer_len, buffer_as_path.c_str(), HHVM_GIT2_V(opts_, diff_options));
+	HHVM_GIT2_V(return_value, patch) = out;
 	return Resource(return_value);
 }
 
@@ -123,12 +123,12 @@ Resource HHVM_FUNCTION(git_patch_get_hunk,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	const git_diff_hunk **out = NULL;
+	const git_diff_hunk *out = NULL;
 
 	auto patch_ = dyn_cast<Git2Resource>(patch);
 
-	git_patch_get_hunk(out, (size_t*) lines_in_hunk, HHVM_GIT2_V(patch_, patch), (size_t) hunk_idx);
-	//HHVM_GIT2_V(return_value, diff_hunk) = *out; todo return as array
+	git_patch_get_hunk(&out, (size_t*) lines_in_hunk, HHVM_GIT2_V(patch_, patch), (size_t) hunk_idx);
+	//HHVM_GIT2_V(return_value, diff_hunk) = out; todo return as array
 	return Resource(return_value);
 }
 
@@ -153,12 +153,12 @@ Resource HHVM_FUNCTION(git_patch_get_line_in_hunk,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	const git_diff_line **out = NULL;
+	const git_diff_line *out = NULL;
 
 	auto patch_ = dyn_cast<Git2Resource>(patch);
 
-	git_patch_get_line_in_hunk(out, HHVM_GIT2_V(patch_, patch), (size_t) hunk_idx, (size_t) line_of_hunk);
-	//HHVM_GIT2_V(return_value, diff_line) = *out; todo return as array
+	git_patch_get_line_in_hunk(&out, HHVM_GIT2_V(patch_, patch), (size_t) hunk_idx, (size_t) line_of_hunk);
+	//HHVM_GIT2_V(return_value, diff_line) = out; todo return as array
 	return Resource(return_value);
 }
 

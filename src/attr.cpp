@@ -30,12 +30,12 @@ String HHVM_FUNCTION(git_attr_get,
 {
 	String return_value;
 
-	const char **value_out = NULL;
+	const char *value_out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_attr_get(value_out, HHVM_GIT2_V(repo_, repository), (uint32_t) flags, path.c_str(), name.c_str());
-	return_value = String(*value_out);
+	git_attr_get(&value_out, HHVM_GIT2_V(repo_, repository), (uint32_t) flags, path.c_str(), name.c_str());
+	return_value = String(value_out);
 	return return_value;
 }
 
@@ -48,13 +48,13 @@ String HHVM_FUNCTION(git_attr_get_many,
 {
 	String return_value;
 
-	const char **values_out = NULL;
+	const char *values_out = NULL;
 	const char **names_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_attr_get_many(values_out, HHVM_GIT2_V(repo_, repository), (uint32_t) flags, path.c_str(), (size_t) num_attr, names_);
-	return_value = String(*values_out);
+	git_attr_get_many(&values_out, HHVM_GIT2_V(repo_, repository), (uint32_t) flags, path.c_str(), (size_t) num_attr, names_);
+	return_value = String(values_out);
 	return return_value;
 }
 

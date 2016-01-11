@@ -18,7 +18,7 @@ Resource HHVM_FUNCTION(git_object_lookup,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_object **object = NULL;
+	git_object *object = NULL;
 	git_oid *id_ = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
@@ -27,8 +27,8 @@ Resource HHVM_FUNCTION(git_object_lookup,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_object_lookup(object, HHVM_GIT2_V(repo_, repository), id_, (git_otype) type);
-	HHVM_GIT2_V(return_value, object) = *object;
+	git_object_lookup(&object, HHVM_GIT2_V(repo_, repository), id_, (git_otype) type);
+	HHVM_GIT2_V(return_value, object) = object;
 	return Resource(return_value);
 }
 
@@ -40,7 +40,7 @@ Resource HHVM_FUNCTION(git_object_lookup_prefix,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_object **object_out = NULL;
+	git_object *object_out = NULL;
 	git_oid *id_ = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
@@ -49,8 +49,8 @@ Resource HHVM_FUNCTION(git_object_lookup_prefix,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_object_lookup_prefix(object_out, HHVM_GIT2_V(repo_, repository), id_, (size_t) len, (git_otype) type);
-	HHVM_GIT2_V(return_value, object) = *object_out;
+	git_object_lookup_prefix(&object_out, HHVM_GIT2_V(repo_, repository), id_, (size_t) len, (git_otype) type);
+	HHVM_GIT2_V(return_value, object) = object_out;
 	return Resource(return_value);
 }
 
@@ -61,12 +61,12 @@ Resource HHVM_FUNCTION(git_object_lookup_bypath,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_object **out = NULL;
+	git_object *out = NULL;
 
 	auto treeish_ = dyn_cast<Git2Resource>(treeish);
 
-	git_object_lookup_bypath(out, HHVM_GIT2_V(treeish_, object), path.c_str(), (git_otype) type);
-	HHVM_GIT2_V(return_value, object) = *out;
+	git_object_lookup_bypath(&out, HHVM_GIT2_V(treeish_, object), path.c_str(), (git_otype) type);
+	HHVM_GIT2_V(return_value, object) = out;
 	return Resource(return_value);
 }
 
@@ -168,12 +168,12 @@ Resource HHVM_FUNCTION(git_object_peel,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_object **peeled = NULL;
+	git_object *peeled = NULL;
 
 	auto object_ = dyn_cast<Git2Resource>(object);
 
-	git_object_peel(peeled, HHVM_GIT2_V(object_, object), (git_otype) target_type);
-	HHVM_GIT2_V(return_value, object) = *peeled;
+	git_object_peel(&peeled, HHVM_GIT2_V(object_, object), (git_otype) target_type);
+	HHVM_GIT2_V(return_value, object) = peeled;
 	return Resource(return_value);
 }
 
@@ -182,12 +182,12 @@ Resource HHVM_FUNCTION(git_object_dup,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_object **dest = NULL;
+	git_object *dest = NULL;
 
 	auto source_ = dyn_cast<Git2Resource>(source);
 
-	git_object_dup(dest, HHVM_GIT2_V(source_, object));
-	HHVM_GIT2_V(return_value, object) = *dest;
+	git_object_dup(&dest, HHVM_GIT2_V(source_, object));
+	HHVM_GIT2_V(return_value, object) = dest;
 	return Resource(return_value);
 }
 

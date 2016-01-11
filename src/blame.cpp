@@ -59,13 +59,13 @@ Resource HHVM_FUNCTION(git_blame_file,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_blame **out = NULL;
+	git_blame *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto options_ = dyn_cast<Git2Resource>(options);
 
-	git_blame_file(out, HHVM_GIT2_V(repo_, repository), path.c_str(), HHVM_GIT2_V(options_, blame_options));
-	HHVM_GIT2_V(return_value, blame) = *out;
+	git_blame_file(&out, HHVM_GIT2_V(repo_, repository), path.c_str(), HHVM_GIT2_V(options_, blame_options));
+	HHVM_GIT2_V(return_value, blame) = out;
 	return Resource(return_value);
 }
 
@@ -76,12 +76,12 @@ Resource HHVM_FUNCTION(git_blame_buffer,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_blame **out = NULL;
+	git_blame *out = NULL;
 
 	auto reference_ = dyn_cast<Git2Resource>(reference);
 
-	git_blame_buffer(out, HHVM_GIT2_V(reference_, blame), buffer.c_str(), (uint32_t) buffer_len);
-	HHVM_GIT2_V(return_value, blame) = *out;
+	git_blame_buffer(&out, HHVM_GIT2_V(reference_, blame), buffer.c_str(), (uint32_t) buffer_len);
+	HHVM_GIT2_V(return_value, blame) = out;
 	return Resource(return_value);
 }
 

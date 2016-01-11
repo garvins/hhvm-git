@@ -46,11 +46,13 @@ class Source extends Printer {
         
         foreach ($this->functions as $function) {
             $hasOutValue = false;
-
+            $outValPointerLvl = 0;
+            
             if (count($function->getParams()) &&
                 	(preg_match("/out/" ,$function->getParams()[0]->getName()) ||
                     (preg_match("/_((dup|lookup|open|peel|gen_ancestor|create|next|load|rename)($|_)|diff_[\w]*?_to_)/", $function->getName()) && count($function->getParams()) > 1))) {
                 $returnType = $function->getParams()[0]->getType();
+                $outValPointerLvl = $function->getParams()[0]->getPointerLvl();
                 $hasOutValue = true;
             } else {
                 $returnType = $function->getReturnType();
@@ -78,7 +80,7 @@ class Source extends Printer {
                 
                 if ($returnType->typeToHackType() == HackType::RESOURCE) {
                     $body .= "\n\tauto return_value = req::make<Git2Resource>();\n";
-                } else if ($returnType->getType() == "git_oid" || ($hasOutValue && $k == 0 && $param->getType()->getType() == "git_oid")) {
+                } else if ($returnType->getType() == "git_oid" || ($hasOutValue && $function->getParams()[0]->getType()->getType() == "git_oid")) {
                     $body .= "\n\tchar *return_value;\n";
                 } else {
                     $body .= "\n\t" . $returnType->getHHVMReturnType() . " return_value;\n";
@@ -92,7 +94,7 @@ class Source extends Printer {
                 $hackType = $param->getType()->typeToHackType();
                 
                 if ($k == 0 && $hasOutValue) {
-                    $body .= "\t" . ($param->isConstant() ? "const " : "") . $param->getType()->getType() . " " . str_repeat("*", $param->getPointerLvl()) . $param->getName() . " = NULL;\n";
+                    $body .= "\t" . ($param->isConstant() ? "const " : "") . $param->getType()->getType() . " " . ($outValPointerLvl > 1 ? "*" : "") . $param->getName() .  ($outValPointerLvl > 1 ? " = NULL" : "") . ";\n";
                 } else if ($param->getPointerLvl() > 1) {
                     $body .= "\t" . ($param->isConstant() ? "const " : "") . $param->getType()->getType() . " " . str_repeat("*", $param->getPointerLvl()) . $param->getName() . "_;\n";
                 } else {
@@ -145,7 +147,7 @@ class Source extends Printer {
                 $hackType = $param->getType()->typeToHackType();
                 
                 if ($k == 0 && $hasOutValue) {
-                    $body .= ($param->getPointerLvl() > 1 ? "" : "") . $param->getName() . ", ";
+                    $body .= ($outValPointerLvl >= 1 ? "&" : "") . $param->getName() . ", ";
                     continue;
                 }
                 
@@ -209,10 +211,10 @@ class Source extends Printer {
                         if (!$hasOutValue && $function->getReturnType()->getType() == "git_oid") {
                             $body .= "\tgit_oid_fmt(return_value, result);\n";
                         } else if ($hasOutValue && $function->getParams()[0]->getType()->getType() == "git_oid") {
-                            $body .= "\tgit_oid_fmt(return_value, " . $function->getParams()[0]->getName() . ");\n";
+                            $body .= "\tgit_oid_fmt(return_value, " . ($outValPointerLvl > 1 ? "" : "&") . $function->getParams()[0]->getName() . ");\n";
                         } else {
                             $body .= "\treturn_value = ";
-                            $body .= "String(" . ($hasOutValue ? (str_repeat("*", $function->getParams()[0]->getPointerLvl() - 1) . $function->getParams()[0]->getName()) : ($function->getPointerLvl() == 0 ? "&" : "") . "result") . ");\n";
+                            $body .= "String(" . ($hasOutValue ? ($outValPointerLvl > 1 ? "" : "&") . $function->getParams()[0]->getName() : ($function->getPointerLvl() == 0 ? "&" : "") . "result") . ");\n";
                         } break;
                     case HackType::ARR :
                         $body .= "\treturn_value = ";
@@ -228,7 +230,7 @@ class Source extends Printer {
                         $body .= "HHVM_GIT2_V(return_value, " . preg_replace("/^git_/", "", ($hasOutValue ? $function->getParams()[0]->getType()->getType() : $function->getReturnType()->getType())) . ") = ";
                         
                         if ($hasOutValue) {
-                            $body .= ($function->getParams()[0]->getPointerLvl() > 1 ? "*" : "") .  $function->getParams()[0]->getName() . ";";
+                            $body .= ($outValPointerLvl > 1 ? "" : "&") .  $function->getParams()[0]->getName() . ";";
                         } else {
                             $body .= "result;";
                         }

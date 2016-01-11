@@ -16,12 +16,12 @@ Resource HHVM_FUNCTION(git_packbuilder_new,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_packbuilder **out = NULL;
+	git_packbuilder *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_packbuilder_new(out, HHVM_GIT2_V(repo_, repository));
-	HHVM_GIT2_V(return_value, packbuilder) = *out;
+	git_packbuilder_new(&out, HHVM_GIT2_V(repo_, repository));
+	HHVM_GIT2_V(return_value, packbuilder) = out;
 	return Resource(return_value);
 }
 

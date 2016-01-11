@@ -16,12 +16,12 @@ Resource HHVM_FUNCTION(git_revwalk_new,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_revwalk **out = NULL;
+	git_revwalk *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_revwalk_new(out, HHVM_GIT2_V(repo_, repository));
-	HHVM_GIT2_V(return_value, revwalk) = *out;
+	git_revwalk_new(&out, HHVM_GIT2_V(repo_, repository));
+	HHVM_GIT2_V(return_value, revwalk) = out;
 	return Resource(return_value);
 }
 
@@ -161,12 +161,12 @@ String HHVM_FUNCTION(git_revwalk_next,
 {
 	char *return_value;
 
-	git_oid *out = NULL;
+	git_oid out;
 
 	auto walk_ = dyn_cast<Git2Resource>(walk);
 
-	git_revwalk_next(out, HHVM_GIT2_V(walk_, revwalk));
-	git_oid_fmt(return_value, out);
+	git_revwalk_next(&out, HHVM_GIT2_V(walk_, revwalk));
+	git_oid_fmt(return_value, &out);
 	return String(return_value);
 }
 

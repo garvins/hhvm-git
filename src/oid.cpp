@@ -16,10 +16,10 @@ String HHVM_FUNCTION(git_oid_fromstr,
 {
 	char *return_value;
 
-	git_oid *out = NULL;
+	git_oid out;
 
-	git_oid_fromstr(out, str.c_str());
-	git_oid_fmt(return_value, out);
+	git_oid_fromstr(&out, str.c_str());
+	git_oid_fmt(return_value, &out);
 	return String(return_value);
 }
 
@@ -28,10 +28,10 @@ String HHVM_FUNCTION(git_oid_fromstrp,
 {
 	char *return_value;
 
-	git_oid *out = NULL;
+	git_oid out;
 
-	git_oid_fromstrp(out, str.c_str());
-	git_oid_fmt(return_value, out);
+	git_oid_fromstrp(&out, str.c_str());
+	git_oid_fmt(return_value, &out);
 	return String(return_value);
 }
 
@@ -41,10 +41,10 @@ String HHVM_FUNCTION(git_oid_fromstrn,
 {
 	char *return_value;
 
-	git_oid *out = NULL;
+	git_oid out;
 
-	git_oid_fromstrn(out, str.c_str(), (size_t) length);
-	git_oid_fmt(return_value, out);
+	git_oid_fromstrn(&out, str.c_str(), (size_t) length);
+	git_oid_fmt(return_value, &out);
 	return String(return_value);
 }
 
@@ -65,7 +65,7 @@ String HHVM_FUNCTION(git_oid_fmt,
 {
 	String return_value;
 
-	char *out = NULL;
+	char out;
 	git_oid *id_ = NULL;
 
 	if (git_oid_fromstrn(id_, id.c_str(), id.length())) {
@@ -73,8 +73,8 @@ String HHVM_FUNCTION(git_oid_fmt,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_oid_fmt(out, id_);
-	return_value = String(out);
+	git_oid_fmt(&out, id_);
+	return_value = String(&out);
 	return return_value;
 }
 
@@ -84,7 +84,7 @@ String HHVM_FUNCTION(git_oid_nfmt,
 {
 	String return_value;
 
-	char *out = NULL;
+	char out;
 	git_oid *id_ = NULL;
 
 	if (git_oid_fromstrn(id_, id.c_str(), id.length())) {
@@ -92,8 +92,8 @@ String HHVM_FUNCTION(git_oid_nfmt,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_oid_nfmt(out, (size_t) n, id_);
-	return_value = String(out);
+	git_oid_nfmt(&out, (size_t) n, id_);
+	return_value = String(&out);
 	return return_value;
 }
 
@@ -102,7 +102,7 @@ String HHVM_FUNCTION(git_oid_pathfmt,
 {
 	String return_value;
 
-	char *out = NULL;
+	char out;
 	git_oid *id_ = NULL;
 
 	if (git_oid_fromstrn(id_, id.c_str(), id.length())) {
@@ -110,8 +110,8 @@ String HHVM_FUNCTION(git_oid_pathfmt,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_oid_pathfmt(out, id_);
-	return_value = String(out);
+	git_oid_pathfmt(&out, id_);
+	return_value = String(&out);
 	return return_value;
 }
 
@@ -139,7 +139,7 @@ String HHVM_FUNCTION(git_oid_tostr,
 {
 	String return_value;
 
-	char *out = NULL;
+	char out;
 	git_oid *id_ = NULL;
 
 	if (git_oid_fromstrn(id_, id.c_str(), id.length())) {
@@ -147,8 +147,8 @@ String HHVM_FUNCTION(git_oid_tostr,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_oid_tostr(out, (size_t) n, id_);
-	return_value = String(out);
+	git_oid_tostr(&out, (size_t) n, id_);
+	return_value = String(&out);
 	return return_value;
 }
 
@@ -157,7 +157,7 @@ String HHVM_FUNCTION(git_oid_cpy,
 {
 	char *return_value;
 
-	git_oid *out = NULL;
+	git_oid out;
 	git_oid *src_ = NULL;
 
 	if (git_oid_fromstrn(src_, src.c_str(), src.length())) {
@@ -165,8 +165,8 @@ String HHVM_FUNCTION(git_oid_cpy,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_oid_cpy(out, src_);
-	git_oid_fmt(return_value, out);
+	git_oid_cpy(&out, src_);
+	git_oid_fmt(return_value, &out);
 	return String(return_value);
 }
 

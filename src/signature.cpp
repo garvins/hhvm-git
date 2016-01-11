@@ -19,10 +19,10 @@ Resource HHVM_FUNCTION(git_signature_new,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_signature **out = NULL;
+	git_signature *out = NULL;
 
-	git_signature_new(out, name.c_str(), email.c_str(), (git_time_t) time, (int) offset);
-	HHVM_GIT2_V(return_value, signature) = *out;
+	git_signature_new(&out, name.c_str(), email.c_str(), (git_time_t) time, (int) offset);
+	HHVM_GIT2_V(return_value, signature) = out;
 	return Resource(return_value);
 }
 
@@ -32,10 +32,10 @@ Resource HHVM_FUNCTION(git_signature_now,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_signature **out = NULL;
+	git_signature *out = NULL;
 
-	git_signature_now(out, name.c_str(), email.c_str());
-	HHVM_GIT2_V(return_value, signature) = *out;
+	git_signature_now(&out, name.c_str(), email.c_str());
+	HHVM_GIT2_V(return_value, signature) = out;
 	return Resource(return_value);
 }
 
@@ -44,12 +44,12 @@ Resource HHVM_FUNCTION(git_signature_default,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_signature **out = NULL;
+	git_signature *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_signature_default(out, HHVM_GIT2_V(repo_, repository));
-	HHVM_GIT2_V(return_value, signature) = *out;
+	git_signature_default(&out, HHVM_GIT2_V(repo_, repository));
+	HHVM_GIT2_V(return_value, signature) = out;
 	return Resource(return_value);
 }
 

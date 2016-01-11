@@ -30,10 +30,10 @@ Resource HHVM_FUNCTION(git_cred_userpass_plaintext_new,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_cred **out = NULL;
+	git_cred *out = NULL;
 
-	git_cred_userpass_plaintext_new(out, username.c_str(), password.c_str());
-	HHVM_GIT2_V(return_value, cred) = *out;
+	git_cred_userpass_plaintext_new(&out, username.c_str(), password.c_str());
+	HHVM_GIT2_V(return_value, cred) = out;
 	return Resource(return_value);
 }
 
@@ -45,10 +45,10 @@ Resource HHVM_FUNCTION(git_cred_ssh_key_new,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_cred **out = NULL;
+	git_cred *out = NULL;
 
-	git_cred_ssh_key_new(out, username.c_str(), publickey.c_str(), privatekey.c_str(), passphrase.c_str());
-	HHVM_GIT2_V(return_value, cred) = *out;
+	git_cred_ssh_key_new(&out, username.c_str(), publickey.c_str(), privatekey.c_str(), passphrase.c_str());
+	HHVM_GIT2_V(return_value, cred) = out;
 	return Resource(return_value);
 }
 
@@ -61,14 +61,14 @@ Resource HHVM_FUNCTION(git_cred_ssh_custom_new,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_cred **out = NULL;
+	git_cred *out = NULL;
 	git_cred_sign_callback sign_fn_ = NULL;
 	void *sign_data_ = NULL;
 
 	sign_fn_ = NULL;
 
-	git_cred_ssh_custom_new(out, username.c_str(), publickey.c_str(), (size_t) publickey_len, /* todo */ sign_fn_, sign_data_);
-	HHVM_GIT2_V(return_value, cred) = *out;
+	git_cred_ssh_custom_new(&out, username.c_str(), publickey.c_str(), (size_t) publickey_len, /* todo */ sign_fn_, sign_data_);
+	HHVM_GIT2_V(return_value, cred) = out;
 	return Resource(return_value);
 }
 
@@ -76,10 +76,10 @@ Resource HHVM_FUNCTION(git_cred_default_new)
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_cred **out = NULL;
+	git_cred *out = NULL;
 
-	git_cred_default_new(out);
-	HHVM_GIT2_V(return_value, cred) = *out;
+	git_cred_default_new(&out);
+	HHVM_GIT2_V(return_value, cred) = out;
 	return Resource(return_value);
 }
 
@@ -89,12 +89,12 @@ Resource HHVM_FUNCTION(git_transport_new,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_transport **out = NULL;
+	git_transport *out = NULL;
 
 	auto owner_ = dyn_cast<Git2Resource>(owner);
 
-	git_transport_new(out, HHVM_GIT2_V(owner_, remote), url.c_str());
-	HHVM_GIT2_V(return_value, transport) = *out;
+	git_transport_new(&out, HHVM_GIT2_V(owner_, remote), url.c_str());
+	HHVM_GIT2_V(return_value, transport) = out;
 	return Resource(return_value);
 }
 
@@ -135,13 +135,13 @@ Resource HHVM_FUNCTION(git_transport_dummy,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_transport **out = NULL;
+	git_transport *out = NULL;
 	void *payload_ = NULL;
 
 	auto owner_ = dyn_cast<Git2Resource>(owner);
 
-	git_transport_dummy(out, HHVM_GIT2_V(owner_, remote), payload_);
-	HHVM_GIT2_V(return_value, transport) = *out;
+	git_transport_dummy(&out, HHVM_GIT2_V(owner_, remote), payload_);
+	HHVM_GIT2_V(return_value, transport) = out;
 	return Resource(return_value);
 }
 
@@ -151,13 +151,13 @@ Resource HHVM_FUNCTION(git_transport_local,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_transport **out = NULL;
+	git_transport *out = NULL;
 	void *payload_ = NULL;
 
 	auto owner_ = dyn_cast<Git2Resource>(owner);
 
-	git_transport_local(out, HHVM_GIT2_V(owner_, remote), payload_);
-	HHVM_GIT2_V(return_value, transport) = *out;
+	git_transport_local(&out, HHVM_GIT2_V(owner_, remote), payload_);
+	HHVM_GIT2_V(return_value, transport) = out;
 	return Resource(return_value);
 }
 
@@ -167,13 +167,13 @@ Resource HHVM_FUNCTION(git_transport_smart,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_transport **out = NULL;
+	git_transport *out = NULL;
 	void *payload_ = NULL;
 
 	auto owner_ = dyn_cast<Git2Resource>(owner);
 
-	git_transport_smart(out, HHVM_GIT2_V(owner_, remote), payload_);
-	HHVM_GIT2_V(return_value, transport) = *out;
+	git_transport_smart(&out, HHVM_GIT2_V(owner_, remote), payload_);
+	HHVM_GIT2_V(return_value, transport) = out;
 	return Resource(return_value);
 }
 
@@ -182,12 +182,12 @@ Resource HHVM_FUNCTION(git_smart_subtransport_http,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_smart_subtransport **out = NULL;
+	git_smart_subtransport *out = NULL;
 
 	auto owner_ = dyn_cast<Git2Resource>(owner);
 
-	git_smart_subtransport_http(out, HHVM_GIT2_V(owner_, transport));
-	HHVM_GIT2_V(return_value, smart_subtransport) = *out;
+	git_smart_subtransport_http(&out, HHVM_GIT2_V(owner_, transport));
+	HHVM_GIT2_V(return_value, smart_subtransport) = out;
 	return Resource(return_value);
 }
 
@@ -196,12 +196,12 @@ Resource HHVM_FUNCTION(git_smart_subtransport_git,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_smart_subtransport **out = NULL;
+	git_smart_subtransport *out = NULL;
 
 	auto owner_ = dyn_cast<Git2Resource>(owner);
 
-	git_smart_subtransport_git(out, HHVM_GIT2_V(owner_, transport));
-	HHVM_GIT2_V(return_value, smart_subtransport) = *out;
+	git_smart_subtransport_git(&out, HHVM_GIT2_V(owner_, transport));
+	HHVM_GIT2_V(return_value, smart_subtransport) = out;
 	return Resource(return_value);
 }
 
@@ -210,12 +210,12 @@ Resource HHVM_FUNCTION(git_smart_subtransport_ssh,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_smart_subtransport **out = NULL;
+	git_smart_subtransport *out = NULL;
 
 	auto owner_ = dyn_cast<Git2Resource>(owner);
 
-	git_smart_subtransport_ssh(out, HHVM_GIT2_V(owner_, transport));
-	HHVM_GIT2_V(return_value, smart_subtransport) = *out;
+	git_smart_subtransport_ssh(&out, HHVM_GIT2_V(owner_, transport));
+	HHVM_GIT2_V(return_value, smart_subtransport) = out;
 	return Resource(return_value);
 }
 

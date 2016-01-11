@@ -16,10 +16,10 @@ Resource HHVM_FUNCTION(git_index_open,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_index **out = NULL;
+	git_index *out = NULL;
 
-	git_index_open(out, index_path.c_str());
-	HHVM_GIT2_V(return_value, index) = *out;
+	git_index_open(&out, index_path.c_str());
+	HHVM_GIT2_V(return_value, index) = out;
 	return Resource(return_value);
 }
 
@@ -27,10 +27,10 @@ Resource HHVM_FUNCTION(git_index_new)
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_index **out = NULL;
+	git_index *out = NULL;
 
-	git_index_new(out);
-	HHVM_GIT2_V(return_value, index) = *out;
+	git_index_new(&out);
+	HHVM_GIT2_V(return_value, index) = out;
 	return Resource(return_value);
 }
 
@@ -143,12 +143,12 @@ String HHVM_FUNCTION(git_index_write_tree,
 {
 	char *return_value;
 
-	git_oid *out = NULL;
+	git_oid out;
 
 	auto index_ = dyn_cast<Git2Resource>(index);
 
-	git_index_write_tree(out, HHVM_GIT2_V(index_, index));
-	git_oid_fmt(return_value, out);
+	git_index_write_tree(&out, HHVM_GIT2_V(index_, index));
+	git_oid_fmt(return_value, &out);
 	return String(return_value);
 }
 
@@ -158,13 +158,13 @@ String HHVM_FUNCTION(git_index_write_tree_to,
 {
 	char *return_value;
 
-	git_oid *out = NULL;
+	git_oid out;
 
 	auto index_ = dyn_cast<Git2Resource>(index);
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_index_write_tree_to(out, HHVM_GIT2_V(index_, index), HHVM_GIT2_V(repo_, repository));
-	git_oid_fmt(return_value, out);
+	git_index_write_tree_to(&out, HHVM_GIT2_V(index_, index), HHVM_GIT2_V(repo_, repository));
+	git_oid_fmt(return_value, &out);
 	return String(return_value);
 }
 
@@ -461,12 +461,12 @@ Resource HHVM_FUNCTION(git_index_conflict_iterator_new,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_index_conflict_iterator **iterator_out = NULL;
+	git_index_conflict_iterator *iterator_out = NULL;
 
 	auto index_ = dyn_cast<Git2Resource>(index);
 
-	git_index_conflict_iterator_new(iterator_out, HHVM_GIT2_V(index_, index));
-	HHVM_GIT2_V(return_value, index_conflict_iterator) = *iterator_out;
+	git_index_conflict_iterator_new(&iterator_out, HHVM_GIT2_V(index_, index));
+	HHVM_GIT2_V(return_value, index_conflict_iterator) = iterator_out;
 	return Resource(return_value);
 }
 

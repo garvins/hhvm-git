@@ -16,12 +16,12 @@ Resource HHVM_FUNCTION(git_pathspec_new,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_pathspec **out = NULL;
+	git_pathspec *out = NULL;
 
 	auto pathspec_ = dyn_cast<Git2Resource>(pathspec);
 
-	git_pathspec_new(out, HHVM_GIT2_V(pathspec_, strarray));
-	HHVM_GIT2_V(return_value, pathspec) = *out;
+	git_pathspec_new(&out, HHVM_GIT2_V(pathspec_, strarray));
+	HHVM_GIT2_V(return_value, pathspec) = out;
 	return Resource(return_value);
 }
 
@@ -56,13 +56,13 @@ Resource HHVM_FUNCTION(git_pathspec_match_workdir,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_pathspec_match_list **out = NULL;
+	git_pathspec_match_list *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto ps_ = dyn_cast<Git2Resource>(ps);
 
-	git_pathspec_match_workdir(out, HHVM_GIT2_V(repo_, repository), (uint32_t) flags, HHVM_GIT2_V(ps_, pathspec));
-	HHVM_GIT2_V(return_value, pathspec_match_list) = *out;
+	git_pathspec_match_workdir(&out, HHVM_GIT2_V(repo_, repository), (uint32_t) flags, HHVM_GIT2_V(ps_, pathspec));
+	HHVM_GIT2_V(return_value, pathspec_match_list) = out;
 	return Resource(return_value);
 }
 
@@ -73,13 +73,13 @@ Resource HHVM_FUNCTION(git_pathspec_match_index,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_pathspec_match_list **out = NULL;
+	git_pathspec_match_list *out = NULL;
 
 	auto index_ = dyn_cast<Git2Resource>(index);
 	auto ps_ = dyn_cast<Git2Resource>(ps);
 
-	git_pathspec_match_index(out, HHVM_GIT2_V(index_, index), (uint32_t) flags, HHVM_GIT2_V(ps_, pathspec));
-	HHVM_GIT2_V(return_value, pathspec_match_list) = *out;
+	git_pathspec_match_index(&out, HHVM_GIT2_V(index_, index), (uint32_t) flags, HHVM_GIT2_V(ps_, pathspec));
+	HHVM_GIT2_V(return_value, pathspec_match_list) = out;
 	return Resource(return_value);
 }
 
@@ -90,13 +90,13 @@ Resource HHVM_FUNCTION(git_pathspec_match_tree,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_pathspec_match_list **out = NULL;
+	git_pathspec_match_list *out = NULL;
 
 	auto tree_ = dyn_cast<Git2Resource>(tree);
 	auto ps_ = dyn_cast<Git2Resource>(ps);
 
-	git_pathspec_match_tree(out, HHVM_GIT2_V(tree_, tree), (uint32_t) flags, HHVM_GIT2_V(ps_, pathspec));
-	HHVM_GIT2_V(return_value, pathspec_match_list) = *out;
+	git_pathspec_match_tree(&out, HHVM_GIT2_V(tree_, tree), (uint32_t) flags, HHVM_GIT2_V(ps_, pathspec));
+	HHVM_GIT2_V(return_value, pathspec_match_list) = out;
 	return Resource(return_value);
 }
 
@@ -107,13 +107,13 @@ Resource HHVM_FUNCTION(git_pathspec_match_diff,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_pathspec_match_list **out = NULL;
+	git_pathspec_match_list *out = NULL;
 
 	auto diff_ = dyn_cast<Git2Resource>(diff);
 	auto ps_ = dyn_cast<Git2Resource>(ps);
 
-	git_pathspec_match_diff(out, HHVM_GIT2_V(diff_, diff), (uint32_t) flags, HHVM_GIT2_V(ps_, pathspec));
-	HHVM_GIT2_V(return_value, pathspec_match_list) = *out;
+	git_pathspec_match_diff(&out, HHVM_GIT2_V(diff_, diff), (uint32_t) flags, HHVM_GIT2_V(ps_, pathspec));
+	HHVM_GIT2_V(return_value, pathspec_match_list) = out;
 	return Resource(return_value);
 }
 

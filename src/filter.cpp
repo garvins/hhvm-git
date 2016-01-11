@@ -19,13 +19,13 @@ Resource HHVM_FUNCTION(git_filter_list_load,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_filter_list **filters = NULL;
+	git_filter_list *filters = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto blob_ = dyn_cast<Git2Resource>(blob);
 
-	git_filter_list_load(filters, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(blob_, blob), path.c_str(), (git_filter_mode_t) mode);
-	HHVM_GIT2_V(return_value, filter_list) = *filters;
+	git_filter_list_load(&filters, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(blob_, blob), path.c_str(), (git_filter_mode_t) mode);
+	HHVM_GIT2_V(return_value, filter_list) = filters;
 	return Resource(return_value);
 }
 
@@ -35,13 +35,13 @@ Resource HHVM_FUNCTION(git_filter_list_apply_to_data,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_buf *out = NULL;
+	git_buf out;
 
 	auto filters_ = dyn_cast<Git2Resource>(filters);
 	auto in_ = dyn_cast<Git2Resource>(in);
 
-	git_filter_list_apply_to_data(out, HHVM_GIT2_V(filters_, filter_list), HHVM_GIT2_V(in_, buf));
-	HHVM_GIT2_V(return_value, buf) = out;
+	git_filter_list_apply_to_data(&out, HHVM_GIT2_V(filters_, filter_list), HHVM_GIT2_V(in_, buf));
+	HHVM_GIT2_V(return_value, buf) = &out;
 	return Resource(return_value);
 }
 
@@ -52,13 +52,13 @@ Resource HHVM_FUNCTION(git_filter_list_apply_to_file,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_buf *out = NULL;
+	git_buf out;
 
 	auto filters_ = dyn_cast<Git2Resource>(filters);
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_filter_list_apply_to_file(out, HHVM_GIT2_V(filters_, filter_list), HHVM_GIT2_V(repo_, repository), path.c_str());
-	HHVM_GIT2_V(return_value, buf) = out;
+	git_filter_list_apply_to_file(&out, HHVM_GIT2_V(filters_, filter_list), HHVM_GIT2_V(repo_, repository), path.c_str());
+	HHVM_GIT2_V(return_value, buf) = &out;
 	return Resource(return_value);
 }
 
@@ -68,13 +68,13 @@ Resource HHVM_FUNCTION(git_filter_list_apply_to_blob,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_buf *out = NULL;
+	git_buf out;
 
 	auto filters_ = dyn_cast<Git2Resource>(filters);
 	auto blob_ = dyn_cast<Git2Resource>(blob);
 
-	git_filter_list_apply_to_blob(out, HHVM_GIT2_V(filters_, filter_list), HHVM_GIT2_V(blob_, blob));
-	HHVM_GIT2_V(return_value, buf) = out;
+	git_filter_list_apply_to_blob(&out, HHVM_GIT2_V(filters_, filter_list), HHVM_GIT2_V(blob_, blob));
+	HHVM_GIT2_V(return_value, buf) = &out;
 	return Resource(return_value);
 }
 

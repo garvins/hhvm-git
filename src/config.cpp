@@ -16,10 +16,10 @@ String HHVM_FUNCTION(git_config_find_global,
 {
 	String return_value;
 
-	char *out = NULL;
+	char out;
 
-	git_config_find_global(out, (size_t) length);
-	return_value = String(out);
+	git_config_find_global(&out, (size_t) length);
+	return_value = String(&out);
 	return return_value;
 }
 
@@ -28,10 +28,10 @@ String HHVM_FUNCTION(git_config_find_xdg,
 {
 	String return_value;
 
-	char *out = NULL;
+	char out;
 
-	git_config_find_xdg(out, (size_t) length);
-	return_value = String(out);
+	git_config_find_xdg(&out, (size_t) length);
+	return_value = String(&out);
 	return return_value;
 }
 
@@ -40,10 +40,10 @@ String HHVM_FUNCTION(git_config_find_system,
 {
 	String return_value;
 
-	char *out = NULL;
+	char out;
 
-	git_config_find_system(out, (size_t) length);
-	return_value = String(out);
+	git_config_find_system(&out, (size_t) length);
+	return_value = String(&out);
 	return return_value;
 }
 
@@ -51,10 +51,10 @@ Resource HHVM_FUNCTION(git_config_open_default)
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_config **out = NULL;
+	git_config *out = NULL;
 
-	git_config_open_default(out);
-	HHVM_GIT2_V(return_value, config) = *out;
+	git_config_open_default(&out);
+	HHVM_GIT2_V(return_value, config) = out;
 	return Resource(return_value);
 }
 
@@ -62,10 +62,10 @@ Resource HHVM_FUNCTION(git_config_new)
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_config **out = NULL;
+	git_config *out = NULL;
 
-	git_config_new(out);
-	HHVM_GIT2_V(return_value, config) = *out;
+	git_config_new(&out);
+	HHVM_GIT2_V(return_value, config) = out;
 	return Resource(return_value);
 }
 
@@ -90,10 +90,10 @@ Resource HHVM_FUNCTION(git_config_open_ondisk,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_config **out = NULL;
+	git_config *out = NULL;
 
-	git_config_open_ondisk(out, path.c_str());
-	HHVM_GIT2_V(return_value, config) = *out;
+	git_config_open_ondisk(&out, path.c_str());
+	HHVM_GIT2_V(return_value, config) = out;
 	return Resource(return_value);
 }
 
@@ -103,12 +103,12 @@ Resource HHVM_FUNCTION(git_config_open_level,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_config **out = NULL;
+	git_config *out = NULL;
 
 	auto parent_ = dyn_cast<Git2Resource>(parent);
 
-	git_config_open_level(out, HHVM_GIT2_V(parent_, config), (git_config_level_t) level);
-	HHVM_GIT2_V(return_value, config) = *out;
+	git_config_open_level(&out, HHVM_GIT2_V(parent_, config), (git_config_level_t) level);
+	HHVM_GIT2_V(return_value, config) = out;
 	return Resource(return_value);
 }
 
@@ -117,12 +117,12 @@ Resource HHVM_FUNCTION(git_config_open_global,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_config **out = NULL;
+	git_config *out = NULL;
 
 	auto config_ = dyn_cast<Git2Resource>(config);
 
-	git_config_open_global(out, HHVM_GIT2_V(config_, config));
-	HHVM_GIT2_V(return_value, config) = *out;
+	git_config_open_global(&out, HHVM_GIT2_V(config_, config));
+	HHVM_GIT2_V(return_value, config) = out;
 	return Resource(return_value);
 }
 
@@ -154,12 +154,12 @@ Resource HHVM_FUNCTION(git_config_get_entry,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	const git_config_entry **out = NULL;
+	const git_config_entry *out = NULL;
 
 	auto cfg_ = dyn_cast<Git2Resource>(cfg);
 
-	git_config_get_entry(out, HHVM_GIT2_V(cfg_, config), name.c_str());
-	//HHVM_GIT2_V(return_value, config_entry) = *out; todo return as array
+	git_config_get_entry(&out, HHVM_GIT2_V(cfg_, config), name.c_str());
+	//HHVM_GIT2_V(return_value, config_entry) = out; todo return as array
 	return Resource(return_value);
 }
 
@@ -169,11 +169,11 @@ int64_t HHVM_FUNCTION(git_config_get_int32,
 {
 	int64_t return_value;
 
-	int32_t *out = NULL;
+	int32_t out;
 
 	auto cfg_ = dyn_cast<Git2Resource>(cfg);
 
-	git_config_get_int32(out, HHVM_GIT2_V(cfg_, config), name.c_str());
+	git_config_get_int32(&out, HHVM_GIT2_V(cfg_, config), name.c_str());
 	return_value = (int64_t) out;
 	return return_value;
 }
@@ -184,11 +184,11 @@ int64_t HHVM_FUNCTION(git_config_get_int64,
 {
 	int64_t return_value;
 
-	int64_t *out = NULL;
+	int64_t out;
 
 	auto cfg_ = dyn_cast<Git2Resource>(cfg);
 
-	git_config_get_int64(out, HHVM_GIT2_V(cfg_, config), name.c_str());
+	git_config_get_int64(&out, HHVM_GIT2_V(cfg_, config), name.c_str());
 	return_value = (int64_t) out;
 	return return_value;
 }
@@ -199,11 +199,11 @@ int64_t HHVM_FUNCTION(git_config_get_bool,
 {
 	int64_t return_value;
 
-	int *out = NULL;
+	int out;
 
 	auto cfg_ = dyn_cast<Git2Resource>(cfg);
 
-	git_config_get_bool(out, HHVM_GIT2_V(cfg_, config), name.c_str());
+	git_config_get_bool(&out, HHVM_GIT2_V(cfg_, config), name.c_str());
 	return_value = (int64_t) out;
 	return return_value;
 }
@@ -214,12 +214,12 @@ String HHVM_FUNCTION(git_config_get_string,
 {
 	String return_value;
 
-	const char **out = NULL;
+	const char *out = NULL;
 
 	auto cfg_ = dyn_cast<Git2Resource>(cfg);
 
-	git_config_get_string(out, HHVM_GIT2_V(cfg_, config), name.c_str());
-	return_value = String(*out);
+	git_config_get_string(&out, HHVM_GIT2_V(cfg_, config), name.c_str());
+	return_value = String(out);
 	return return_value;
 }
 
@@ -251,12 +251,12 @@ Resource HHVM_FUNCTION(git_config_multivar_iterator_new,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_config_iterator **out = NULL;
+	git_config_iterator *out = NULL;
 
 	auto cfg_ = dyn_cast<Git2Resource>(cfg);
 
-	git_config_multivar_iterator_new(out, HHVM_GIT2_V(cfg_, config), name.c_str(), regexp.c_str());
-	HHVM_GIT2_V(return_value, config_iterator) = *out;
+	git_config_multivar_iterator_new(&out, HHVM_GIT2_V(cfg_, config), name.c_str(), regexp.c_str());
+	HHVM_GIT2_V(return_value, config_iterator) = out;
 	return Resource(return_value);
 }
 
@@ -265,12 +265,12 @@ Resource HHVM_FUNCTION(git_config_next,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_config_entry **entry = NULL;
+	git_config_entry *entry = NULL;
 
 	auto iter_ = dyn_cast<Git2Resource>(iter);
 
-	git_config_next(entry, HHVM_GIT2_V(iter_, config_iterator));
-	HHVM_GIT2_V(return_value, config_entry) = *entry;
+	git_config_next(&entry, HHVM_GIT2_V(iter_, config_iterator));
+	HHVM_GIT2_V(return_value, config_entry) = entry;
 	return Resource(return_value);
 }
 
@@ -412,12 +412,12 @@ Resource HHVM_FUNCTION(git_config_iterator_new,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_config_iterator **out = NULL;
+	git_config_iterator *out = NULL;
 
 	auto cfg_ = dyn_cast<Git2Resource>(cfg);
 
-	git_config_iterator_new(out, HHVM_GIT2_V(cfg_, config));
-	HHVM_GIT2_V(return_value, config_iterator) = *out;
+	git_config_iterator_new(&out, HHVM_GIT2_V(cfg_, config));
+	HHVM_GIT2_V(return_value, config_iterator) = out;
 	return Resource(return_value);
 }
 
@@ -427,12 +427,12 @@ Resource HHVM_FUNCTION(git_config_iterator_glob_new,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_config_iterator **out = NULL;
+	git_config_iterator *out = NULL;
 
 	auto cfg_ = dyn_cast<Git2Resource>(cfg);
 
-	git_config_iterator_glob_new(out, HHVM_GIT2_V(cfg_, config), regexp.c_str());
-	HHVM_GIT2_V(return_value, config_iterator) = *out;
+	git_config_iterator_glob_new(&out, HHVM_GIT2_V(cfg_, config), regexp.c_str());
+	HHVM_GIT2_V(return_value, config_iterator) = out;
 	return Resource(return_value);
 }
 
@@ -464,12 +464,12 @@ int64_t HHVM_FUNCTION(git_config_get_mapped,
 {
 	int64_t return_value;
 
-	int *out = NULL;
+	int out;
 
 	auto cfg_ = dyn_cast<Git2Resource>(cfg);
 	auto maps_ = dyn_cast<Git2Resource>(maps);
 
-	git_config_get_mapped(out, HHVM_GIT2_V(cfg_, config), name.c_str(), HHVM_GIT2_V(maps_, cvar_map), (size_t) map_n);
+	git_config_get_mapped(&out, HHVM_GIT2_V(cfg_, config), name.c_str(), HHVM_GIT2_V(maps_, cvar_map), (size_t) map_n);
 	return_value = (int64_t) out;
 	return return_value;
 }
@@ -481,11 +481,11 @@ int64_t HHVM_FUNCTION(git_config_lookup_map_value,
 {
 	int64_t return_value;
 
-	int *out = NULL;
+	int out;
 
 	auto maps_ = dyn_cast<Git2Resource>(maps);
 
-	git_config_lookup_map_value(out, HHVM_GIT2_V(maps_, cvar_map), (size_t) map_n, value.c_str());
+	git_config_lookup_map_value(&out, HHVM_GIT2_V(maps_, cvar_map), (size_t) map_n, value.c_str());
 	return_value = (int64_t) out;
 	return return_value;
 }
@@ -495,9 +495,9 @@ int64_t HHVM_FUNCTION(git_config_parse_bool,
 {
 	int64_t return_value;
 
-	int *out = NULL;
+	int out;
 
-	git_config_parse_bool(out, value.c_str());
+	git_config_parse_bool(&out, value.c_str());
 	return_value = (int64_t) out;
 	return return_value;
 }
@@ -507,9 +507,9 @@ int64_t HHVM_FUNCTION(git_config_parse_int32,
 {
 	int64_t return_value;
 
-	int32_t *out = NULL;
+	int32_t out;
 
-	git_config_parse_int32(out, value.c_str());
+	git_config_parse_int32(&out, value.c_str());
 	return_value = (int64_t) out;
 	return return_value;
 }
@@ -519,9 +519,9 @@ int64_t HHVM_FUNCTION(git_config_parse_int64,
 {
 	int64_t return_value;
 
-	int64_t *out = NULL;
+	int64_t out;
 
-	git_config_parse_int64(out, value.c_str());
+	git_config_parse_int64(&out, value.c_str());
 	return_value = (int64_t) out;
 	return return_value;
 }

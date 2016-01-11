@@ -17,12 +17,12 @@ Resource HHVM_FUNCTION(git_submodule_lookup,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_submodule **submodule = NULL;
+	git_submodule *submodule = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_submodule_lookup(submodule, HHVM_GIT2_V(repo_, repository), name.c_str());
-	HHVM_GIT2_V(return_value, submodule) = *submodule;
+	git_submodule_lookup(&submodule, HHVM_GIT2_V(repo_, repository), name.c_str());
+	HHVM_GIT2_V(return_value, submodule) = submodule;
 	return Resource(return_value);
 }
 
@@ -318,12 +318,12 @@ Resource HHVM_FUNCTION(git_submodule_open,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_repository **repo = NULL;
+	git_repository *repo = NULL;
 
 	auto submodule_ = dyn_cast<Git2Resource>(submodule);
 
-	git_submodule_open(repo, HHVM_GIT2_V(submodule_, submodule));
-	HHVM_GIT2_V(return_value, repository) = *repo;
+	git_submodule_open(&repo, HHVM_GIT2_V(submodule_, submodule));
+	HHVM_GIT2_V(return_value, repository) = repo;
 	return Resource(return_value);
 }
 

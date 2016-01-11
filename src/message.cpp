@@ -18,10 +18,10 @@ String HHVM_FUNCTION(git_message_prettify,
 {
 	String return_value;
 
-	char *out = NULL;
+	char out;
 
-	git_message_prettify(out, (size_t) out_size, message.c_str(), (int) strip_comments);
-	return_value = String(out);
+	git_message_prettify(&out, (size_t) out_size, message.c_str(), (int) strip_comments);
+	return_value = String(&out);
 	return return_value;
 }
 

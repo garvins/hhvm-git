@@ -17,7 +17,7 @@ Resource HHVM_FUNCTION(git_blob_lookup,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_blob **blob = NULL;
+	git_blob *blob = NULL;
 	git_oid *id_ = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
@@ -26,8 +26,8 @@ Resource HHVM_FUNCTION(git_blob_lookup,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_blob_lookup(blob, HHVM_GIT2_V(repo_, repository), id_);
-	HHVM_GIT2_V(return_value, blob) = *blob;
+	git_blob_lookup(&blob, HHVM_GIT2_V(repo_, repository), id_);
+	HHVM_GIT2_V(return_value, blob) = blob;
 	return Resource(return_value);
 }
 
@@ -38,7 +38,7 @@ Resource HHVM_FUNCTION(git_blob_lookup_prefix,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_blob **blob = NULL;
+	git_blob *blob = NULL;
 	git_oid *id_ = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
@@ -47,8 +47,8 @@ Resource HHVM_FUNCTION(git_blob_lookup_prefix,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_blob_lookup_prefix(blob, HHVM_GIT2_V(repo_, repository), id_, (size_t) len);
-	HHVM_GIT2_V(return_value, blob) = *blob;
+	git_blob_lookup_prefix(&blob, HHVM_GIT2_V(repo_, repository), id_, (size_t) len);
+	HHVM_GIT2_V(return_value, blob) = blob;
 	return Resource(return_value);
 }
 
@@ -116,12 +116,12 @@ Resource HHVM_FUNCTION(git_blob_filtered_content,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_buf *out = NULL;
+	git_buf out;
 
 	auto blob_ = dyn_cast<Git2Resource>(blob);
 
-	git_blob_filtered_content(out, HHVM_GIT2_V(blob_, blob), as_path.c_str(), (int) check_for_binary_data);
-	HHVM_GIT2_V(return_value, buf) = out;
+	git_blob_filtered_content(&out, HHVM_GIT2_V(blob_, blob), as_path.c_str(), (int) check_for_binary_data);
+	HHVM_GIT2_V(return_value, buf) = &out;
 	return Resource(return_value);
 }
 
@@ -131,12 +131,12 @@ String HHVM_FUNCTION(git_blob_create_fromworkdir,
 {
 	char *return_value;
 
-	git_oid *id = NULL;
+	git_oid id;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_blob_create_fromworkdir(id, HHVM_GIT2_V(repo_, repository), relative_path.c_str());
-	git_oid_fmt(return_value, id);
+	git_blob_create_fromworkdir(&id, HHVM_GIT2_V(repo_, repository), relative_path.c_str());
+	git_oid_fmt(return_value, &id);
 	return String(return_value);
 }
 
@@ -146,12 +146,12 @@ String HHVM_FUNCTION(git_blob_create_fromdisk,
 {
 	char *return_value;
 
-	git_oid *id = NULL;
+	git_oid id;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_blob_create_fromdisk(id, HHVM_GIT2_V(repo_, repository), path.c_str());
-	git_oid_fmt(return_value, id);
+	git_blob_create_fromdisk(&id, HHVM_GIT2_V(repo_, repository), path.c_str());
+	git_oid_fmt(return_value, &id);
 	return String(return_value);
 }
 
@@ -163,15 +163,15 @@ String HHVM_FUNCTION(git_blob_create_fromchunks,
 {
 	char *return_value;
 
-	git_oid *id = NULL;
+	git_oid id;
 	git_blob_chunk_cb callback_ = NULL;
 	void *payload_ = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	callback_ = NULL;
 
-	git_blob_create_fromchunks(id, HHVM_GIT2_V(repo_, repository), hintpath.c_str(), /* todo */ callback_, payload_);
-	git_oid_fmt(return_value, id);
+	git_blob_create_fromchunks(&id, HHVM_GIT2_V(repo_, repository), hintpath.c_str(), /* todo */ callback_, payload_);
+	git_oid_fmt(return_value, &id);
 	return String(return_value);
 }
 
@@ -182,13 +182,13 @@ String HHVM_FUNCTION(git_blob_create_frombuffer,
 {
 	char *return_value;
 
-	git_oid *oid = NULL;
+	git_oid oid;
 	void *buffer_ = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_blob_create_frombuffer(oid, HHVM_GIT2_V(repo_, repository), buffer_, (size_t) len);
-	git_oid_fmt(return_value, oid);
+	git_blob_create_frombuffer(&oid, HHVM_GIT2_V(repo_, repository), buffer_, (size_t) len);
+	git_oid_fmt(return_value, &oid);
 	return String(return_value);
 }
 

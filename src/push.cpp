@@ -16,12 +16,12 @@ Resource HHVM_FUNCTION(git_push_new,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_push **out = NULL;
+	git_push *out = NULL;
 
 	auto remote_ = dyn_cast<Git2Resource>(remote);
 
-	git_push_new(out, HHVM_GIT2_V(remote_, remote));
-	HHVM_GIT2_V(return_value, push) = *out;
+	git_push_new(&out, HHVM_GIT2_V(remote_, remote));
+	HHVM_GIT2_V(return_value, push) = out;
 	return Resource(return_value);
 }
 

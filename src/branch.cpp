@@ -19,13 +19,13 @@ Resource HHVM_FUNCTION(git_branch_create,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_reference **out = NULL;
+	git_reference *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto target_ = dyn_cast<Git2Resource>(target);
 
-	git_branch_create(out, HHVM_GIT2_V(repo_, repository), branch_name.c_str(), HHVM_GIT2_V(target_, commit), (int) force);
-	HHVM_GIT2_V(return_value, reference) = *out;
+	git_branch_create(&out, HHVM_GIT2_V(repo_, repository), branch_name.c_str(), HHVM_GIT2_V(target_, commit), (int) force);
+	HHVM_GIT2_V(return_value, reference) = out;
 	return Resource(return_value);
 }
 
@@ -48,12 +48,12 @@ Resource HHVM_FUNCTION(git_branch_iterator_new,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_branch_iterator **out = NULL;
+	git_branch_iterator *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_branch_iterator_new(out, HHVM_GIT2_V(repo_, repository), (git_branch_t) list_flags);
-	HHVM_GIT2_V(return_value, branch_iterator) = *out;
+	git_branch_iterator_new(&out, HHVM_GIT2_V(repo_, repository), (git_branch_t) list_flags);
+	HHVM_GIT2_V(return_value, branch_iterator) = out;
 	return Resource(return_value);
 }
 
@@ -63,12 +63,12 @@ Resource HHVM_FUNCTION(git_branch_next,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_reference **out = NULL;
+	git_reference *out = NULL;
 
 	auto iter_ = dyn_cast<Git2Resource>(iter);
 
-	git_branch_next(out, (git_branch_t*) out_type, HHVM_GIT2_V(iter_, branch_iterator));
-	HHVM_GIT2_V(return_value, reference) = *out;
+	git_branch_next(&out, (git_branch_t*) out_type, HHVM_GIT2_V(iter_, branch_iterator));
+	HHVM_GIT2_V(return_value, reference) = out;
 	return Resource(return_value);
 }
 
@@ -88,12 +88,12 @@ Resource HHVM_FUNCTION(git_branch_move,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_reference **out = NULL;
+	git_reference *out = NULL;
 
 	auto branch_ = dyn_cast<Git2Resource>(branch);
 
-	git_branch_move(out, HHVM_GIT2_V(branch_, reference), new_branch_name.c_str(), (int) force);
-	HHVM_GIT2_V(return_value, reference) = *out;
+	git_branch_move(&out, HHVM_GIT2_V(branch_, reference), new_branch_name.c_str(), (int) force);
+	HHVM_GIT2_V(return_value, reference) = out;
 	return Resource(return_value);
 }
 
@@ -104,12 +104,12 @@ Resource HHVM_FUNCTION(git_branch_lookup,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_reference **out = NULL;
+	git_reference *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_branch_lookup(out, HHVM_GIT2_V(repo_, repository), branch_name.c_str(), (git_branch_t) branch_type);
-	HHVM_GIT2_V(return_value, reference) = *out;
+	git_branch_lookup(&out, HHVM_GIT2_V(repo_, repository), branch_name.c_str(), (git_branch_t) branch_type);
+	HHVM_GIT2_V(return_value, reference) = out;
 	return Resource(return_value);
 }
 
@@ -118,12 +118,12 @@ String HHVM_FUNCTION(git_branch_name,
 {
 	String return_value;
 
-	const char **out = NULL;
+	const char *out = NULL;
 
 	auto ref_ = dyn_cast<Git2Resource>(ref);
 
-	git_branch_name(out, HHVM_GIT2_V(ref_, reference));
-	return_value = String(*out);
+	git_branch_name(&out, HHVM_GIT2_V(ref_, reference));
+	return_value = String(out);
 	return return_value;
 }
 
@@ -132,12 +132,12 @@ Resource HHVM_FUNCTION(git_branch_upstream,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_reference **out = NULL;
+	git_reference *out = NULL;
 
 	auto branch_ = dyn_cast<Git2Resource>(branch);
 
-	git_branch_upstream(out, HHVM_GIT2_V(branch_, reference));
-	HHVM_GIT2_V(return_value, reference) = *out;
+	git_branch_upstream(&out, HHVM_GIT2_V(branch_, reference));
+	HHVM_GIT2_V(return_value, reference) = out;
 	return Resource(return_value);
 }
 
@@ -162,12 +162,12 @@ String HHVM_FUNCTION(git_branch_upstream_name,
 {
 	String return_value;
 
-	char *tracking_branch_name_out = NULL;
+	char tracking_branch_name_out;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_branch_upstream_name(tracking_branch_name_out, (size_t) buffer_size, HHVM_GIT2_V(repo_, repository), canonical_branch_name.c_str());
-	return_value = String(tracking_branch_name_out);
+	git_branch_upstream_name(&tracking_branch_name_out, (size_t) buffer_size, HHVM_GIT2_V(repo_, repository), canonical_branch_name.c_str());
+	return_value = String(&tracking_branch_name_out);
 	return return_value;
 }
 
@@ -191,12 +191,12 @@ String HHVM_FUNCTION(git_branch_remote_name,
 {
 	String return_value;
 
-	char *remote_name_out = NULL;
+	char remote_name_out;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_branch_remote_name(remote_name_out, (size_t) buffer_size, HHVM_GIT2_V(repo_, repository), canonical_branch_name.c_str());
-	return_value = String(remote_name_out);
+	git_branch_remote_name(&remote_name_out, (size_t) buffer_size, HHVM_GIT2_V(repo_, repository), canonical_branch_name.c_str());
+	return_value = String(&remote_name_out);
 	return return_value;
 }
 

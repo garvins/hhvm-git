@@ -19,13 +19,13 @@ String HHVM_FUNCTION(git_stash_save,
 {
 	char *return_value;
 
-	git_oid *out = NULL;
+	git_oid out;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto stasher_ = dyn_cast<Git2Resource>(stasher);
 
-	git_stash_save(out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(stasher_, signature), message.c_str(), (unsigned int) flags);
-	git_oid_fmt(return_value, out);
+	git_stash_save(&out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(stasher_, signature), message.c_str(), (unsigned int) flags);
+	git_oid_fmt(return_value, &out);
 	return String(return_value);
 }
 

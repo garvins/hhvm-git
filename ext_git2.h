@@ -4,6 +4,8 @@
 #define HHVM_GIT2_V(git2, type) git2->type
 #define HHVM_GIT2_V_N(git2, type) (git2 && git2->type) ? git2->type : NULL
 
+#include "hphp/runtime/ext/extension.h"
+
 #include "git2.h"
 #include "git2/cred_helpers.h"
 #include "git2/odb_backend.h"
@@ -17,8 +19,6 @@
 #include "git2/sys/reflog.h"
 #include "git2/sys/refs.h"
 #include "git2/sys/repository.h"
-
-#include "hphp/runtime/ext/extension.h"
 
 #include <stdlib.h>
 
@@ -119,9 +119,9 @@ namespace HPHP {
 class Git2Resource : public SweepableResourceData {
 public:
 	DECLARE_RESOURCE_ALLOCATION(Git2Resource)
-	Git2Resource() {};
-	virtual ~Git2Resource();
 	CLASSNAME_IS("git2");
+	Git2Resource() {}
+	virtual ~Git2Resource() {}
 	enum hhvm_git2_resource_type type;
 	union {
 		git_blame_options *blame_options;

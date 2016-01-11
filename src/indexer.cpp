@@ -20,15 +20,15 @@ Resource HHVM_FUNCTION(git_indexer_new,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_indexer **out = NULL;
+	git_indexer *out = NULL;
 	git_transfer_progress_callback progress_cb_ = NULL;
 	void *progress_cb_payload_ = NULL;
 
 	auto odb_ = dyn_cast<Git2Resource>(odb);
 	progress_cb_ = NULL;
 
-	git_indexer_new(out, path.c_str(), (unsigned int) mode, HHVM_GIT2_V(odb_, odb), /* todo */ progress_cb_, progress_cb_payload_);
-	HHVM_GIT2_V(return_value, indexer) = *out;
+	git_indexer_new(&out, path.c_str(), (unsigned int) mode, HHVM_GIT2_V(odb_, odb), /* todo */ progress_cb_, progress_cb_payload_);
+	HHVM_GIT2_V(return_value, indexer) = out;
 	return Resource(return_value);
 }
 

@@ -16,12 +16,12 @@ Resource HHVM_FUNCTION(git_refdb_backend_fs,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_refdb_backend **backend_out = NULL;
+	git_refdb_backend *backend_out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_refdb_backend_fs(backend_out, HHVM_GIT2_V(repo_, repository));
-	HHVM_GIT2_V(return_value, refdb_backend) = *backend_out;
+	git_refdb_backend_fs(&backend_out, HHVM_GIT2_V(repo_, repository));
+	HHVM_GIT2_V(return_value, refdb_backend) = backend_out;
 	return Resource(return_value);
 }
 

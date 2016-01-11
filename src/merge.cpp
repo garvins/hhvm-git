@@ -18,7 +18,7 @@ String HHVM_FUNCTION(git_merge_base,
 {
 	char *return_value;
 
-	git_oid *out = NULL;
+	git_oid out;
 	git_oid *one_ = NULL;
 	git_oid *two_ = NULL;
 
@@ -32,8 +32,8 @@ String HHVM_FUNCTION(git_merge_base,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_merge_base(out, HHVM_GIT2_V(repo_, repository), one_, two_);
-	git_oid_fmt(return_value, out);
+	git_merge_base(&out, HHVM_GIT2_V(repo_, repository), one_, two_);
+	git_oid_fmt(return_value, &out);
 	return String(return_value);
 }
 
@@ -44,7 +44,7 @@ String HHVM_FUNCTION(git_merge_base_many,
 {
 	char *return_value;
 
-	git_oid *out = NULL;
+	git_oid out;
 	git_oid *input_array_ = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
@@ -53,8 +53,8 @@ String HHVM_FUNCTION(git_merge_base_many,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_merge_base_many(out, HHVM_GIT2_V(repo_, repository), (size_t) length, input_array_);
-	git_oid_fmt(return_value, out);
+	git_merge_base_many(&out, HHVM_GIT2_V(repo_, repository), (size_t) length, input_array_);
+	git_oid_fmt(return_value, &out);
 	return String(return_value);
 }
 
@@ -64,13 +64,13 @@ Resource HHVM_FUNCTION(git_merge_head_from_ref,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_merge_head **out = NULL;
+	git_merge_head *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto ref_ = dyn_cast<Git2Resource>(ref);
 
-	git_merge_head_from_ref(out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(ref_, reference));
-	HHVM_GIT2_V(return_value, merge_head) = *out;
+	git_merge_head_from_ref(&out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(ref_, reference));
+	HHVM_GIT2_V(return_value, merge_head) = out;
 	return Resource(return_value);
 }
 
@@ -82,7 +82,7 @@ Resource HHVM_FUNCTION(git_merge_head_from_fetchhead,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_merge_head **out = NULL;
+	git_merge_head *out = NULL;
 	git_oid *oid_ = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
@@ -91,8 +91,8 @@ Resource HHVM_FUNCTION(git_merge_head_from_fetchhead,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_merge_head_from_fetchhead(out, HHVM_GIT2_V(repo_, repository), branch_name.c_str(), remote_url.c_str(), oid_);
-	HHVM_GIT2_V(return_value, merge_head) = *out;
+	git_merge_head_from_fetchhead(&out, HHVM_GIT2_V(repo_, repository), branch_name.c_str(), remote_url.c_str(), oid_);
+	HHVM_GIT2_V(return_value, merge_head) = out;
 	return Resource(return_value);
 }
 
@@ -102,7 +102,7 @@ Resource HHVM_FUNCTION(git_merge_head_from_oid,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_merge_head **out = NULL;
+	git_merge_head *out = NULL;
 	git_oid *oid_ = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
@@ -111,8 +111,8 @@ Resource HHVM_FUNCTION(git_merge_head_from_oid,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_merge_head_from_oid(out, HHVM_GIT2_V(repo_, repository), oid_);
-	HHVM_GIT2_V(return_value, merge_head) = *out;
+	git_merge_head_from_oid(&out, HHVM_GIT2_V(repo_, repository), oid_);
+	HHVM_GIT2_V(return_value, merge_head) = out;
 	return Resource(return_value);
 }
 
@@ -134,7 +134,7 @@ Resource HHVM_FUNCTION(git_merge_trees,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_index **out = NULL;
+	git_index *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto ancestor_tree_ = dyn_cast<Git2Resource>(ancestor_tree);
@@ -142,8 +142,8 @@ Resource HHVM_FUNCTION(git_merge_trees,
 	auto their_tree_ = dyn_cast<Git2Resource>(their_tree);
 	auto opts_ = dyn_cast<Git2Resource>(opts);
 
-	git_merge_trees(out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(ancestor_tree_, tree), HHVM_GIT2_V(our_tree_, tree), HHVM_GIT2_V(their_tree_, tree), HHVM_GIT2_V(opts_, merge_tree_opts));
-	HHVM_GIT2_V(return_value, index) = *out;
+	git_merge_trees(&out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(ancestor_tree_, tree), HHVM_GIT2_V(our_tree_, tree), HHVM_GIT2_V(their_tree_, tree), HHVM_GIT2_V(opts_, merge_tree_opts));
+	HHVM_GIT2_V(return_value, index) = out;
 	return Resource(return_value);
 }
 
@@ -199,12 +199,12 @@ String HHVM_FUNCTION(git_merge_result_fastforward_oid,
 {
 	char *return_value;
 
-	git_oid *out = NULL;
+	git_oid out;
 
 	auto merge_result_ = dyn_cast<Git2Resource>(merge_result);
 
-	git_merge_result_fastforward_oid(out, HHVM_GIT2_V(merge_result_, merge_result));
-	git_oid_fmt(return_value, out);
+	git_merge_result_fastforward_oid(&out, HHVM_GIT2_V(merge_result_, merge_result));
+	git_oid_fmt(return_value, &out);
 	return String(return_value);
 }
 

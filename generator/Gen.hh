@@ -97,7 +97,8 @@ class Gen {
         $content = "#ifndef EXT_GIT2_H\n" .
             "#define EXT_GIT2_H\n\n" .
             "#define HHVM_GIT2_V(git2, type) git2->type\n" .
-            "#define HHVM_GIT2_V_N(git2, type) (git2 && git2->type) ? git2->type : NULL\n\n" .
+        	"#define HHVM_GIT2_V_N(git2, type) (git2 && git2->type) ? git2->type : NULL\n\n" .
+        	"#include \"hphp/runtime/ext/extension.h\"\n\n" .
             "#include \"git2.h\"\n" .
             "#include \"git2/cred_helpers.h\"\n" .
             "#include \"git2/odb_backend.h\"\n" .
@@ -111,7 +112,6 @@ class Gen {
             "#include \"git2/sys/reflog.h\"\n" .
             "#include \"git2/sys/refs.h\"\n" .
             "#include \"git2/sys/repository.h\"\n\n" .
-            "#include \"hphp/runtime/ext/extension.h\"\n\n" .
             "#include <stdlib.h>\n\n" .
             "enum hhvm_git2_resource_type {\n";
             
@@ -123,10 +123,10 @@ class Gen {
             "\nnamespace HPHP {\n" .
             "class Git2Resource : public SweepableResourceData {\n" .
             "public:\n" .
-            "\tDECLARE_RESOURCE_ALLOCATION(Git2Resource)\n" .
-            "\tGit2Resource() {};\n" .
-            "\tvirtual ~Git2Resource();\n" .
-            "\tCLASSNAME_IS(\"git2\");\n" .
+        	"\tDECLARE_RESOURCE_ALLOCATION(Git2Resource)\n" .
+        	"\tCLASSNAME_IS(\"git2\");\n" .
+            "\tGit2Resource() {}\n" .
+            "\tvirtual ~Git2Resource() {}\n" .
             "\tenum hhvm_git2_resource_type type;\n" .
             "\tunion {\n";
             
@@ -135,7 +135,8 @@ class Gen {
         }
             
         $content .= "\t};\n" .
-            "};\n}\n" .
+            "};\n" .
+    		"}\n" .
             "#endif /* EXT_GIT2_H */\n";
             
         file_put_contents(dirname(__FILE__)."/../ext_git2.h", $content);
@@ -199,7 +200,7 @@ class Gen {
         
         $content .= ")\n\n" .
         	"HHVM_SYSTEMLIB(git2 ext_git2.php)\n";
-        
+        $content .= "target_link_libraries(git2 \${CMAKE_SOURCE_DIR}/libgit2/build/libgit2.a)";
         file_put_contents(dirname(__FILE__)."/../config.cmake", $content);
     }
     

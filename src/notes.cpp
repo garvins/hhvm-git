@@ -17,12 +17,12 @@ Resource HHVM_FUNCTION(git_note_iterator_new,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_note_iterator **out = NULL;
+	git_note_iterator *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_note_iterator_new(out, HHVM_GIT2_V(repo_, repository), notes_ref.c_str());
-	HHVM_GIT2_V(return_value, note_iterator) = *out;
+	git_note_iterator_new(&out, HHVM_GIT2_V(repo_, repository), notes_ref.c_str());
+	HHVM_GIT2_V(return_value, note_iterator) = out;
 	return Resource(return_value);
 }
 
@@ -41,7 +41,7 @@ String HHVM_FUNCTION(git_note_next,
 {
 	char *return_value;
 
-	git_oid *note_id = NULL;
+	git_oid note_id;
 	git_oid *annotated_id_ = NULL;
 
 	if (git_oid_fromstrn(annotated_id_, annotated_id.c_str(), annotated_id.length())) {
@@ -50,8 +50,8 @@ String HHVM_FUNCTION(git_note_next,
 	}
 	auto it_ = dyn_cast<Git2Resource>(it);
 
-	git_note_next(note_id, annotated_id_, HHVM_GIT2_V(it_, note_iterator));
-	git_oid_fmt(return_value, note_id);
+	git_note_next(&note_id, annotated_id_, HHVM_GIT2_V(it_, note_iterator));
+	git_oid_fmt(return_value, &note_id);
 	return String(return_value);
 }
 
@@ -62,7 +62,7 @@ Resource HHVM_FUNCTION(git_note_read,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_note **out = NULL;
+	git_note *out = NULL;
 	git_oid *oid_ = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
@@ -71,8 +71,8 @@ Resource HHVM_FUNCTION(git_note_read,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_note_read(out, HHVM_GIT2_V(repo_, repository), notes_ref.c_str(), oid_);
-	HHVM_GIT2_V(return_value, note) = *out;
+	git_note_read(&out, HHVM_GIT2_V(repo_, repository), notes_ref.c_str(), oid_);
+	HHVM_GIT2_V(return_value, note) = out;
 	return Resource(return_value);
 }
 
@@ -113,7 +113,7 @@ String HHVM_FUNCTION(git_note_create,
 {
 	char *return_value;
 
-	git_oid *out = NULL;
+	git_oid out;
 	git_oid *oid_ = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
@@ -124,8 +124,8 @@ String HHVM_FUNCTION(git_note_create,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_note_create(out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(author_, signature), HHVM_GIT2_V(committer_, signature), notes_ref.c_str(), oid_, note.c_str(), (int) force);
-	git_oid_fmt(return_value, out);
+	git_note_create(&out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(author_, signature), HHVM_GIT2_V(committer_, signature), notes_ref.c_str(), oid_, note.c_str(), (int) force);
+	git_oid_fmt(return_value, &out);
 	return String(return_value);
 }
 
@@ -168,12 +168,12 @@ String HHVM_FUNCTION(git_note_default_ref,
 {
 	String return_value;
 
-	const char **out = NULL;
+	const char *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_note_default_ref(out, HHVM_GIT2_V(repo_, repository));
-	return_value = String(*out);
+	git_note_default_ref(&out, HHVM_GIT2_V(repo_, repository));
+	return_value = String(out);
 	return return_value;
 }
 

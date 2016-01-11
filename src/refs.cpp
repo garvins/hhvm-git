@@ -17,12 +17,12 @@ Resource HHVM_FUNCTION(git_reference_lookup,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_reference **out = NULL;
+	git_reference *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_reference_lookup(out, HHVM_GIT2_V(repo_, repository), name.c_str());
-	HHVM_GIT2_V(return_value, reference) = *out;
+	git_reference_lookup(&out, HHVM_GIT2_V(repo_, repository), name.c_str());
+	HHVM_GIT2_V(return_value, reference) = out;
 	return Resource(return_value);
 }
 
@@ -32,12 +32,12 @@ String HHVM_FUNCTION(git_reference_name_to_id,
 {
 	char *return_value;
 
-	git_oid *out = NULL;
+	git_oid out;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_reference_name_to_id(out, HHVM_GIT2_V(repo_, repository), name.c_str());
-	git_oid_fmt(return_value, out);
+	git_reference_name_to_id(&out, HHVM_GIT2_V(repo_, repository), name.c_str());
+	git_oid_fmt(return_value, &out);
 	return String(return_value);
 }
 
@@ -47,12 +47,12 @@ Resource HHVM_FUNCTION(git_reference_dwim,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_reference **out = NULL;
+	git_reference *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_reference_dwim(out, HHVM_GIT2_V(repo_, repository), shorthand.c_str());
-	HHVM_GIT2_V(return_value, reference) = *out;
+	git_reference_dwim(&out, HHVM_GIT2_V(repo_, repository), shorthand.c_str());
+	HHVM_GIT2_V(return_value, reference) = out;
 	return Resource(return_value);
 }
 
@@ -64,12 +64,12 @@ Resource HHVM_FUNCTION(git_reference_symbolic_create,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_reference **out = NULL;
+	git_reference *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_reference_symbolic_create(out, HHVM_GIT2_V(repo_, repository), name.c_str(), target.c_str(), (int) force);
-	HHVM_GIT2_V(return_value, reference) = *out;
+	git_reference_symbolic_create(&out, HHVM_GIT2_V(repo_, repository), name.c_str(), target.c_str(), (int) force);
+	HHVM_GIT2_V(return_value, reference) = out;
 	return Resource(return_value);
 }
 
@@ -81,7 +81,7 @@ Resource HHVM_FUNCTION(git_reference_create,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_reference **out = NULL;
+	git_reference *out = NULL;
 	git_oid *id_ = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
@@ -90,8 +90,8 @@ Resource HHVM_FUNCTION(git_reference_create,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_reference_create(out, HHVM_GIT2_V(repo_, repository), name.c_str(), id_, (int) force);
-	HHVM_GIT2_V(return_value, reference) = *out;
+	git_reference_create(&out, HHVM_GIT2_V(repo_, repository), name.c_str(), id_, (int) force);
+	HHVM_GIT2_V(return_value, reference) = out;
 	return Resource(return_value);
 }
 
@@ -165,12 +165,12 @@ Resource HHVM_FUNCTION(git_reference_resolve,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_reference **out = NULL;
+	git_reference *out = NULL;
 
 	auto ref_ = dyn_cast<Git2Resource>(ref);
 
-	git_reference_resolve(out, HHVM_GIT2_V(ref_, reference));
-	HHVM_GIT2_V(return_value, reference) = *out;
+	git_reference_resolve(&out, HHVM_GIT2_V(ref_, reference));
+	HHVM_GIT2_V(return_value, reference) = out;
 	return Resource(return_value);
 }
 
@@ -193,12 +193,12 @@ Resource HHVM_FUNCTION(git_reference_symbolic_set_target,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_reference **out = NULL;
+	git_reference *out = NULL;
 
 	auto ref_ = dyn_cast<Git2Resource>(ref);
 
-	git_reference_symbolic_set_target(out, HHVM_GIT2_V(ref_, reference), target.c_str());
-	HHVM_GIT2_V(return_value, reference) = *out;
+	git_reference_symbolic_set_target(&out, HHVM_GIT2_V(ref_, reference), target.c_str());
+	HHVM_GIT2_V(return_value, reference) = out;
 	return Resource(return_value);
 }
 
@@ -208,7 +208,7 @@ Resource HHVM_FUNCTION(git_reference_set_target,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_reference **out = NULL;
+	git_reference *out = NULL;
 	git_oid *id_ = NULL;
 
 	auto ref_ = dyn_cast<Git2Resource>(ref);
@@ -217,8 +217,8 @@ Resource HHVM_FUNCTION(git_reference_set_target,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_reference_set_target(out, HHVM_GIT2_V(ref_, reference), id_);
-	HHVM_GIT2_V(return_value, reference) = *out;
+	git_reference_set_target(&out, HHVM_GIT2_V(ref_, reference), id_);
+	HHVM_GIT2_V(return_value, reference) = out;
 	return Resource(return_value);
 }
 
@@ -229,12 +229,12 @@ Resource HHVM_FUNCTION(git_reference_rename,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_reference **new_ref = NULL;
+	git_reference *new_ref = NULL;
 
 	auto ref_ = dyn_cast<Git2Resource>(ref);
 
-	git_reference_rename(new_ref, HHVM_GIT2_V(ref_, reference), new_name.c_str(), (int) force);
-	HHVM_GIT2_V(return_value, reference) = *new_ref;
+	git_reference_rename(&new_ref, HHVM_GIT2_V(ref_, reference), new_name.c_str(), (int) force);
+	HHVM_GIT2_V(return_value, reference) = new_ref;
 	return Resource(return_value);
 }
 
@@ -333,12 +333,12 @@ Resource HHVM_FUNCTION(git_reference_iterator_new,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_reference_iterator **out = NULL;
+	git_reference_iterator *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_reference_iterator_new(out, HHVM_GIT2_V(repo_, repository));
-	HHVM_GIT2_V(return_value, reference_iterator) = *out;
+	git_reference_iterator_new(&out, HHVM_GIT2_V(repo_, repository));
+	HHVM_GIT2_V(return_value, reference_iterator) = out;
 	return Resource(return_value);
 }
 
@@ -348,12 +348,12 @@ Resource HHVM_FUNCTION(git_reference_iterator_glob_new,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_reference_iterator **out = NULL;
+	git_reference_iterator *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_reference_iterator_glob_new(out, HHVM_GIT2_V(repo_, repository), glob.c_str());
-	HHVM_GIT2_V(return_value, reference_iterator) = *out;
+	git_reference_iterator_glob_new(&out, HHVM_GIT2_V(repo_, repository), glob.c_str());
+	HHVM_GIT2_V(return_value, reference_iterator) = out;
 	return Resource(return_value);
 }
 
@@ -362,12 +362,12 @@ Resource HHVM_FUNCTION(git_reference_next,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_reference **out = NULL;
+	git_reference *out = NULL;
 
 	auto iter_ = dyn_cast<Git2Resource>(iter);
 
-	git_reference_next(out, HHVM_GIT2_V(iter_, reference_iterator));
-	HHVM_GIT2_V(return_value, reference) = *out;
+	git_reference_next(&out, HHVM_GIT2_V(iter_, reference_iterator));
+	HHVM_GIT2_V(return_value, reference) = out;
 	return Resource(return_value);
 }
 
@@ -376,12 +376,12 @@ String HHVM_FUNCTION(git_reference_next_name,
 {
 	String return_value;
 
-	const char **out = NULL;
+	const char *out = NULL;
 
 	auto iter_ = dyn_cast<Git2Resource>(iter);
 
-	git_reference_next_name(out, HHVM_GIT2_V(iter_, reference_iterator));
-	return_value = String(*out);
+	git_reference_next_name(&out, HHVM_GIT2_V(iter_, reference_iterator));
+	return_value = String(out);
 	return return_value;
 }
 
@@ -473,10 +473,10 @@ String HHVM_FUNCTION(git_reference_normalize_name,
 {
 	String return_value;
 
-	char *buffer_out = NULL;
+	char buffer_out;
 
-	git_reference_normalize_name(buffer_out, (size_t) buffer_size, name.c_str(), (unsigned int) flags);
-	return_value = String(buffer_out);
+	git_reference_normalize_name(&buffer_out, (size_t) buffer_size, name.c_str(), (unsigned int) flags);
+	return_value = String(&buffer_out);
 	return return_value;
 }
 
@@ -486,12 +486,12 @@ Resource HHVM_FUNCTION(git_reference_peel,
 {
 	auto return_value = req::make<Git2Resource>();
 
-	git_object **out = NULL;
+	git_object *out = NULL;
 
 	auto ref_ = dyn_cast<Git2Resource>(ref);
 
-	git_reference_peel(out, HHVM_GIT2_V(ref_, reference), (git_otype) type);
-	HHVM_GIT2_V(return_value, object) = *out;
+	git_reference_peel(&out, HHVM_GIT2_V(ref_, reference), (git_otype) type);
+	HHVM_GIT2_V(return_value, object) = out;
 	return Resource(return_value);
 }
 
