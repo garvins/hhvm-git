@@ -12,7 +12,7 @@
 
 using namespace HPHP;
 
-Resource HHVM_FUNCTION(giterr_last);
+Array HHVM_FUNCTION(giterr_last);
 
 void HHVM_FUNCTION(giterr_clear);
 

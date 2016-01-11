@@ -16,13 +16,19 @@ Resource HHVM_FUNCTION(git_remote_create,
 	const String& name,
 	const String& url)
 {
+    int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_remote *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_remote_create(&out, HHVM_GIT2_V(repo_, repository), name.c_str(), url.c_str());
+	result = git_remote_create(&out, HHVM_GIT2_V(repo_, repository), name.c_str(), url.c_str());
+    
+    if (result != 0) {
+        throw SystemLib::AllocExceptionObject("got an error!");
+    }
+    
 	HHVM_GIT2_V(return_value, remote) = out;
 	return Resource(return_value);
 }
@@ -372,6 +378,8 @@ void HHVM_FUNCTION(git_remote_free,
 	auto remote_ = dyn_cast<Git2Resource>(remote);
 
 	git_remote_free(HHVM_GIT2_V(remote_, remote));
+    
+    // todo free resource, too
 }
 
 int64_t HHVM_FUNCTION(git_remote_update_tips,

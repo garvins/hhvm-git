@@ -257,7 +257,7 @@ function git_commit_time_offset(resource $commit): int;
 function git_commit_committer(resource $commit): resource;
 
 <<__Native>>
-function git_commit_author(resource $commit): resource;
+function git_commit_author(resource $commit): array;
 
 <<__Native>>
 function git_commit_raw_header(resource $commit): string;
@@ -585,7 +585,7 @@ function git_diff_blob_to_buffer(string $old_as_path,
 // --------------- errors.h ---------------
 
 <<__Native>>
-function giterr_last(): resource;
+function giterr_last(): array;
 
 <<__Native>>
 function giterr_clear(): void;
@@ -765,7 +765,7 @@ function git_index_conflict_add(resource $index,
 
 <<__Native>>
 function git_index_conflict_get(resource $index,
-                                string $path): resource;
+                                string $path): array;
 
 <<__Native>>
 function git_index_conflict_remove(resource $index,
@@ -781,7 +781,7 @@ function git_index_has_conflicts(resource $index): int;
 function git_index_conflict_iterator_new(resource $index): resource;
 
 <<__Native>>
-function git_index_conflict_next(resource $iterator): resource;
+function git_index_conflict_next(resource $iterator): array;
 
 <<__Native>>
 function git_index_conflict_iterator_free(resource $iterator): void;

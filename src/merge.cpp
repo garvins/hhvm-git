@@ -16,6 +16,7 @@ String HHVM_FUNCTION(git_merge_base,
 	const String& one,
 	const String& two)
 {
+    int result;
 	char *return_value;
 
 	git_oid out;
@@ -23,16 +24,19 @@ String HHVM_FUNCTION(git_merge_base,
 	git_oid *two_ = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	if (git_oid_fromstrn(one_, one.c_str(), one.length())) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+    if (git_oid_fromstrn(one_, one.c_str(), one.length())) {
+        throw SystemLib::AllocExceptionObject("got an error!");
 	}
-	if (git_oid_fromstrn(two_, two.c_str(), two.length())) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+    if (git_oid_fromstrn(two_, two.c_str(), two.length())) {
+        throw SystemLib::AllocExceptionObject("got an error!");
 	}
 
-	git_merge_base(&out, HHVM_GIT2_V(repo_, repository), one_, two_);
+	result = git_merge_base(&out, HHVM_GIT2_V(repo_, repository), one_, two_);
+    
+    if (result != 0) {
+        throw SystemLib::AllocExceptionObject("got an error!");
+    }
+    
 	git_oid_fmt(return_value, &out);
 	return String(return_value);
 }
@@ -123,6 +127,8 @@ void HHVM_FUNCTION(git_merge_head_free,
 	auto head_ = dyn_cast<Git2Resource>(head);
 
 	git_merge_head_free(HHVM_GIT2_V(head_, merge_head));
+    
+    // todo free resource, too
 }
 
 Resource HHVM_FUNCTION(git_merge_trees,
@@ -215,5 +221,7 @@ void HHVM_FUNCTION(git_merge_result_free,
 	auto merge_result_ = dyn_cast<Git2Resource>(merge_result);
 
 	git_merge_result_free(HHVM_GIT2_V(merge_result_, merge_result));
+    
+    // todo free resource, too
 }
 

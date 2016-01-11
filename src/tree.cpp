@@ -59,6 +59,8 @@ void HHVM_FUNCTION(git_tree_free,
 	auto tree_ = dyn_cast<Git2Resource>(tree);
 
 	git_tree_free(HHVM_GIT2_V(tree_, tree));
+    
+    // todo free resource, too
 }
 
 String HHVM_FUNCTION(git_tree_id,

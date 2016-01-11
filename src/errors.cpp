@@ -6,19 +6,25 @@
  */
 
 #include "hphp/system/systemlib.h"
-
+#include "hphp/runtime/base/array-init.h"
 #include "errors.h"
 
 using namespace HPHP;
 
-Resource HHVM_FUNCTION(giterr_last)
+Array HHVM_FUNCTION(giterr_last)
 {
-	const git_error *result;
-	auto return_value = req::make<Git2Resource>();
-
-	result = giterr_last();
-	//HHVM_GIT2_V(return_value, error) = result; todo return as array
-	return Resource(return_value);
+    Array return_value;
+    const git_error *result;
+    
+    result = giterr_last();
+    
+    if (result == NULL) {
+        return_value = make_map_array("0", "", "1" , 0);
+    } else {
+        return_value = make_map_array("0", result->message, "1" , result->klass);
+    }
+    
+	return return_value;
 }
 
 void HHVM_FUNCTION(giterr_clear)

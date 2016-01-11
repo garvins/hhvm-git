@@ -5,8 +5,6 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/system/systemlib.h"
-
 #include "repository.h"
 
 using namespace HPHP;
@@ -14,11 +12,17 @@ using namespace HPHP;
 Resource HHVM_FUNCTION(git_repository_open,
 	const String& path)
 {
+    int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_repository *out = NULL;
 
-	git_repository_open(&out, path.c_str());
+	result = git_repository_open(&out, path.c_str());
+    
+    if (result != 0) {
+        throw SystemLib::AllocExceptionObject("got an error!");
+    }
+    
 	HHVM_GIT2_V(return_value, repository) = out;
 	return Resource(return_value);
 }
@@ -190,7 +194,13 @@ String HHVM_FUNCTION(git_repository_workdir,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
 	result = git_repository_workdir(HHVM_GIT2_V(repo_, repository));
-	return_value = String(result);
+    
+    if (result != NULL) {
+        return_value = String(result);
+    } else {
+        return_value = "";
+    }
+    
 	return return_value;
 }
 

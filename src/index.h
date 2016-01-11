@@ -121,7 +121,7 @@ int64_t HHVM_FUNCTION(git_index_conflict_add,
 	const Resource& our_entry,
 	const Resource& their_entry);
 
-Resource HHVM_FUNCTION(git_index_conflict_get,
+Array HHVM_FUNCTION(git_index_conflict_get,
 	const Resource& index,
 	const String& path);
 
@@ -138,7 +138,7 @@ int64_t HHVM_FUNCTION(git_index_has_conflicts,
 Resource HHVM_FUNCTION(git_index_conflict_iterator_new,
 	const Resource& index);
 
-Resource HHVM_FUNCTION(git_index_conflict_next,
+Array HHVM_FUNCTION(git_index_conflict_next,
 	const Resource& iterator);
 
 void HHVM_FUNCTION(git_index_conflict_iterator_free,

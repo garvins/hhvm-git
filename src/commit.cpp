@@ -7,6 +7,7 @@
 
 #include "hphp/system/systemlib.h"
 
+#include "hphp/runtime/base/array-init.h"
 #include "commit.h"
 
 using namespace HPHP;
@@ -21,10 +22,10 @@ Resource HHVM_FUNCTION(git_commit_lookup,
 	git_oid *id_ = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	if (git_oid_fromstrn(id_, id.c_str(), id.length())) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
-	}
+    
+    if (git_oid_fromstrn(id_, id.c_str(), id.length())) {
+        throw SystemLib::AllocExceptionObject("got an error!");
+    }
 
 	git_commit_lookup(&commit, HHVM_GIT2_V(repo_, repository), id_);
 	HHVM_GIT2_V(return_value, commit) = commit;
@@ -42,9 +43,8 @@ Resource HHVM_FUNCTION(git_commit_lookup_prefix,
 	git_oid *id_ = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	if (git_oid_fromstrn(id_, id.c_str(), id.length())) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+    if (git_oid_fromstrn(id_, id.c_str(), id.length())) {
+        throw SystemLib::AllocExceptionObject("got an error!");
 	}
 
 	git_commit_lookup_prefix(&commit, HHVM_GIT2_V(repo_, repository), id_, (size_t) len);
@@ -55,10 +55,11 @@ Resource HHVM_FUNCTION(git_commit_lookup_prefix,
 void HHVM_FUNCTION(git_commit_free,
 	const Resource& commit)
 {
-
 	auto commit_ = dyn_cast<Git2Resource>(commit);
 
 	git_commit_free(HHVM_GIT2_V(commit_, commit));
+    
+    // todo free resource, too
 }
 
 String HHVM_FUNCTION(git_commit_id,
@@ -165,17 +166,28 @@ Resource HHVM_FUNCTION(git_commit_committer,
 	return Resource(return_value);
 }
 
-Resource HHVM_FUNCTION(git_commit_author,
+Array HHVM_FUNCTION(git_commit_author,
 	const Resource& commit)
 {
-	const git_signature *result;
-	auto return_value = req::make<Git2Resource>();
-
+    char *name = NULL, *email = NULL;
+    const git_signature *result;
+    Array return_value;
+    
 	auto commit_ = dyn_cast<Git2Resource>(commit);
 
 	result = git_commit_author(HHVM_GIT2_V(commit_, commit));
-	//HHVM_GIT2_V(return_value, signature) = result; todo return as array
-	return Resource(return_value);
+    
+    if (result->name != NULL) {
+        name = result->name;
+    }
+    
+    if (result->email != NULL) {
+        email = result->email;
+    }
+    
+    return_value = make_map_array("name" , name, "email", email, "time", 0 /* todo return time */);
+    
+	return return_value;
 }
 
 String HHVM_FUNCTION(git_commit_raw_header,
@@ -194,14 +206,20 @@ String HHVM_FUNCTION(git_commit_raw_header,
 Resource HHVM_FUNCTION(git_commit_tree,
 	const Resource& commit)
 {
+    int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_tree *tree_out = NULL;
 
 	auto commit_ = dyn_cast<Git2Resource>(commit);
 
-	git_commit_tree(&tree_out, HHVM_GIT2_V(commit_, commit));
-	HHVM_GIT2_V(return_value, tree) = tree_out;
+	result = git_commit_tree(&tree_out, HHVM_GIT2_V(commit_, commit));
+    
+    if (result != 0) {
+        throw SystemLib::AllocExceptionObject("got an error!");
+    }
+    
+    HHVM_GIT2_V(return_value, tree) = tree_out;
 	return Resource(return_value);
 }
 
@@ -235,14 +253,20 @@ Resource HHVM_FUNCTION(git_commit_parent,
 	const Resource& commit,
 	int64_t n)
 {
+    int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_commit *out = NULL;
 
 	auto commit_ = dyn_cast<Git2Resource>(commit);
 
-	git_commit_parent(&out, HHVM_GIT2_V(commit_, commit), (unsigned int) n);
-	HHVM_GIT2_V(return_value, commit) = out;
+	result = git_commit_parent(&out, HHVM_GIT2_V(commit_, commit), (unsigned int) n);
+
+    if (result != 0) {
+        throw SystemLib::AllocExceptionObject("got an error!");
+    }
+    
+    HHVM_GIT2_V(return_value, commit) = out;
 	return Resource(return_value);
 }
 

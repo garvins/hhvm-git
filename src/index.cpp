@@ -7,6 +7,7 @@
 
 #include "hphp/system/systemlib.h"
 
+#include "hphp/runtime/base/array-init.h"
 #include "index.h"
 
 using namespace HPHP;
@@ -41,6 +42,8 @@ void HHVM_FUNCTION(git_index_free,
 	auto index_ = dyn_cast<Git2Resource>(index);
 
 	git_index_free(HHVM_GIT2_V(index_, index));
+    
+    // todo free resource, too 
 }
 
 Resource HHVM_FUNCTION(git_index_owner,
@@ -403,21 +406,65 @@ int64_t HHVM_FUNCTION(git_index_conflict_add,
 	return return_value;
 }
 
-Resource HHVM_FUNCTION(git_index_conflict_get,
+Array HHVM_FUNCTION(git_index_conflict_get,
 	const Resource& index,
 	const String& path)
 {
-	auto return_value = req::make<Git2Resource>();
+    Array return_value;
+    Array ancestor, our, their;
 
-	const git_index_entry **ancestor_out = NULL;
-	const git_index_entry **our_out = NULL;
-	const git_index_entry **their_out = NULL;
+	const git_index_entry *ancestor_out = NULL, *our_out = NULL, *their_out = NULL;
+    char *ancestor_buf = NULL, *our_buf = NULL, *their_buf = NULL;
 
 	auto index_ = dyn_cast<Git2Resource>(index);
 
-	git_index_conflict_get(ancestor_out, our_out, their_out, HHVM_GIT2_V(index_, index), path.c_str());
-	//HHVM_GIT2_V(return_value, index_entry) = *ancestor_out; todo return as array
-	return Resource(return_value);
+    git_index_conflict_get(&ancestor_out, &our_out, &their_out, HHVM_GIT2_V(index_, index), path.c_str());
+    
+    git_oid_fmt(ancestor_buf, &ancestor_out->oid);
+    ancestor = make_map_array("ctime", 0,
+                              "mtime", 0,
+                              "dev", (int64_t) ancestor_out->dev,
+                              "ino", (int64_t) ancestor_out->ino,
+                              "mode", (int64_t) ancestor_out->mode,
+                              "uid", (int64_t) ancestor_out->uid,
+                              "gid", (int64_t) ancestor_out->gid,
+                              "file_size", (int64_t) ancestor_out->file_size,
+                              "oid", String(ancestor_buf),
+                              "flags", (int64_t) ancestor_out->flags,
+                              "flags_extended", (int64_t) ancestor_out->flags_extended,
+                              "path", String(ancestor_out->path));
+    
+    git_oid_fmt(our_buf, &our_out->oid);
+    our = make_map_array("ctime", 0,
+                         "mtime", 0,
+                         "dev", (int64_t) our_out->dev,
+                         "ino", (int64_t) our_out->ino,
+                         "mode", (int64_t) our_out->mode,
+                         "uid", (int64_t) our_out->uid,
+                         "gid", (int64_t) our_out->gid,
+                         "file_sSize", (int64_t) our_out->file_size,
+                         "oid", String(our_buf),
+                         "flags", (int64_t) our_out->flags,
+                         "flags_extended", (int64_t) our_out->flags_extended,
+                         "path", String(our_out->path));
+    
+    git_oid_fmt(their_buf, &their_out->oid);
+    their = make_map_array("ctime", 0,
+                           "mtime", 0,
+                           "dev", (int64_t) their_out->dev,
+                           "ino", (int64_t) their_out->ino,
+                           "mode", (int64_t) their_out->mode,
+                           "uid", (int64_t) their_out->uid,
+                           "gid", (int64_t) their_out->gid,
+                           "file_size", (int64_t) their_out->file_size,
+                           "oid", String(their_buf),
+                           "flags", (int64_t) their_out->flags,
+                           "flags_extended", (int64_t) their_out->flags_extended,
+                           "path", String(their_out->path));
+    
+    return_value = make_map_array("ancestor", ancestor, "our", our, "their", their);
+
+    return return_value;
 }
 
 int64_t HHVM_FUNCTION(git_index_conflict_remove,
@@ -470,20 +517,64 @@ Resource HHVM_FUNCTION(git_index_conflict_iterator_new,
 	return Resource(return_value);
 }
 
-Resource HHVM_FUNCTION(git_index_conflict_next,
+Array HHVM_FUNCTION(git_index_conflict_next,
 	const Resource& iterator)
 {
-	auto return_value = req::make<Git2Resource>();
-
-	const git_index_entry **ancestor_out = NULL;
-    const git_index_entry **our_out;
-	const git_index_entry **their_out;
+	Array return_value;
+    Array ancestor, our, their;
+    
+    const git_index_entry *ancestor_out = NULL, *our_out = NULL, *their_out = NULL;
+    char *ancestor_buf = NULL, *our_buf = NULL, *their_buf = NULL;
 
 	auto iterator_ = dyn_cast<Git2Resource>(iterator);
 
-	git_index_conflict_next(ancestor_out, our_out, their_out, HHVM_GIT2_V(iterator_, index_conflict_iterator));
-	//HHVM_GIT2_V(return_value, index_entry) = *ancestor_out; todo return as array
-	return Resource(return_value);
+    git_index_conflict_next(&ancestor_out, &our_out, &their_out, HHVM_GIT2_V(iterator_, index_conflict_iterator));
+    
+    git_oid_fmt(ancestor_buf, &ancestor_out->oid);
+    ancestor = make_map_array("ctime", 0,
+                              "mtime", 0,
+                              "dev", (int64_t) ancestor_out->dev,
+                              "ino", (int64_t) ancestor_out->ino,
+                              "mode", (int64_t) ancestor_out->mode,
+                              "uid", (int64_t) ancestor_out->uid,
+                              "gid", (int64_t) ancestor_out->gid,
+                              "file_size", (int64_t) ancestor_out->file_size,
+                              "oid", String(ancestor_buf),
+                              "flags", (int64_t) ancestor_out->flags,
+                              "flags_extended", (int64_t) ancestor_out->flags_extended,
+                              "path", String(ancestor_out->path));
+    
+    git_oid_fmt(our_buf, &our_out->oid);
+    our = make_map_array("ctime", 0,
+                         "mtime", 0,
+                         "dev", (int64_t) our_out->dev,
+                         "ino", (int64_t) our_out->ino,
+                         "mode", (int64_t) our_out->mode,
+                         "uid", (int64_t) our_out->uid,
+                         "gid", (int64_t) our_out->gid,
+                         "file_sSize", (int64_t) our_out->file_size,
+                         "oid", String(our_buf),
+                         "flags", (int64_t) our_out->flags,
+                         "flags_extended", (int64_t) our_out->flags_extended,
+                         "path", String(our_out->path));
+    
+    git_oid_fmt(their_buf, &their_out->oid);
+    their = make_map_array("ctime", 0,
+                           "mtime", 0,
+                           "dev", (int64_t) their_out->dev,
+                           "ino", (int64_t) their_out->ino,
+                           "mode", (int64_t) their_out->mode,
+                           "uid", (int64_t) their_out->uid,
+                           "gid", (int64_t) their_out->gid,
+                           "file_size", (int64_t) their_out->file_size,
+                           "oid", String(their_buf),
+                           "flags", (int64_t) their_out->flags,
+                           "flags_extended", (int64_t) their_out->flags_extended,
+                           "path", String(their_out->path));
+    
+    return_value = make_map_array("ancestor", ancestor, "our", our, "their", their);
+	
+    return return_value;
 }
 
 void HHVM_FUNCTION(git_index_conflict_iterator_free,

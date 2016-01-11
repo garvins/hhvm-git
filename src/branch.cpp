@@ -17,6 +17,7 @@ Resource HHVM_FUNCTION(git_branch_create,
 	const Resource& target,
 	int64_t force)
 {
+    int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_reference *out = NULL;
@@ -24,7 +25,12 @@ Resource HHVM_FUNCTION(git_branch_create,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto target_ = dyn_cast<Git2Resource>(target);
 
-	git_branch_create(&out, HHVM_GIT2_V(repo_, repository), branch_name.c_str(), HHVM_GIT2_V(target_, commit), (int) force);
+	result = git_branch_create(&out, HHVM_GIT2_V(repo_, repository), branch_name.c_str(), HHVM_GIT2_V(target_, commit), (int) force);
+    
+    if (result != 0) {
+        throw SystemLib::AllocExceptionObject("got an error!");
+    }
+    
 	HHVM_GIT2_V(return_value, reference) = out;
 	return Resource(return_value);
 }

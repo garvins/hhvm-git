@@ -8,20 +8,25 @@
 #include "hphp/system/systemlib.h"
 
 #include "refs.h"
-
 using namespace HPHP;
 
 Resource HHVM_FUNCTION(git_reference_lookup,
 	const Resource& repo,
 	const String& name)
 {
+    int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_reference *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_reference_lookup(&out, HHVM_GIT2_V(repo_, repository), name.c_str());
+	result = git_reference_lookup(&out, HHVM_GIT2_V(repo_, repository), name.c_str());
+    
+    if (result != 0) {
+        throw SystemLib::AllocExceptionObject("got an error!");
+    }
+    
 	HHVM_GIT2_V(return_value, reference) = out;
 	return Resource(return_value);
 }
@@ -45,13 +50,19 @@ Resource HHVM_FUNCTION(git_reference_dwim,
 	const Resource& repo,
 	const String& shorthand)
 {
+    int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_reference *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_reference_dwim(&out, HHVM_GIT2_V(repo_, repository), shorthand.c_str());
+    result = git_reference_dwim(&out, HHVM_GIT2_V(repo_, repository), shorthand.c_str());
+    
+    if (result != 0) {
+        throw SystemLib::AllocExceptionObject("got an error!");
+    }
+    
 	HHVM_GIT2_V(return_value, reference) = out;
 	return Resource(return_value);
 }
@@ -392,6 +403,8 @@ void HHVM_FUNCTION(git_reference_iterator_free,
 	auto iter_ = dyn_cast<Git2Resource>(iter);
 
 	git_reference_iterator_free(HHVM_GIT2_V(iter_, reference_iterator));
+	
+    // todo free resource, too
 }
 
 int64_t HHVM_FUNCTION(git_reference_foreach_glob,

@@ -35,7 +35,6 @@ class Source extends Printer {
     }
     
     protected function printIncludes() : void {
-        $this->add("#include \"hphp/system/systemlib.h\"\n");
         $this->add("#include \"". $this->fileName .".h\"");
     }
     
