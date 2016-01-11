@@ -126,7 +126,9 @@ class Gen {
         	"\tDECLARE_RESOURCE_ALLOCATION(Git2Resource)\n" .
         	"\tCLASSNAME_IS(\"git2\");\n" .
             "\tGit2Resource() {}\n" .
-            "\tvirtual ~Git2Resource() {}\n" .
+        	"\tvirtual ~Git2Resource() {}\n" .
+        	"\tconst String& o_getClassNameHook() const override { return classnameof(); }\n" .
+        	"\tvoid o_setResourceId(int64_t id) { hdr()->setRawId(id); }\n" .
             "\tenum hhvm_git2_resource_type type;\n" .
             "\tunion {\n";
             

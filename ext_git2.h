@@ -122,6 +122,8 @@ public:
 	CLASSNAME_IS("git2");
 	Git2Resource() {}
 	virtual ~Git2Resource() {}
+    const String& o_getClassNameHook() const override { return classnameof(); }
+    void o_setResourceId(int64_t id) { hdr()->setRawId(id); }
 	enum hhvm_git2_resource_type type;
 	union {
 		git_blame_options *blame_options;
