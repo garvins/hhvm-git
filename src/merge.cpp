@@ -156,20 +156,21 @@ Resource HHVM_FUNCTION(git_merge_trees,
 Resource HHVM_FUNCTION(git_merge,
 	const Resource& repo,
 	const Resource& their_heads,
-	const Resource& opts)
+	const Array& opts)
 {
 	Git2Resource *return_value = new Git2Resource();
-	const git_merge_head *heads[1];
+    const git_merge_head *heads[1];
+    
+    // todo handle multiple heads an handle opts
     
 	git_merge_result **out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto their_heads_ = dyn_cast<Git2Resource>(their_heads);
-	auto opts_ = dyn_cast<Git2Resource>(opts);
     
     heads[0] = HHVM_GIT2_V(their_heads_, merge_head);
 
-	git_merge(out, HHVM_GIT2_V(repo_, repository), heads, 1, HHVM_GIT2_V(opts_, merge_opts));
+	git_merge(out, HHVM_GIT2_V(repo_, repository), heads, 1, NULL);
 	HHVM_GIT2_V(return_value, merge_result) = *out;
 	return Resource(return_value);
 }

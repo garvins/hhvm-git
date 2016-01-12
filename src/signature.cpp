@@ -7,6 +7,7 @@
 
 #include "hphp/system/systemlib.h"
 
+#include "hphp/runtime/base/array-init.h"
 #include "signature.h"
 
 using namespace HPHP;
@@ -26,17 +27,27 @@ Resource HHVM_FUNCTION(git_signature_new,
 	return Resource(return_value);
 }
 
-Resource HHVM_FUNCTION(git_signature_now,
+Array HHVM_FUNCTION(git_signature_now,
 	const String& name,
 	const String& email)
 {
-	auto return_value = req::make<Git2Resource>();
-
 	git_signature *out = NULL;
-
-	git_signature_now(&out, name.c_str(), email.c_str());
-	HHVM_GIT2_V(return_value, signature) = out;
-	return Resource(return_value);
+    char *name_ = NULL, *email_ = NULL;
+    Array return_value;
+    
+    git_signature_now(&out, name.c_str(), email.c_str());
+    
+    if (out->name != NULL) {
+        name_ = out->name;
+    }
+    
+    if (out->email != NULL) {
+        email_ = out->email;
+    }
+    
+    return_value = make_map_array("name" , name_, "email", email_, "time", 0 /* todo return time */);
+    
+    return return_value;
 }
 
 Resource HHVM_FUNCTION(git_signature_default,

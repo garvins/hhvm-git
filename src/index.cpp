@@ -254,15 +254,37 @@ int64_t HHVM_FUNCTION(git_index_remove_directory,
 
 int64_t HHVM_FUNCTION(git_index_add,
 	const Resource& index,
-	const Resource& source_entry)
+	const Array& source_entry)
 {
+    git_index_entry *entry;
 	int result;
 	int64_t return_value;
-
+    git_oid *id = NULL;
+    
+    if (git_oid_fromstrn(id,  source_entry[String("oid")].toString().c_str(),  source_entry[String("oid")].toString().length())) {
+        // todo error
+    }
+    
+    memset(entry, '\0', sizeof(git_index_entry));
+    
+    entry->ctime.seconds = (git_time_t) 0; //todo
+    entry->ctime.nanoseconds = (unsigned int) 0; //todo
+    entry->mtime.seconds = (git_time_t) 0; //todo
+    entry->mtime.nanoseconds = (unsigned int) 0; //todo
+    entry->dev = (unsigned int) source_entry[String("dev")].toInt64();
+    entry->ino = (unsigned int) source_entry[String("ino")].toInt64();
+    entry->mode = (unsigned int) source_entry[String("mode")].toInt64();
+    entry->uid = (unsigned int) source_entry[String("uid")].toInt64();
+    entry->gid = (unsigned int) source_entry[String("gid")].toInt64();
+    entry->file_size = (git_off_t) source_entry[String("file_size")].toInt64();
+    entry->oid = *id;
+    entry->flags = (unsigned short) source_entry[String("flags")].toInt64();
+    entry->flags_extended = (unsigned short) source_entry[String("flags_extended")].toInt64();
+    entry->path = source_entry[String("path")].toString().mutableData();
+    
 	auto index_ = dyn_cast<Git2Resource>(index);
-	auto source_entry_ = dyn_cast<Git2Resource>(source_entry);
 
-	result = git_index_add(HHVM_GIT2_V(index_, index), HHVM_GIT2_V(source_entry_, index_entry));
+	result = git_index_add(HHVM_GIT2_V(index_, index), entry);
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -421,8 +443,8 @@ Array HHVM_FUNCTION(git_index_conflict_get,
     git_index_conflict_get(&ancestor_out, &our_out, &their_out, HHVM_GIT2_V(index_, index), path.c_str());
     
     git_oid_fmt(ancestor_buf, &ancestor_out->oid);
-    ancestor = make_map_array("ctime", 0,
-                              "mtime", 0,
+    ancestor = make_map_array("ctime", 0, //todo
+                              "mtime", 0, //todo
                               "dev", (int64_t) ancestor_out->dev,
                               "ino", (int64_t) ancestor_out->ino,
                               "mode", (int64_t) ancestor_out->mode,
@@ -435,8 +457,8 @@ Array HHVM_FUNCTION(git_index_conflict_get,
                               "path", String(ancestor_out->path));
     
     git_oid_fmt(our_buf, &our_out->oid);
-    our = make_map_array("ctime", 0,
-                         "mtime", 0,
+    our = make_map_array("ctime", 0, //todo
+                         "mtime", 0, //todo
                          "dev", (int64_t) our_out->dev,
                          "ino", (int64_t) our_out->ino,
                          "mode", (int64_t) our_out->mode,
@@ -449,8 +471,8 @@ Array HHVM_FUNCTION(git_index_conflict_get,
                          "path", String(our_out->path));
     
     git_oid_fmt(their_buf, &their_out->oid);
-    their = make_map_array("ctime", 0,
-                           "mtime", 0,
+    their = make_map_array("ctime", 0, //todo
+                           "mtime", 0, //todo
                            "dev", (int64_t) their_out->dev,
                            "ino", (int64_t) their_out->ino,
                            "mode", (int64_t) their_out->mode,
@@ -531,8 +553,8 @@ Array HHVM_FUNCTION(git_index_conflict_next,
     git_index_conflict_next(&ancestor_out, &our_out, &their_out, HHVM_GIT2_V(iterator_, index_conflict_iterator));
     
     git_oid_fmt(ancestor_buf, &ancestor_out->oid);
-    ancestor = make_map_array("ctime", 0,
-                              "mtime", 0,
+    ancestor = make_map_array("ctime", 0, //todo
+                              "mtime", 0, //todo
                               "dev", (int64_t) ancestor_out->dev,
                               "ino", (int64_t) ancestor_out->ino,
                               "mode", (int64_t) ancestor_out->mode,
@@ -545,8 +567,8 @@ Array HHVM_FUNCTION(git_index_conflict_next,
                               "path", String(ancestor_out->path));
     
     git_oid_fmt(our_buf, &our_out->oid);
-    our = make_map_array("ctime", 0,
-                         "mtime", 0,
+    our = make_map_array("ctime", 0, //todo
+                         "mtime", 0, //todo
                          "dev", (int64_t) our_out->dev,
                          "ino", (int64_t) our_out->ino,
                          "mode", (int64_t) our_out->mode,
@@ -559,8 +581,8 @@ Array HHVM_FUNCTION(git_index_conflict_next,
                          "path", String(our_out->path));
     
     git_oid_fmt(their_buf, &their_out->oid);
-    their = make_map_array("ctime", 0,
-                           "mtime", 0,
+    their = make_map_array("ctime", 0, //todo
+                           "mtime", 0, //todo
                            "dev", (int64_t) their_out->dev,
                            "ino", (int64_t) their_out->ino,
                            "mode", (int64_t) their_out->mode,

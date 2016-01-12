@@ -78,7 +78,7 @@ int64_t HHVM_FUNCTION(git_index_remove_directory,
 
 int64_t HHVM_FUNCTION(git_index_add,
 	const Resource& index,
-	const Resource& source_entry);
+	const Array& source_entry);
 
 int64_t HHVM_FUNCTION(git_index_entry_stage,
 	const Resource& entry);

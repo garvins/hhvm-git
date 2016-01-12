@@ -19,13 +19,13 @@ Resource HHVM_FUNCTION(git_diff_tree_to_tree,
 	const Resource& repo,
 	const Resource& old_tree,
 	const Resource& new_tree,
-	const Resource& opts);
+	const Array& opts = null_array);
 
 Resource HHVM_FUNCTION(git_diff_tree_to_index,
 	const Resource& repo,
 	const Resource& old_tree,
 	const Resource& index,
-	const Resource& opts);
+	const Array& opts = null_array);
 
 Resource HHVM_FUNCTION(git_diff_index_to_workdir,
 	const Resource& repo,
@@ -40,7 +40,7 @@ Resource HHVM_FUNCTION(git_diff_tree_to_workdir,
 Resource HHVM_FUNCTION(git_diff_tree_to_workdir_with_index,
 	const Resource& repo,
 	const Resource& old_tree,
-	const Resource& opts);
+	const Array& opts = null_array);
 
 int64_t HHVM_FUNCTION(git_diff_merge,
 	const Resource& onto,

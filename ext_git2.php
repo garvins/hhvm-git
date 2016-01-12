@@ -83,7 +83,7 @@ function git_blob_id(resource $blob): string;
 function git_blob_owner(resource $blob): resource;
 
 <<__Native>>
-function git_blob_rawcontent(resource $blob): void;
+function git_blob_rawcontent(resource $blob): string;
 
 <<__Native>>
 function git_blob_rawsize(resource $blob): int;
@@ -190,6 +190,9 @@ function git_buf_set(resource $buffer,
 // --------------- checkout.h ---------------
 
 <<__Native>>
+function git_checkout_opts_new(): array;
+
+<<__Native>>
 function git_checkout_head(resource $repo,
                            resource $opts): int;
 
@@ -201,7 +204,7 @@ function git_checkout_index(resource $repo,
 <<__Native>>
 function git_checkout_tree(resource $repo,
                            resource $treeish,
-                           resource $opts): int;
+                           array $opts): int;
 
 
 // --------------- clone.h ---------------
@@ -286,13 +289,13 @@ function git_commit_nth_gen_ancestor(resource $commit,
 <<__Native>>
 function git_commit_create(resource $repo,
                            string $update_ref,
-                           resource $author,
-                           resource $committer,
+                           array $author,
+                           array $committer,
                            string $message_encoding,
                            string $message,
                            resource $tree,
                            int $parent_count,
-                           resource $parents): string;
+                           array $parents): string;
 
 <<__Native>>
 function git_commit_create_v(resource $repo,
@@ -494,13 +497,13 @@ function git_diff_free(resource $diff): void;
 function git_diff_tree_to_tree(resource $repo,
                                resource $old_tree,
                                resource $new_tree,
-                               resource $opts): resource;
+                               array $opts): resource;
 
 <<__Native>>
 function git_diff_tree_to_index(resource $repo,
                                 resource $old_tree,
                                 resource $index,
-                                resource $opts): resource;
+                                array $opts): resource;
 
 <<__Native>>
 function git_diff_index_to_workdir(resource $repo,
@@ -515,7 +518,7 @@ function git_diff_tree_to_workdir(resource $repo,
 <<__Native>>
 function git_diff_tree_to_workdir_with_index(resource $repo,
                                              resource $old_tree,
-                                             resource $opts): resource;
+                                             array $opts): resource;
 
 <<__Native>>
 function git_diff_merge(resource $onto,
@@ -720,7 +723,7 @@ function git_index_remove_directory(resource $index,
 
 <<__Native>>
 function git_index_add(resource $index,
-                       resource $source_entry): int;
+                       array $source_entry): int;
 
 <<__Native>>
 function git_index_entry_stage(resource $entry): int;
@@ -852,7 +855,7 @@ function git_merge_trees(resource $repo,
 <<__Native>>
 function git_merge(resource $repo,
                    resource $their_heads,
-                   resource $opts): resource;
+                   array $opts): resource;
 
 <<__Native>>
 function git_merge_result_is_uptodate(resource $merge_result): int;
@@ -2014,7 +2017,7 @@ function git_signature_new(string $name,
 
 <<__Native>>
 function git_signature_now(string $name,
-                           string $email): resource;
+                           string $email): array;
 
 <<__Native>>
 function git_signature_default(resource $repo): resource;

@@ -128,6 +128,7 @@ static class Git2Extension : public Extension  {
 
 
       // --------------- checkout.h ---------------
+      HHVM_FE(git_checkout_opts_new);
       HHVM_FE(git_checkout_head);
       HHVM_FE(git_checkout_index);
       HHVM_FE(git_checkout_tree);
@@ -205,7 +206,7 @@ static class Git2Extension : public Extension  {
       HHVM_FE(git_config_parse_bool);
       HHVM_FE(git_config_parse_int32);
       HHVM_FE(git_config_parse_int64);
-      HHVM_FE(git_config_backend_foreach_match);
+      //HHVM_FE(git_config_backend_foreach_match);
 
 
       // --------------- cred_helpers.h ---------------

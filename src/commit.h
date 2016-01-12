@@ -78,13 +78,13 @@ Resource HHVM_FUNCTION(git_commit_nth_gen_ancestor,
 String HHVM_FUNCTION(git_commit_create,
 	const Resource& repo,
 	const String& update_ref,
-	const Resource& author,
-	const Resource& committer,
+	const Array& author,
+	const Array& committer,
 	const String& message_encoding,
 	const String& message,
 	const Resource& tree,
 	int64_t parent_count,
-	const Resource& parents);
+	const Array& parents);
 
 String HHVM_FUNCTION(git_commit_create_v,
 	const Resource& repo,

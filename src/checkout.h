@@ -12,6 +12,8 @@
 
 using namespace HPHP;
 
+Array HHVM_FUNCTION(git_checkout_opts_new);
+
 int64_t HHVM_FUNCTION(git_checkout_head,
 	const Resource& repo,
 	const Resource& opts);
@@ -24,7 +26,7 @@ int64_t HHVM_FUNCTION(git_checkout_index,
 int64_t HHVM_FUNCTION(git_checkout_tree,
 	const Resource& repo,
 	const Resource& treeish,
-	const Resource& opts);
+	const Array& opts);
 
 #endif
 

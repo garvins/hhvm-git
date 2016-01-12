@@ -49,7 +49,7 @@ Resource HHVM_FUNCTION(git_merge_trees,
 Resource HHVM_FUNCTION(git_merge,
 	const Resource& repo,
 	const Resource& their_heads,
-	const Resource& opts);
+	const Array& opts);
 
 int64_t HHVM_FUNCTION(git_merge_result_is_uptodate,
 	const Resource& merge_result);

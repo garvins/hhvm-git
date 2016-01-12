@@ -18,7 +18,7 @@ Resource HHVM_FUNCTION(git_signature_new,
 	int64_t time,
 	int64_t offset);
 
-Resource HHVM_FUNCTION(git_signature_now,
+Array HHVM_FUNCTION(git_signature_now,
 	const String& name,
 	const String& email);
 

@@ -302,25 +302,47 @@ Resource HHVM_FUNCTION(git_commit_nth_gen_ancestor,
 String HHVM_FUNCTION(git_commit_create,
 	const Resource& repo,
 	const String& update_ref,
-	const Resource& author,
-	const Resource& committer,
+	const Array& author,
+	const Array& committer,
 	const String& message_encoding,
 	const String& message,
 	const Resource& tree,
 	int64_t parent_count,
-	const Resource& parents)
+	const Array& parents)
 {
+    int result;
 	char *return_value;
-
+    const git_commit **__parents = NULL;
+	git_signature *__author, *__committer;
 	git_oid id;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	auto author_ = dyn_cast<Git2Resource>(author);
-	auto committer_ = dyn_cast<Git2Resource>(committer);
 	auto tree_ = dyn_cast<Git2Resource>(tree);
-	auto parents_ = dyn_cast<Git2Resource>(parents);
+    
+    memset(__author, '\0', sizeof(git_signature));
+    memset(__committer, '\0', sizeof(git_signature));
+    
+    __author->name = author[String("name")].toString().mutableData();
+    __author->email = author[String("email")].toString().mutableData();
+    __author->when.time = (git_time_t) 0; //todo
+    __author->when.offset = (int) 0; //todo
+    __committer->name = committer[String("name")].toString().mutableData();
+    __committer->email = committer[String("email")].toString().mutableData();
+    __committer->when.time = (git_time_t) 0; //todo
+    __committer->when.offset = (int) 0; //todo
+    
+    __parents = (const git_commit**) malloc(parent_count * sizeof(git_commit*));
+    for(int i = 0; i < parent_count; i++) {
+        auto p = dyn_cast<Git2Resource>(parents[i].toResource());
+        __parents[i] = HHVM_GIT2_V(p, commit);
+    }
 
-	git_commit_create(&id, HHVM_GIT2_V(repo_, repository), update_ref.c_str(), HHVM_GIT2_V(author_, signature), HHVM_GIT2_V(committer_, signature), message_encoding.c_str(), message.c_str(), HHVM_GIT2_V(tree_, tree), (int) parent_count, NULL /*HHVM_GIT2_V(parents_, commit) todo */);
+	result = git_commit_create(&id, HHVM_GIT2_V(repo_, repository), update_ref.c_str(), __author, __committer, message_encoding.c_str(), message.c_str(), HHVM_GIT2_V(tree_, tree), (int) parent_count, __parents);
+    
+    if (result != 0) {
+        throw SystemLib::AllocExceptionObject("got an error!");
+    }
+    
 	git_oid_fmt(return_value, &id);
 	return String(return_value);
 }

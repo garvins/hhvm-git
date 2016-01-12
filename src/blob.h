@@ -30,7 +30,7 @@ String HHVM_FUNCTION(git_blob_id,
 Resource HHVM_FUNCTION(git_blob_owner,
 	const Resource& blob);
 
-void HHVM_FUNCTION(git_blob_rawcontent,
+String HHVM_FUNCTION(git_blob_rawcontent,
 	const Resource& blob);
 
 int64_t HHVM_FUNCTION(git_blob_rawsize,

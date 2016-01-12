@@ -87,13 +87,20 @@ Resource HHVM_FUNCTION(git_blob_owner,
 	return Resource(return_value);
 }
 
-void HHVM_FUNCTION(git_blob_rawcontent,
+String HHVM_FUNCTION(git_blob_rawcontent,
 	const Resource& blob)
 {
+    const char *buffer = NULL;
 
 	auto blob_ = dyn_cast<Git2Resource>(blob);
 
-	git_blob_rawcontent(HHVM_GIT2_V(blob_, blob));
+	buffer = (const char*) git_blob_rawcontent(HHVM_GIT2_V(blob_, blob));
+    
+    if (buffer == NULL) {
+        throw SystemLib::AllocExceptionObject("got an error!");
+    }
+    
+    return String(buffer);
 }
 
 int64_t HHVM_FUNCTION(git_blob_rawsize,
