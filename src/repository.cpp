@@ -251,7 +251,13 @@ String HHVM_FUNCTION(git_repository_workdir,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
 	result = git_repository_workdir(HHVM_GIT2_V(repo_, repository));
-	return_value = String(result);
+    
+    if (result != NULL) {
+        return_value = String(result);
+    } else {
+        return_value = "";
+    }
+    
 	return return_value;
 }
 

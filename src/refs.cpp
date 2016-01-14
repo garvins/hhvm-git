@@ -460,7 +460,7 @@ Variant HHVM_FUNCTION(git_reference_next,
     
     if (result == GIT_ITEROVER) {
         //todo return null
-        return Variant(nullptr);
+        return Variant(false);
         const git_error *error = giterr_last();
         SystemLib::throwInvalidArgumentExceptionObject(error->message);
     } else if (result != GIT_OK) {
