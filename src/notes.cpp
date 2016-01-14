@@ -42,13 +42,13 @@ String HHVM_FUNCTION(git_note_next,
 	git_oid note_id;
 	git_oid annotated_id_;
 
-	if (git_oid_fromstr(annotated_id_, annotated_id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&annotated_id_, annotated_id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 	auto it_ = dyn_cast<Git2Resource>(it);
 
-	git_note_next(&note_id, annotated_id_, HHVM_GIT2_V(it_, note_iterator));
+	git_note_next(&note_id, &annotated_id_, HHVM_GIT2_V(it_, note_iterator));
 	git_oid_fmt(return_value, &note_id);
 	return String(return_value);
 }
@@ -64,12 +64,12 @@ Resource HHVM_FUNCTION(git_note_read,
 	git_oid oid_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	if (git_oid_fromstr(oid_, oid.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&oid_, oid.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_note_read(&out, HHVM_GIT2_V(repo_, repository), notes_ref.c_str(), oid_);
+	git_note_read(&out, HHVM_GIT2_V(repo_, repository), notes_ref.c_str(), &oid_);
 	HHVM_GIT2_V(return_value, note) = out;
 	return Resource(return_value);
 }
@@ -117,12 +117,12 @@ String HHVM_FUNCTION(git_note_create,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto author_ = dyn_cast<Git2Resource>(author);
 	auto committer_ = dyn_cast<Git2Resource>(committer);
-	if (git_oid_fromstr(oid_, oid.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&oid_, oid.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_note_create(&out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(author_, signature), HHVM_GIT2_V(committer_, signature), notes_ref.c_str(), oid_, note.c_str(), (int) force);
+	git_note_create(&out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(author_, signature), HHVM_GIT2_V(committer_, signature), notes_ref.c_str(), &oid_, note.c_str(), (int) force);
 	git_oid_fmt(return_value, &out);
 	return String(return_value);
 }
@@ -142,12 +142,12 @@ int64_t HHVM_FUNCTION(git_note_remove,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto author_ = dyn_cast<Git2Resource>(author);
 	auto committer_ = dyn_cast<Git2Resource>(committer);
-	if (git_oid_fromstr(oid_, oid.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&oid_, oid.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	result = git_note_remove(HHVM_GIT2_V(repo_, repository), notes_ref.c_str(), HHVM_GIT2_V(author_, signature), HHVM_GIT2_V(committer_, signature), oid_);
+	result = git_note_remove(HHVM_GIT2_V(repo_, repository), notes_ref.c_str(), HHVM_GIT2_V(author_, signature), HHVM_GIT2_V(committer_, signature), &oid_);
 	return_value = (int64_t) result;
 	return return_value;
 }

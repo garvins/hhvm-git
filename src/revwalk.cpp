@@ -42,12 +42,12 @@ int64_t HHVM_FUNCTION(git_revwalk_push,
 	git_oid id_;
 
 	auto walk_ = dyn_cast<Git2Resource>(walk);
-	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	result = git_revwalk_push(HHVM_GIT2_V(walk_, revwalk), id_);
+	result = git_revwalk_push(HHVM_GIT2_V(walk_, revwalk), &id_);
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -89,12 +89,12 @@ int64_t HHVM_FUNCTION(git_revwalk_hide,
 	git_oid commit_id_;
 
 	auto walk_ = dyn_cast<Git2Resource>(walk);
-	if (git_oid_fromstr(commit_id_, commit_id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&commit_id_, commit_id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	result = git_revwalk_hide(HHVM_GIT2_V(walk_, revwalk), commit_id_);
+	result = git_revwalk_hide(HHVM_GIT2_V(walk_, revwalk), &commit_id_);
 	return_value = (int64_t) result;
 	return return_value;
 }

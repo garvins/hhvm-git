@@ -135,20 +135,20 @@ int64_t HHVM_FUNCTION(git_index_reuc_add,
 	git_oid their_id_;
 
 	auto index_ = dyn_cast<Git2Resource>(index);
-	if (git_oid_fromstr(ancestor_id_, ancestor_id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&ancestor_id_, ancestor_id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
-	if (git_oid_fromstr(our_id_, our_id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&our_id_, our_id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
-	if (git_oid_fromstr(their_id_, their_id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&their_id_, their_id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	result = git_index_reuc_add(HHVM_GIT2_V(index_, index), path.c_str(), (int) ancestor_mode, ancestor_id_, (int) our_mode, our_id_, (int) their_mode, their_id_);
+	result = git_index_reuc_add(HHVM_GIT2_V(index_, index), path.c_str(), (int) ancestor_mode, &ancestor_id_, (int) our_mode, &our_id_, (int) their_mode, &their_id_);
 	return_value = (int64_t) result;
 	return return_value;
 }

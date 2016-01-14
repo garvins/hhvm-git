@@ -408,12 +408,12 @@ int64_t HHVM_FUNCTION(git_repository_set_head_detached,
 	git_oid commitish_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	if (git_oid_fromstr(commitish_, commitish.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&commitish_, commitish.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	result = git_repository_set_head_detached(HHVM_GIT2_V(repo_, repository), commitish_);
+	result = git_repository_set_head_detached(HHVM_GIT2_V(repo_, repository), &commitish_);
 	return_value = (int64_t) result;
 	return return_value;
 }

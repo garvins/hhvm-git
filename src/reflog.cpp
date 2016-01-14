@@ -49,13 +49,13 @@ int64_t HHVM_FUNCTION(git_reflog_append,
 	git_oid id_;
 
 	auto reflog_ = dyn_cast<Git2Resource>(reflog);
-	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 	auto committer_ = dyn_cast<Git2Resource>(committer);
 
-	result = git_reflog_append(HHVM_GIT2_V(reflog_, reflog), id_, HHVM_GIT2_V(committer_, signature), msg.c_str());
+	result = git_reflog_append(HHVM_GIT2_V(reflog_, reflog), &id_, HHVM_GIT2_V(committer_, signature), msg.c_str());
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -73,13 +73,13 @@ int64_t HHVM_FUNCTION(git_reflog_append_to,
 	git_oid id_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 	auto committer_ = dyn_cast<Git2Resource>(committer);
 
-	result = git_reflog_append_to(HHVM_GIT2_V(repo_, repository), name.c_str(), id_, HHVM_GIT2_V(committer_, signature), msg.c_str());
+	result = git_reflog_append_to(HHVM_GIT2_V(repo_, repository), name.c_str(), &id_, HHVM_GIT2_V(committer_, signature), msg.c_str());
 	return_value = (int64_t) result;
 	return return_value;
 }

@@ -20,16 +20,16 @@ Resource HHVM_FUNCTION(git_reference__alloc,
 	git_oid oid_;
 	git_oid peel_;
 
-	if (git_oid_fromstr(oid_, oid.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&oid_, oid.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
-	if (git_oid_fromstr(peel_, peel.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&peel_, peel.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	result = git_reference__alloc(name.c_str(), oid_, peel_);
+	result = git_reference__alloc(name.c_str(), &oid_, &peel_);
 	HHVM_GIT2_V(return_value, reference) = result;
 	return Resource(return_value);
 }

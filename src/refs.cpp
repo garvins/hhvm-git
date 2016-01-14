@@ -95,12 +95,12 @@ Resource HHVM_FUNCTION(git_reference_create,
 	git_oid id_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_reference_create(&out, HHVM_GIT2_V(repo_, repository), name.c_str(), id_, (int) force);
+	git_reference_create(&out, HHVM_GIT2_V(repo_, repository), name.c_str(), &id_, (int) force);
 	HHVM_GIT2_V(return_value, reference) = out;
 	return Resource(return_value);
 }
@@ -222,12 +222,12 @@ Resource HHVM_FUNCTION(git_reference_set_target,
 	git_oid id_;
 
 	auto ref_ = dyn_cast<Git2Resource>(ref);
-	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_reference_set_target(&out, HHVM_GIT2_V(ref_, reference), id_);
+	git_reference_set_target(&out, HHVM_GIT2_V(ref_, reference), &id_);
 	HHVM_GIT2_V(return_value, reference) = out;
 	return Resource(return_value);
 }

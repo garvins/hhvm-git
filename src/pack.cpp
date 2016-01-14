@@ -48,12 +48,12 @@ int64_t HHVM_FUNCTION(git_packbuilder_insert,
 	git_oid id_;
 
 	auto pb_ = dyn_cast<Git2Resource>(pb);
-	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	result = git_packbuilder_insert(HHVM_GIT2_V(pb_, packbuilder), id_, name.c_str());
+	result = git_packbuilder_insert(HHVM_GIT2_V(pb_, packbuilder), &id_, name.c_str());
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -68,12 +68,12 @@ int64_t HHVM_FUNCTION(git_packbuilder_insert_tree,
 	git_oid id_;
 
 	auto pb_ = dyn_cast<Git2Resource>(pb);
-	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	result = git_packbuilder_insert_tree(HHVM_GIT2_V(pb_, packbuilder), id_);
+	result = git_packbuilder_insert_tree(HHVM_GIT2_V(pb_, packbuilder), &id_);
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -88,12 +88,12 @@ int64_t HHVM_FUNCTION(git_packbuilder_insert_commit,
 	git_oid id_;
 
 	auto pb_ = dyn_cast<Git2Resource>(pb);
-	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	result = git_packbuilder_insert_commit(HHVM_GIT2_V(pb_, packbuilder), id_);
+	result = git_packbuilder_insert_commit(HHVM_GIT2_V(pb_, packbuilder), &id_);
 	return_value = (int64_t) result;
 	return return_value;
 }

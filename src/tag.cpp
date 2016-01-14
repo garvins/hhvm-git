@@ -19,12 +19,12 @@ Resource HHVM_FUNCTION(git_tag_lookup,
 	git_oid id_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_tag_lookup(&out, HHVM_GIT2_V(repo_, repository), id_);
+	git_tag_lookup(&out, HHVM_GIT2_V(repo_, repository), &id_);
 	HHVM_GIT2_V(return_value, tag) = out;
 	return Resource(return_value);
 }
@@ -40,12 +40,12 @@ Resource HHVM_FUNCTION(git_tag_lookup_prefix,
 	git_oid id_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_tag_lookup_prefix(&out, HHVM_GIT2_V(repo_, repository), id_, (size_t) len);
+	git_tag_lookup_prefix(&out, HHVM_GIT2_V(repo_, repository), &id_, (size_t) len);
 	HHVM_GIT2_V(return_value, tag) = out;
 	return Resource(return_value);
 }

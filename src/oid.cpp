@@ -67,12 +67,12 @@ String HHVM_FUNCTION(git_oid_fmt,
 	char out;
 	git_oid id_;
 
-	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_oid_fmt(&out, id_);
+	git_oid_fmt(&out, &id_);
 	return_value = String(&out);
 	return return_value;
 }
@@ -86,12 +86,12 @@ String HHVM_FUNCTION(git_oid_nfmt,
 	char out;
 	git_oid id_;
 
-	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_oid_nfmt(&out, (size_t) n, id_);
+	git_oid_nfmt(&out, (size_t) n, &id_);
 	return_value = String(&out);
 	return return_value;
 }
@@ -104,12 +104,12 @@ String HHVM_FUNCTION(git_oid_pathfmt,
 	char out;
 	git_oid id_;
 
-	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_oid_pathfmt(&out, id_);
+	git_oid_pathfmt(&out, &id_);
 	return_value = String(&out);
 	return return_value;
 }
@@ -122,12 +122,12 @@ String HHVM_FUNCTION(git_oid_allocfmt,
 
 	git_oid id_;
 
-	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	result = git_oid_allocfmt(id_);
+	result = git_oid_allocfmt(&id_);
 	return_value = String(result);
 	return return_value;
 }
@@ -141,12 +141,12 @@ String HHVM_FUNCTION(git_oid_tostr,
 	char out;
 	git_oid id_;
 
-	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_oid_tostr(&out, (size_t) n, id_);
+	git_oid_tostr(&out, (size_t) n, &id_);
 	return_value = String(&out);
 	return return_value;
 }
@@ -159,12 +159,12 @@ String HHVM_FUNCTION(git_oid_cpy,
 	git_oid out;
 	git_oid src_;
 
-	if (git_oid_fromstr(src_, src.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&src_, src.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_oid_cpy(&out, src_);
+	git_oid_cpy(&out, &src_);
 	git_oid_fmt(return_value, &out);
 	return String(return_value);
 }
@@ -179,16 +179,16 @@ int64_t HHVM_FUNCTION(git_oid_cmp,
 	git_oid a_;
 	git_oid b_;
 
-	if (git_oid_fromstr(a_, a.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&a_, a.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
-	if (git_oid_fromstr(b_, b.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&b_, b.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	result = git_oid_cmp(a_, b_);
+	result = git_oid_cmp(&a_, &b_);
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -204,16 +204,16 @@ int64_t HHVM_FUNCTION(git_oid_ncmp,
 	git_oid a_;
 	git_oid b_;
 
-	if (git_oid_fromstr(a_, a.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&a_, a.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
-	if (git_oid_fromstr(b_, b.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&b_, b.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	result = git_oid_ncmp(a_, b_, (size_t) len);
+	result = git_oid_ncmp(&a_, &b_, (size_t) len);
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -227,12 +227,12 @@ int64_t HHVM_FUNCTION(git_oid_streq,
 
 	git_oid id_;
 
-	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	result = git_oid_streq(id_, str.c_str());
+	result = git_oid_streq(&id_, str.c_str());
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -246,12 +246,12 @@ int64_t HHVM_FUNCTION(git_oid_strcmp,
 
 	git_oid id_;
 
-	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	result = git_oid_strcmp(id_, str.c_str());
+	result = git_oid_strcmp(&id_, str.c_str());
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -264,12 +264,12 @@ int64_t HHVM_FUNCTION(git_oid_iszero,
 
 	git_oid id_;
 
-	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	result = git_oid_iszero(id_);
+	result = git_oid_iszero(&id_);
 	return_value = (int64_t) result;
 	return return_value;
 }

@@ -65,12 +65,12 @@ Resource HHVM_FUNCTION(git_odb_read,
 	git_oid id_;
 
 	auto db_ = dyn_cast<Git2Resource>(db);
-	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_odb_read(&out, HHVM_GIT2_V(db_, odb), id_);
+	git_odb_read(&out, HHVM_GIT2_V(db_, odb), &id_);
 	HHVM_GIT2_V(return_value, odb_object) = out;
 	return Resource(return_value);
 }
@@ -86,12 +86,12 @@ Resource HHVM_FUNCTION(git_odb_read_prefix,
 	git_oid short_id_;
 
 	auto db_ = dyn_cast<Git2Resource>(db);
-	if (git_oid_fromstr(short_id_, short_id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&short_id_, short_id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_odb_read_prefix(&out, HHVM_GIT2_V(db_, odb), short_id_, (size_t) len);
+	git_odb_read_prefix(&out, HHVM_GIT2_V(db_, odb), &short_id_, (size_t) len);
 	HHVM_GIT2_V(return_value, odb_object) = out;
 	return Resource(return_value);
 }
@@ -107,12 +107,12 @@ int64_t HHVM_FUNCTION(git_odb_read_header,
 	git_oid id_;
 
 	auto db_ = dyn_cast<Git2Resource>(db);
-	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_odb_read_header(&len_out, (git_otype*) type_out, HHVM_GIT2_V(db_, odb), id_);
+	git_odb_read_header(&len_out, (git_otype*) type_out, HHVM_GIT2_V(db_, odb), &id_);
 	return_value = (int64_t) len_out;
 	return return_value;
 }
@@ -127,12 +127,12 @@ int64_t HHVM_FUNCTION(git_odb_exists,
 	git_oid id_;
 
 	auto db_ = dyn_cast<Git2Resource>(db);
-	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	result = git_odb_exists(HHVM_GIT2_V(db_, odb), id_);
+	result = git_odb_exists(HHVM_GIT2_V(db_, odb), &id_);
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -266,12 +266,12 @@ Resource HHVM_FUNCTION(git_odb_open_rstream,
 	git_oid oid_;
 
 	auto db_ = dyn_cast<Git2Resource>(db);
-	if (git_oid_fromstr(oid_, oid.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&oid_, oid.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_odb_open_rstream(&out, HHVM_GIT2_V(db_, odb), oid_);
+	git_odb_open_rstream(&out, HHVM_GIT2_V(db_, odb), &oid_);
 	HHVM_GIT2_V(return_value, odb_stream) = out;
 	return Resource(return_value);
 }

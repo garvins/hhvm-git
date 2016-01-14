@@ -131,7 +131,7 @@ class Source extends Printer {
                 } else if ($hackType == HackType::RESOURCE) {
                     $body .= "\tauto " . $param->getName() . "_ = dyn_cast<Git2Resource>(" . $param->getName() . ");\n";
                 } else if ($hackType == HackType::STRING && $param->getType()->getType() == "git_oid") {
-                    $body .= "\tif (git_oid_fromstr(" . $param->getName() . "_, " . $param->getName() . ".c_str()) != GIT_OK) {\n";
+                    $body .= "\tif (git_oid_fromstr(&" . $param->getName() . "_, " . $param->getName() . ".c_str()) != GIT_OK) {\n";
                     $body .= "\t\tconst git_error *error = giterr_last();\n";
                     $body .= "\t\tSystemLib::throwInvalidArgumentExceptionObject(error->message);\n";
                     $body .= "\t}\n";
@@ -162,7 +162,7 @@ class Source extends Printer {
                                     $body .= "(" . $param->getType()->getType() . ($param->getPointerLvl() > 0 ? "*" : "") . ") " . $param->getName(); break;
                                 case HackType::STRING :
                                     if ($param->getType()->getType() == "git_oid") {
-                                        $body .= $param->getName() ."_";
+                                        $body .= "&" . $param->getName() . "_";
                                     } else {
                                         $body .= $param->getName() . ".c_str()";
                                     }

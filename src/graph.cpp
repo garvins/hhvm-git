@@ -23,16 +23,16 @@ int64_t HHVM_FUNCTION(git_graph_ahead_behind,
 	git_oid upstream_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	if (git_oid_fromstr(local_, local.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&local_, local.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
-	if (git_oid_fromstr(upstream_, upstream.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&upstream_, upstream.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	result = git_graph_ahead_behind((size_t*) ahead, (size_t*) behind, HHVM_GIT2_V(repo_, repository), local_, upstream_);
+	result = git_graph_ahead_behind((size_t*) ahead, (size_t*) behind, HHVM_GIT2_V(repo_, repository), &local_, &upstream_);
 	return_value = (int64_t) result;
 	return return_value;
 }

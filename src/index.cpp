@@ -257,10 +257,11 @@ int64_t HHVM_FUNCTION(git_index_add,
     git_index_entry *entry;
 	int result;
 	int64_t return_value;
-    git_oid *id = NULL;
+    git_oid id;
     
-    if (git_oid_fromstrn(id,  source_entry[String("oid")].toString().c_str(),  source_entry[String("oid")].toString().length())) {
-        // todo error
+    if (git_oid_fromstr(&id,  source_entry[String("oid")].toString().c_str())) {
+        const git_error *error = giterr_last();
+        SystemLib::throwInvalidArgumentExceptionObject(error->message);
     }
     
     memset(entry, '\0', sizeof(git_index_entry));
@@ -275,7 +276,7 @@ int64_t HHVM_FUNCTION(git_index_add,
     entry->uid = (unsigned int) source_entry[String("uid")].toInt64();
     entry->gid = (unsigned int) source_entry[String("gid")].toInt64();
     entry->file_size = (git_off_t) source_entry[String("file_size")].toInt64();
-    entry->oid = *id;
+    entry->oid = id;
     entry->flags = (unsigned short) source_entry[String("flags")].toInt64();
     entry->flags_extended = (unsigned short) source_entry[String("flags_extended")].toInt64();
     entry->path = source_entry[String("path")].toString().mutableData();

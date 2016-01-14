@@ -22,16 +22,16 @@ String HHVM_FUNCTION(git_merge_base,
 	git_oid two_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	if (git_oid_fromstr(one_, one.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&one_, one.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
-	if (git_oid_fromstr(two_, two.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&two_, two.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	result = git_merge_base(&out, HHVM_GIT2_V(repo_, repository), one_, two_);
+	result = git_merge_base(&out, HHVM_GIT2_V(repo_, repository), &one_, &two_);
     
     if (result != 0) {
         throw SystemLib::AllocExceptionObject("got an error!");
@@ -52,12 +52,12 @@ String HHVM_FUNCTION(git_merge_base_many,
 	git_oid input_array_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	if (git_oid_fromstr(input_array_, input_array.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&input_array_, input_array.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_merge_base_many(&out, HHVM_GIT2_V(repo_, repository), (size_t) length, input_array_);
+	git_merge_base_many(&out, HHVM_GIT2_V(repo_, repository), (size_t) length, &input_array_);
 	git_oid_fmt(return_value, &out);
 	return String(return_value);
 }
@@ -90,12 +90,12 @@ Resource HHVM_FUNCTION(git_merge_head_from_fetchhead,
 	git_oid oid_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	if (git_oid_fromstr(oid_, oid.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&oid_, oid.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_merge_head_from_fetchhead(&out, HHVM_GIT2_V(repo_, repository), branch_name.c_str(), remote_url.c_str(), oid_);
+	git_merge_head_from_fetchhead(&out, HHVM_GIT2_V(repo_, repository), branch_name.c_str(), remote_url.c_str(), &oid_);
 	HHVM_GIT2_V(return_value, merge_head) = out;
 	return Resource(return_value);
 }
@@ -110,12 +110,12 @@ Resource HHVM_FUNCTION(git_merge_head_from_oid,
 	git_oid oid_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	if (git_oid_fromstr(oid_, oid.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&oid_, oid.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_merge_head_from_oid(&out, HHVM_GIT2_V(repo_, repository), oid_);
+	git_merge_head_from_oid(&out, HHVM_GIT2_V(repo_, repository), &oid_);
 	HHVM_GIT2_V(return_value, merge_head) = out;
 	return Resource(return_value);
 }

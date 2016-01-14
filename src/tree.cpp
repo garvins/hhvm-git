@@ -19,12 +19,12 @@ Resource HHVM_FUNCTION(git_tree_lookup,
 	git_oid id_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_tree_lookup(&out, HHVM_GIT2_V(repo_, repository), id_);
+	git_tree_lookup(&out, HHVM_GIT2_V(repo_, repository), &id_);
 	HHVM_GIT2_V(return_value, tree) = out;
 	return Resource(return_value);
 }
@@ -40,12 +40,12 @@ Resource HHVM_FUNCTION(git_tree_lookup_prefix,
 	git_oid id_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_tree_lookup_prefix(&out, HHVM_GIT2_V(repo_, repository), id_, (size_t) len);
+	git_tree_lookup_prefix(&out, HHVM_GIT2_V(repo_, repository), &id_, (size_t) len);
 	HHVM_GIT2_V(return_value, tree) = out;
 	return Resource(return_value);
 }
@@ -138,12 +138,12 @@ Resource HHVM_FUNCTION(git_tree_entry_byoid,
 	git_oid oid_;
 
 	auto tree_ = dyn_cast<Git2Resource>(tree);
-	if (git_oid_fromstr(oid_, oid.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&oid_, oid.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	result = git_tree_entry_byoid(HHVM_GIT2_V(tree_, tree), oid_);
+	result = git_tree_entry_byoid(HHVM_GIT2_V(tree_, tree), &oid_);
 	//HHVM_GIT2_V(return_value, tree_entry) = result; todo return as array
 	return Resource(return_value);
 }
@@ -352,12 +352,12 @@ Resource HHVM_FUNCTION(git_treebuilder_insert,
 	git_oid id_;
 
 	auto bld_ = dyn_cast<Git2Resource>(bld);
-	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_treebuilder_insert(&out, HHVM_GIT2_V(bld_, treebuilder), filename.c_str(), id_, (git_filemode_t) filemode);
+	git_treebuilder_insert(&out, HHVM_GIT2_V(bld_, treebuilder), filename.c_str(), &id_, (git_filemode_t) filemode);
 	//HHVM_GIT2_V(return_value, tree_entry) = out; todo return as array
 	return Resource(return_value);
 }
@@ -401,14 +401,14 @@ int64_t HHVM_FUNCTION(git_treebuilder_write,
 
 	git_oid id_;
 
-	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
+	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto bld_ = dyn_cast<Git2Resource>(bld);
 
-	result = git_treebuilder_write(id_, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(bld_, treebuilder));
+	result = git_treebuilder_write(&id_, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(bld_, treebuilder));
 	return_value = (int64_t) result;
 	return return_value;
 }
