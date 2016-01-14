@@ -373,7 +373,7 @@ String HHVM_FUNCTION(git_repository_hashfile,
 	int64_t type,
 	const String& as_path)
 {
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid out;
 
@@ -405,10 +405,10 @@ int64_t HHVM_FUNCTION(git_repository_set_head_detached,
 	int result;
 	int64_t return_value;
 
-	git_oid *commitish_ = NULL;
+	git_oid commitish_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	if (git_oid_fromstrn(commitish_, commitish.c_str(), commitish.length())) {
+	if (git_oid_fromstr(commitish_, commitish.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}

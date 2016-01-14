@@ -5,8 +5,6 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/system/systemlib.h"
-
 #include "patch.h"
 
 using namespace HPHP;

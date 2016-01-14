@@ -5,8 +5,6 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/system/systemlib.h"
-
 #include "indexer.h"
 
 using namespace HPHP;
@@ -70,7 +68,7 @@ String HHVM_FUNCTION(git_indexer_hash,
 	const Resource& idx)
 {
 	const git_oid *result;
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	auto idx_ = dyn_cast<Git2Resource>(idx);
 

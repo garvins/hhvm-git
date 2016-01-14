@@ -5,8 +5,6 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/system/systemlib.h"
-
 #include "push.h"
 
 using namespace HPHP;
@@ -119,7 +117,7 @@ int64_t HHVM_FUNCTION(git_push_unpack_ok,
 
 int64_t HHVM_FUNCTION(git_push_status_foreach,
 	const Resource& push,
-	int64_t cb,
+    const Variant& cb,
 	const Variant& data)
 {
 	int result;

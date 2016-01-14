@@ -5,8 +5,6 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/system/systemlib.h"
-
 #include "notes.h"
 
 using namespace HPHP;
@@ -39,12 +37,12 @@ String HHVM_FUNCTION(git_note_next,
 	const String& annotated_id,
 	const Resource& it)
 {
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid note_id;
-	git_oid *annotated_id_ = NULL;
+	git_oid annotated_id_;
 
-	if (git_oid_fromstrn(annotated_id_, annotated_id.c_str(), annotated_id.length())) {
+	if (git_oid_fromstr(annotated_id_, annotated_id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
@@ -63,10 +61,10 @@ Resource HHVM_FUNCTION(git_note_read,
 	auto return_value = req::make<Git2Resource>();
 
 	git_note *out = NULL;
-	git_oid *oid_ = NULL;
+	git_oid oid_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	if (git_oid_fromstrn(oid_, oid.c_str(), oid.length())) {
+	if (git_oid_fromstr(oid_, oid.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
@@ -93,7 +91,7 @@ String HHVM_FUNCTION(git_note_oid,
 	const Resource& note)
 {
 	const git_oid *result;
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	auto note_ = dyn_cast<Git2Resource>(note);
 
@@ -111,15 +109,15 @@ String HHVM_FUNCTION(git_note_create,
 	const String& note,
 	int64_t force)
 {
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid out;
-	git_oid *oid_ = NULL;
+	git_oid oid_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto author_ = dyn_cast<Git2Resource>(author);
 	auto committer_ = dyn_cast<Git2Resource>(committer);
-	if (git_oid_fromstrn(oid_, oid.c_str(), oid.length())) {
+	if (git_oid_fromstr(oid_, oid.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
@@ -139,12 +137,12 @@ int64_t HHVM_FUNCTION(git_note_remove,
 	int result;
 	int64_t return_value;
 
-	git_oid *oid_ = NULL;
+	git_oid oid_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto author_ = dyn_cast<Git2Resource>(author);
 	auto committer_ = dyn_cast<Git2Resource>(committer);
-	if (git_oid_fromstrn(oid_, oid.c_str(), oid.length())) {
+	if (git_oid_fromstr(oid_, oid.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}

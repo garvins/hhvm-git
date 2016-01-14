@@ -5,8 +5,6 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/system/systemlib.h"
-
 #include "reflog.h"
 
 using namespace HPHP;
@@ -48,10 +46,10 @@ int64_t HHVM_FUNCTION(git_reflog_append,
 	int result;
 	int64_t return_value;
 
-	git_oid *id_ = NULL;
+	git_oid id_;
 
 	auto reflog_ = dyn_cast<Git2Resource>(reflog);
-	if (git_oid_fromstrn(id_, id.c_str(), id.length())) {
+	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
@@ -72,10 +70,10 @@ int64_t HHVM_FUNCTION(git_reflog_append_to,
 	int result;
 	int64_t return_value;
 
-	git_oid *id_ = NULL;
+	git_oid id_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	if (git_oid_fromstrn(id_, id.c_str(), id.length())) {
+	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
@@ -161,7 +159,7 @@ String HHVM_FUNCTION(git_reflog_entry_id_old,
 	const Resource& entry)
 {
 	const git_oid *result;
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	auto entry_ = dyn_cast<Git2Resource>(entry);
 
@@ -174,7 +172,7 @@ String HHVM_FUNCTION(git_reflog_entry_id_new,
 	const Resource& entry)
 {
 	const git_oid *result;
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	auto entry_ = dyn_cast<Git2Resource>(entry);
 

@@ -5,7 +5,7 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/system/systemlib.h"
+#include "hphp/runtime/base/builtin-functions.h"
 
 #include "remote.h"
 
@@ -471,15 +471,21 @@ int64_t HHVM_FUNCTION(git_remote_set_transport,
 
 int64_t HHVM_FUNCTION(git_remote_set_callbacks,
 	const Resource& remote,
-	const Resource& callbacks)
+	const Array& callbacks)
 {
 	int result;
 	int64_t return_value;
+    git_remote_callbacks callbacks_ = GIT_REMOTE_CALLBACKS_INIT;
 
 	auto remote_ = dyn_cast<Git2Resource>(remote);
-	auto callbacks_ = dyn_cast<Git2Resource>(callbacks);
-
-	result = git_remote_set_callbacks(HHVM_GIT2_V(remote_, remote), HHVM_GIT2_V(callbacks_, remote_callbacks));
+    
+    if (is_callable(callbacks[String("credentials")])) {
+        // callbacks_.credentials = <todo Konvertierung> callbacks[String("credentials")];
+    } else {
+        throw SystemLib::AllocExceptionObject("is no callback");
+    }
+        
+	result = git_remote_set_callbacks(HHVM_GIT2_V(remote_, remote), &callbacks_);
 	return_value = (int64_t) result;
 	return return_value;
 }

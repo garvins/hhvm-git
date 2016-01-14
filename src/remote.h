@@ -137,7 +137,7 @@ int64_t HHVM_FUNCTION(git_remote_set_transport,
 
 int64_t HHVM_FUNCTION(git_remote_set_callbacks,
 	const Resource& remote,
-	const Resource& callbacks);
+	const Array& callbacks);
 
 Resource HHVM_FUNCTION(git_remote_stats,
 	const Resource& remote);

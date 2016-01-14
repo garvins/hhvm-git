@@ -5,8 +5,6 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/system/systemlib.h"
-
 #include "tag.h"
 
 using namespace HPHP;
@@ -18,10 +16,10 @@ Resource HHVM_FUNCTION(git_tag_lookup,
 	auto return_value = req::make<Git2Resource>();
 
 	git_tag *out = NULL;
-	git_oid *id_ = NULL;
+	git_oid id_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	if (git_oid_fromstrn(id_, id.c_str(), id.length())) {
+	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
@@ -39,10 +37,10 @@ Resource HHVM_FUNCTION(git_tag_lookup_prefix,
 	auto return_value = req::make<Git2Resource>();
 
 	git_tag *out = NULL;
-	git_oid *id_ = NULL;
+	git_oid id_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	if (git_oid_fromstrn(id_, id.c_str(), id.length())) {
+	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
@@ -65,7 +63,7 @@ String HHVM_FUNCTION(git_tag_id,
 	const Resource& tag)
 {
 	const git_oid *result;
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	auto tag_ = dyn_cast<Git2Resource>(tag);
 
@@ -105,7 +103,7 @@ String HHVM_FUNCTION(git_tag_target_id,
 	const Resource& tag)
 {
 	const git_oid *result;
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	auto tag_ = dyn_cast<Git2Resource>(tag);
 
@@ -174,7 +172,7 @@ String HHVM_FUNCTION(git_tag_create,
 	const String& message,
 	int64_t force)
 {
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid oid;
 
@@ -194,7 +192,7 @@ String HHVM_FUNCTION(git_tag_annotation_create,
 	const Resource& tagger,
 	const String& message)
 {
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid oid;
 
@@ -212,7 +210,7 @@ String HHVM_FUNCTION(git_tag_create_frombuffer,
 	const String& buffer,
 	int64_t force)
 {
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid oid;
 
@@ -229,7 +227,7 @@ String HHVM_FUNCTION(git_tag_create_lightweight,
 	const Resource& target,
 	int64_t force)
 {
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid oid;
 

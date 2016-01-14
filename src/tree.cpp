@@ -5,8 +5,6 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/system/systemlib.h"
-
 #include "tree.h"
 
 using namespace HPHP;
@@ -18,10 +16,10 @@ Resource HHVM_FUNCTION(git_tree_lookup,
 	auto return_value = req::make<Git2Resource>();
 
 	git_tree *out = NULL;
-	git_oid *id_ = NULL;
+	git_oid id_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	if (git_oid_fromstrn(id_, id.c_str(), id.length())) {
+	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
@@ -39,10 +37,10 @@ Resource HHVM_FUNCTION(git_tree_lookup_prefix,
 	auto return_value = req::make<Git2Resource>();
 
 	git_tree *out = NULL;
-	git_oid *id_ = NULL;
+	git_oid id_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	if (git_oid_fromstrn(id_, id.c_str(), id.length())) {
+	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
@@ -67,7 +65,7 @@ String HHVM_FUNCTION(git_tree_id,
 	const Resource& tree)
 {
 	const git_oid *result;
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	auto tree_ = dyn_cast<Git2Resource>(tree);
 
@@ -137,10 +135,10 @@ Resource HHVM_FUNCTION(git_tree_entry_byoid,
 	const git_tree_entry *result;
 	auto return_value = req::make<Git2Resource>();
 
-	git_oid *oid_ = NULL;
+	git_oid oid_;
 
 	auto tree_ = dyn_cast<Git2Resource>(tree);
-	if (git_oid_fromstrn(oid_, oid.c_str(), oid.length())) {
+	if (git_oid_fromstr(oid_, oid.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
@@ -204,7 +202,7 @@ String HHVM_FUNCTION(git_tree_entry_id,
 	const Resource& entry)
 {
 	const git_oid *result;
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	auto entry_ = dyn_cast<Git2Resource>(entry);
 
@@ -351,10 +349,10 @@ Resource HHVM_FUNCTION(git_treebuilder_insert,
 	auto return_value = req::make<Git2Resource>();
 
 	const git_tree_entry *out = NULL;
-	git_oid *id_ = NULL;
+	git_oid id_;
 
 	auto bld_ = dyn_cast<Git2Resource>(bld);
-	if (git_oid_fromstrn(id_, id.c_str(), id.length())) {
+	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
@@ -401,9 +399,9 @@ int64_t HHVM_FUNCTION(git_treebuilder_write,
 	int result;
 	int64_t return_value;
 
-	git_oid *id_ = NULL;
+	git_oid id_;
 
-	if (git_oid_fromstrn(id_, id.c_str(), id.length())) {
+	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}

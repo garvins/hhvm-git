@@ -5,8 +5,6 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/system/systemlib.h"
-
 #include "sys_index.h"
 
 using namespace HPHP;
@@ -132,20 +130,20 @@ int64_t HHVM_FUNCTION(git_index_reuc_add,
 	int result;
 	int64_t return_value;
 
-	git_oid *ancestor_id_ = NULL;
-	git_oid *our_id_ = NULL;
-	git_oid *their_id_ = NULL;
+	git_oid ancestor_id_;
+	git_oid our_id_;
+	git_oid their_id_;
 
 	auto index_ = dyn_cast<Git2Resource>(index);
-	if (git_oid_fromstrn(ancestor_id_, ancestor_id.c_str(), ancestor_id.length())) {
+	if (git_oid_fromstr(ancestor_id_, ancestor_id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
-	if (git_oid_fromstrn(our_id_, our_id.c_str(), our_id.length())) {
+	if (git_oid_fromstr(our_id_, our_id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
-	if (git_oid_fromstrn(their_id_, their_id.c_str(), their_id.length())) {
+	if (git_oid_fromstr(their_id_, their_id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}

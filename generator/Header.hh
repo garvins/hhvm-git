@@ -34,7 +34,7 @@ class Header extends Printer {
             
             if(count($function->getParams()) &&
                (preg_match("/out/" ,$function->getParams()[0]->getName()) ||
-                (preg_match("/_((dup|lookup|open|peel|gen_ancestor|create|next|load|rename)($|_)|diff_[\w]*?_to_)/", $function->getName()) && count($function->getParams()) > 1))) {
+                (preg_match("/_((dup|lookup|open|peel|gen_ancestor|create|next|load|rename|add_setup)($|_)|diff_[\w]*?_to_)/", $function->getName()) && count($function->getParams()) > 1))) {
                 $hasOutValue = true;
                 $returnType = $function->getParams()[0]->getType()->getHHVMReturnType();
             } else {

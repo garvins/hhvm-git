@@ -5,8 +5,6 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/system/systemlib.h"
-
 #include "graph.h"
 
 using namespace HPHP;
@@ -21,15 +19,15 @@ int64_t HHVM_FUNCTION(git_graph_ahead_behind,
 	int result;
 	int64_t return_value;
 
-	git_oid *local_ = NULL;
-	git_oid *upstream_ = NULL;
+	git_oid local_;
+	git_oid upstream_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	if (git_oid_fromstrn(local_, local.c_str(), local.length())) {
+	if (git_oid_fromstr(local_, local.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
-	if (git_oid_fromstrn(upstream_, upstream.c_str(), upstream.length())) {
+	if (git_oid_fromstr(upstream_, upstream.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}

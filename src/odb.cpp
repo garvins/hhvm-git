@@ -5,8 +5,6 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/system/systemlib.h"
-
 #include "odb.h"
 
 using namespace HPHP;
@@ -64,10 +62,10 @@ Resource HHVM_FUNCTION(git_odb_read,
 	auto return_value = req::make<Git2Resource>();
 
 	git_odb_object *out = NULL;
-	git_oid *id_ = NULL;
+	git_oid id_;
 
 	auto db_ = dyn_cast<Git2Resource>(db);
-	if (git_oid_fromstrn(id_, id.c_str(), id.length())) {
+	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
@@ -85,10 +83,10 @@ Resource HHVM_FUNCTION(git_odb_read_prefix,
 	auto return_value = req::make<Git2Resource>();
 
 	git_odb_object *out = NULL;
-	git_oid *short_id_ = NULL;
+	git_oid short_id_;
 
 	auto db_ = dyn_cast<Git2Resource>(db);
-	if (git_oid_fromstrn(short_id_, short_id.c_str(), short_id.length())) {
+	if (git_oid_fromstr(short_id_, short_id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
@@ -106,10 +104,10 @@ int64_t HHVM_FUNCTION(git_odb_read_header,
 	int64_t return_value;
 
 	size_t len_out;
-	git_oid *id_ = NULL;
+	git_oid id_;
 
 	auto db_ = dyn_cast<Git2Resource>(db);
-	if (git_oid_fromstrn(id_, id.c_str(), id.length())) {
+	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
@@ -126,10 +124,10 @@ int64_t HHVM_FUNCTION(git_odb_exists,
 	int result;
 	int64_t return_value;
 
-	git_oid *id_ = NULL;
+	git_oid id_;
 
 	auto db_ = dyn_cast<Git2Resource>(db);
-	if (git_oid_fromstrn(id_, id.c_str(), id.length())) {
+	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
@@ -177,7 +175,7 @@ String HHVM_FUNCTION(git_odb_write,
 	int64_t len,
 	int64_t type)
 {
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid out;
 	void *data_ = NULL;
@@ -223,7 +221,7 @@ int64_t HHVM_FUNCTION(git_odb_stream_write,
 String HHVM_FUNCTION(git_odb_stream_finalize_write,
 	const Resource& stream)
 {
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid out;
 
@@ -265,10 +263,10 @@ Resource HHVM_FUNCTION(git_odb_open_rstream,
 	auto return_value = req::make<Git2Resource>();
 
 	git_odb_stream *out = NULL;
-	git_oid *oid_ = NULL;
+	git_oid oid_;
 
 	auto db_ = dyn_cast<Git2Resource>(db);
-	if (git_oid_fromstrn(oid_, oid.c_str(), oid.length())) {
+	if (git_oid_fromstr(oid_, oid.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
@@ -302,7 +300,7 @@ String HHVM_FUNCTION(git_odb_hash,
 	int64_t len,
 	int64_t type)
 {
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid out;
 	void *data_ = NULL;
@@ -316,7 +314,7 @@ String HHVM_FUNCTION(git_odb_hashfile,
 	const String& path,
 	int64_t type)
 {
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid out;
 
@@ -352,7 +350,7 @@ String HHVM_FUNCTION(git_odb_object_id,
 	const Resource& object)
 {
 	const git_oid *result;
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	auto object_ = dyn_cast<Git2Resource>(object);
 

@@ -5,9 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/system/systemlib.h"
-
 #include "refs.h"
+
 using namespace HPHP;
 
 Resource HHVM_FUNCTION(git_reference_lookup,
@@ -35,7 +34,7 @@ String HHVM_FUNCTION(git_reference_name_to_id,
 	const Resource& repo,
 	const String& name)
 {
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid out;
 
@@ -93,10 +92,10 @@ Resource HHVM_FUNCTION(git_reference_create,
 	auto return_value = req::make<Git2Resource>();
 
 	git_reference *out = NULL;
-	git_oid *id_ = NULL;
+	git_oid id_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	if (git_oid_fromstrn(id_, id.c_str(), id.length())) {
+	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
@@ -110,7 +109,7 @@ String HHVM_FUNCTION(git_reference_target,
 	const Resource& ref)
 {
 	const git_oid *result;
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	auto ref_ = dyn_cast<Git2Resource>(ref);
 
@@ -123,7 +122,7 @@ String HHVM_FUNCTION(git_reference_target_peel,
 	const Resource& ref)
 {
 	const git_oid *result;
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	auto ref_ = dyn_cast<Git2Resource>(ref);
 
@@ -220,10 +219,10 @@ Resource HHVM_FUNCTION(git_reference_set_target,
 	auto return_value = req::make<Git2Resource>();
 
 	git_reference *out = NULL;
-	git_oid *id_ = NULL;
+	git_oid id_;
 
 	auto ref_ = dyn_cast<Git2Resource>(ref);
-	if (git_oid_fromstrn(id_, id.c_str(), id.length())) {
+	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}

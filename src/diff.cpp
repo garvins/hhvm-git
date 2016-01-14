@@ -5,8 +5,6 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/system/systemlib.h"
-
 #include "diff.h"
 
 using namespace HPHP;
@@ -260,7 +258,7 @@ int64_t HHVM_FUNCTION(git_diff_print,
 	auto diff_ = dyn_cast<Git2Resource>(diff);
 	print_cb_ = NULL;
 
-	result = git_diff_print(HHVM_GIT2_V(diff_, diff), (git_diff_format_t) format, /* todo */ print_cb_, payload_);
+	result = git_diff_print(HHVM_GIT2_V(diff_, diff), (git_diff_format_t) format, print_cb_, payload_);
 	return_value = (int64_t) result;
 	return return_value;
 }

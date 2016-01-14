@@ -5,8 +5,6 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/system/systemlib.h"
-
 #include "sys_refs.h"
 
 using namespace HPHP;
@@ -19,14 +17,14 @@ Resource HHVM_FUNCTION(git_reference__alloc,
 	git_reference *result;
 	auto return_value = req::make<Git2Resource>();
 
-	git_oid *oid_ = NULL;
-	git_oid *peel_ = NULL;
+	git_oid oid_;
+	git_oid peel_;
 
-	if (git_oid_fromstrn(oid_, oid.c_str(), oid.length())) {
+	if (git_oid_fromstr(oid_, oid.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
-	if (git_oid_fromstrn(peel_, peel.c_str(), peel.length())) {
+	if (git_oid_fromstr(peel_, peel.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}

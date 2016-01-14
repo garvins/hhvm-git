@@ -5,8 +5,6 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/system/systemlib.h"
-
 #include "merge.h"
 
 using namespace HPHP;
@@ -17,18 +15,20 @@ String HHVM_FUNCTION(git_merge_base,
 	const String& two)
 {
     int result;
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid out;
-	git_oid *one_ = NULL;
-	git_oid *two_ = NULL;
+	git_oid one_;
+	git_oid two_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-    if (git_oid_fromstrn(one_, one.c_str(), one.length())) {
-        throw SystemLib::AllocExceptionObject("got an error!");
+	if (git_oid_fromstr(one_, one.c_str()) != GIT_OK) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
-    if (git_oid_fromstrn(two_, two.c_str(), two.length())) {
-        throw SystemLib::AllocExceptionObject("got an error!");
+	if (git_oid_fromstr(two_, two.c_str()) != GIT_OK) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
 	result = git_merge_base(&out, HHVM_GIT2_V(repo_, repository), one_, two_);
@@ -46,13 +46,13 @@ String HHVM_FUNCTION(git_merge_base_many,
 	int64_t length,
 	const String& input_array)
 {
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid out;
-	git_oid *input_array_ = NULL;
+	git_oid input_array_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	if (git_oid_fromstrn(input_array_, input_array.c_str(), input_array.length())) {
+	if (git_oid_fromstr(input_array_, input_array.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
@@ -87,10 +87,10 @@ Resource HHVM_FUNCTION(git_merge_head_from_fetchhead,
 	auto return_value = req::make<Git2Resource>();
 
 	git_merge_head *out = NULL;
-	git_oid *oid_ = NULL;
+	git_oid oid_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	if (git_oid_fromstrn(oid_, oid.c_str(), oid.length())) {
+	if (git_oid_fromstr(oid_, oid.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
@@ -107,10 +107,10 @@ Resource HHVM_FUNCTION(git_merge_head_from_oid,
 	auto return_value = req::make<Git2Resource>();
 
 	git_merge_head *out = NULL;
-	git_oid *oid_ = NULL;
+	git_oid oid_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	if (git_oid_fromstrn(oid_, oid.c_str(), oid.length())) {
+	if (git_oid_fromstr(oid_, oid.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
@@ -204,7 +204,7 @@ int64_t HHVM_FUNCTION(git_merge_result_is_fastforward,
 String HHVM_FUNCTION(git_merge_result_fastforward_oid,
 	const Resource& merge_result)
 {
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid out;
 

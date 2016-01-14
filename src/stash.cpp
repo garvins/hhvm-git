@@ -5,8 +5,6 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/system/systemlib.h"
-
 #include "stash.h"
 
 using namespace HPHP;
@@ -17,7 +15,7 @@ String HHVM_FUNCTION(git_stash_save,
 	const String& message,
 	int64_t flags)
 {
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid out;
 

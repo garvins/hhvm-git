@@ -471,12 +471,12 @@ function git_config_parse_int32(string $value): int;
 
 <<__Native>>
 function git_config_parse_int64(string $value): int;
-
+ /*
 <<__Native>>
 function git_config_backend_foreach_match(resource $backend,
                                           string $regexp,
                                           int $cb,
-                                          mixed $data): int;
+                                          mixed $data): int;*/
 
 
 // --------------- cred_helpers.h ---------------
@@ -1268,10 +1268,7 @@ function git_patch_get_delta(resource $patch): resource;
 function git_patch_num_hunks(resource $patch): int;
 
 <<__Native>>
-function git_patch_line_stats(int $total_context,
-                              int $total_additions,
-                              int $total_deletions,
-                              resource $patch): int;
+function git_patch_line_stats(resource $patch): int;
 
 <<__Native>>
 function git_patch_get_hunk(int $lines_in_hunk,
@@ -1389,7 +1386,7 @@ function git_push_unpack_ok(resource $push): int;
 
 <<__Native>>
 function git_push_status_foreach(resource $push,
-                                 int $cb,
+                                 mixed $cb,
                                  mixed $data): int;
 
 <<__Native>>
@@ -1767,7 +1764,7 @@ function git_remote_set_transport(resource $remote,
 
 <<__Native>>
 function git_remote_set_callbacks(resource $remote,
-                                  resource $callbacks): int;
+                                  array $callbacks): int;
 
 <<__Native>>
 function git_remote_stats(resource $remote): resource;
@@ -1938,8 +1935,7 @@ function git_revparse_single(resource $repo,
                              string $spec): resource;
 
 <<__Native>>
-function git_revparse_ext(array $reference_out,
-                          resource $repo,
+function git_revparse_ext(resource $repo,
                           string $spec): resource;
 
 <<__Native>>
@@ -2107,11 +2103,10 @@ function git_submodule_foreach(resource $repo,
                                mixed $payload): int;
 
 <<__Native>>
-function git_submodule_add_setup(array $submodule,
-                                 resource $repo,
+function git_submodule_add_setup(resource $repo,
                                  string $url,
                                  string $path,
-                                 int $use_gitlink): int;
+                                 int $use_gitlink): resource;
 
 <<__Native>>
 function git_submodule_add_finalize(resource $submodule): int;

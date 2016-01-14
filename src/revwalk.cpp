@@ -5,8 +5,6 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/system/systemlib.h"
-
 #include "revwalk.h"
 
 using namespace HPHP;
@@ -41,10 +39,10 @@ int64_t HHVM_FUNCTION(git_revwalk_push,
 	int result;
 	int64_t return_value;
 
-	git_oid *id_ = NULL;
+	git_oid id_;
 
 	auto walk_ = dyn_cast<Git2Resource>(walk);
-	if (git_oid_fromstrn(id_, id.c_str(), id.length())) {
+	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
@@ -88,10 +86,10 @@ int64_t HHVM_FUNCTION(git_revwalk_hide,
 	int result;
 	int64_t return_value;
 
-	git_oid *commit_id_ = NULL;
+	git_oid commit_id_;
 
 	auto walk_ = dyn_cast<Git2Resource>(walk);
-	if (git_oid_fromstrn(commit_id_, commit_id.c_str(), commit_id.length())) {
+	if (git_oid_fromstr(commit_id_, commit_id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
@@ -159,7 +157,7 @@ int64_t HHVM_FUNCTION(git_revwalk_hide_ref,
 String HHVM_FUNCTION(git_revwalk_next,
 	const Resource& walk)
 {
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid out;
 

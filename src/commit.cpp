@@ -5,8 +5,6 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/system/systemlib.h"
-
 #include "hphp/runtime/base/array-init.h"
 #include "commit.h"
 
@@ -19,13 +17,13 @@ Resource HHVM_FUNCTION(git_commit_lookup,
 	auto return_value = req::make<Git2Resource>();
 
 	git_commit *commit = NULL;
-	git_oid *id_ = NULL;
+	git_oid id_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-    
-    if (git_oid_fromstrn(id_, id.c_str(), id.length())) {
-        throw SystemLib::AllocExceptionObject("got an error!");
-    }
+	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+	}
 
 	git_commit_lookup(&commit, HHVM_GIT2_V(repo_, repository), id_);
 	HHVM_GIT2_V(return_value, commit) = commit;
@@ -40,11 +38,12 @@ Resource HHVM_FUNCTION(git_commit_lookup_prefix,
 	auto return_value = req::make<Git2Resource>();
 
 	git_commit *commit = NULL;
-	git_oid *id_ = NULL;
+	git_oid id_;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-    if (git_oid_fromstrn(id_, id.c_str(), id.length())) {
-        throw SystemLib::AllocExceptionObject("got an error!");
+	if (git_oid_fromstr(id_, id.c_str()) != GIT_OK) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
 	git_commit_lookup_prefix(&commit, HHVM_GIT2_V(repo_, repository), id_, (size_t) len);
@@ -66,7 +65,7 @@ String HHVM_FUNCTION(git_commit_id,
 	const Resource& commit)
 {
 	const git_oid *result;
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	auto commit_ = dyn_cast<Git2Resource>(commit);
 
@@ -227,7 +226,7 @@ String HHVM_FUNCTION(git_commit_tree_id,
 	const Resource& commit)
 {
 	const git_oid *result;
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	auto commit_ = dyn_cast<Git2Resource>(commit);
 
@@ -275,7 +274,7 @@ String HHVM_FUNCTION(git_commit_parent_id,
 	int64_t n)
 {
 	const git_oid *result;
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	auto commit_ = dyn_cast<Git2Resource>(commit);
 
@@ -311,7 +310,7 @@ String HHVM_FUNCTION(git_commit_create,
 	const Array& parents)
 {
     int result;
-	char *return_value;
+    char return_value[GIT_OID_HEXSZ+1] = {0};
     const git_commit **__parents = NULL;
 	git_signature *__author, *__committer;
 	git_oid id;
@@ -357,7 +356,7 @@ String HHVM_FUNCTION(git_commit_create_v,
 	const Resource& tree,
 	int64_t parent_count)
 {
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid id;
 

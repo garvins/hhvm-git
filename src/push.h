@@ -41,7 +41,7 @@ int64_t HHVM_FUNCTION(git_push_unpack_ok,
 
 int64_t HHVM_FUNCTION(git_push_status_foreach,
 	const Resource& push,
-	int64_t cb,
+	const Variant& cb,
 	const Variant& data);
 
 void HHVM_FUNCTION(git_push_free,

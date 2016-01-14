@@ -5,8 +5,6 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/system/systemlib.h"
-
 #include "submodule.h"
 
 using namespace HPHP;
@@ -49,15 +47,15 @@ Resource HHVM_FUNCTION(git_submodule_add_setup,
 	const String& path,
 	int64_t use_gitlink)
 {
-    Git2Resource *return_value = new Git2Resource();
+	auto return_value = req::make<Git2Resource>();
 
-	git_submodule **submodule;
+	git_submodule *submodule = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-    git_submodule_add_setup(submodule, HHVM_GIT2_V(repo_, repository), url.c_str(), path.c_str(), (int) use_gitlink);
-    HHVM_GIT2_V(return_value, submodule) = *submodule;
-    return Resource(return_value);
+	git_submodule_add_setup(&submodule, HHVM_GIT2_V(repo_, repository), url.c_str(), path.c_str(), (int) use_gitlink);
+	HHVM_GIT2_V(return_value, submodule) = submodule;
+	return Resource(return_value);
 }
 
 int64_t HHVM_FUNCTION(git_submodule_add_finalize,
@@ -170,7 +168,7 @@ String HHVM_FUNCTION(git_submodule_index_id,
 	const Resource& submodule)
 {
 	const git_oid *result;
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	auto submodule_ = dyn_cast<Git2Resource>(submodule);
 
@@ -183,7 +181,7 @@ String HHVM_FUNCTION(git_submodule_head_id,
 	const Resource& submodule)
 {
 	const git_oid *result;
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	auto submodule_ = dyn_cast<Git2Resource>(submodule);
 
@@ -196,7 +194,7 @@ String HHVM_FUNCTION(git_submodule_wd_id,
 	const Resource& submodule)
 {
 	const git_oid *result;
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	auto submodule_ = dyn_cast<Git2Resource>(submodule);
 

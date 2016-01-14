@@ -5,8 +5,6 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/system/systemlib.h"
-
 #include "hphp/runtime/base/array-init.h"
 #include "index.h"
 
@@ -144,7 +142,7 @@ int64_t HHVM_FUNCTION(git_index_read_tree,
 String HHVM_FUNCTION(git_index_write_tree,
 	const Resource& index)
 {
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid out;
 
@@ -159,7 +157,7 @@ String HHVM_FUNCTION(git_index_write_tree_to,
 	const Resource& index,
 	const Resource& repo)
 {
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid out;
 
@@ -436,8 +434,10 @@ Array HHVM_FUNCTION(git_index_conflict_get,
     Array ancestor, our, their;
 
 	const git_index_entry *ancestor_out = NULL, *our_out = NULL, *their_out = NULL;
-    char *ancestor_buf = NULL, *our_buf = NULL, *their_buf = NULL;
-
+	char ancestor_buf[GIT_OID_HEXSZ+1] = {0};
+    char our_buf[GIT_OID_HEXSZ+1] = {0};
+    char their_buf[GIT_OID_HEXSZ+1] = {0};
+    
 	auto index_ = dyn_cast<Git2Resource>(index);
 
     git_index_conflict_get(&ancestor_out, &our_out, &their_out, HHVM_GIT2_V(index_, index), path.c_str());
@@ -546,7 +546,9 @@ Array HHVM_FUNCTION(git_index_conflict_next,
     Array ancestor, our, their;
     
     const git_index_entry *ancestor_out = NULL, *our_out = NULL, *their_out = NULL;
-    char *ancestor_buf = NULL, *our_buf = NULL, *their_buf = NULL;
+    char ancestor_buf[GIT_OID_HEXSZ+1] = {0};
+    char our_buf[GIT_OID_HEXSZ+1] = {0};
+    char their_buf[GIT_OID_HEXSZ+1] = {0};
 
 	auto iterator_ = dyn_cast<Git2Resource>(iterator);
 

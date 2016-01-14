@@ -5,9 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/system/systemlib.h"
-
 #include "hphp/runtime/base/array-init.h"
+
 #include "signature.h"
 
 using namespace HPHP;

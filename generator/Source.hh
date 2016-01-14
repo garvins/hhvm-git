@@ -49,7 +49,7 @@ class Source extends Printer {
             
             if (count($function->getParams()) &&
                 	(preg_match("/out/" ,$function->getParams()[0]->getName()) ||
-                    (preg_match("/_((dup|lookup|open|peel|gen_ancestor|create|next|load|rename)($|_)|diff_[\w]*?_to_)/", $function->getName()) && count($function->getParams()) > 1))) {
+                    (preg_match("/_((dup|lookup|open|peel|gen_ancestor|create|next|load|rename|add_setup)($|_)|diff_[\w]*?_to_)/", $function->getName()) && count($function->getParams()) > 1))) {
                 $returnType = $function->getParams()[0]->getType();
                 $outValPointerLvl = $function->getParams()[0]->getPointerLvl();
                 $hasOutValue = true;
@@ -131,7 +131,7 @@ class Source extends Printer {
                 } else if ($hackType == HackType::RESOURCE) {
                     $body .= "\tauto " . $param->getName() . "_ = dyn_cast<Git2Resource>(" . $param->getName() . ");\n";
                 } else if ($hackType == HackType::STRING && $param->getType()->getType() == "git_oid") {
-                    $body .= "\tif (git_oid_fromstr(" . $param->getName() . "_, " . $param->getName() . ".c_str() != GIT_OK) {\n";
+                    $body .= "\tif (git_oid_fromstr(" . $param->getName() . "_, " . $param->getName() . ".c_str()) != GIT_OK) {\n";
                     $body .= "\t\tconst git_error *error = giterr_last();\n";
                     $body .= "\t\tSystemLib::throwInvalidArgumentExceptionObject(error->message);\n";
                     $body .= "\t}\n";

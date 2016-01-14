@@ -5,8 +5,6 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
-#include "hphp/system/systemlib.h"
-
 #include "sys_filter.h"
 
 using namespace HPHP;
@@ -111,7 +109,7 @@ String HHVM_FUNCTION(git_filter_source_id,
 	const Resource& src)
 {
 	const git_oid *result;
-	char *return_value;
+	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	auto src_ = dyn_cast<Git2Resource>(src);
 
