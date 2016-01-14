@@ -80,7 +80,7 @@ class Source extends Printer {
                 if ($returnType->typeToHackType() == HackType::RESOURCE) {
                     $body .= "\n\tauto return_value = req::make<Git2Resource>();\n";
                 } else if ($returnType->getType() == "git_oid" || ($hasOutValue && $function->getParams()[0]->getType()->getType() == "git_oid")) {
-                    $body .= "\n\tchar *return_value;\n";
+                    $body .= "\n\tchar return_value[GIT_OID_HEXSZ+1] = {0};\n";
                 } else {
                     $body .= "\n\t" . $returnType->getHHVMReturnType() . " return_value;\n";
                 }
@@ -106,7 +106,7 @@ class Source extends Printer {
                     		break;
                         case HackType::STRING :
                             if ($param->getType()->getType() == "git_oid") {
-                                $body .= "\t" . $param->getType()->getType() . " *" . $param->getName() . "_ = NULL;\n";
+                                $body .= "\t" . $param->getType()->getType() . " " . $param->getName() . "_;\n";
                             }
                             break;
                         default : break;
@@ -131,7 +131,7 @@ class Source extends Printer {
                 } else if ($hackType == HackType::RESOURCE) {
                     $body .= "\tauto " . $param->getName() . "_ = dyn_cast<Git2Resource>(" . $param->getName() . ");\n";
                 } else if ($hackType == HackType::STRING && $param->getType()->getType() == "git_oid") {
-                    $body .= "\tif (git_oid_fromstrn(" . $param->getName() . "_, " . $param->getName() . ".c_str(), " . $param->getName() . ".length())) {\n";
+                    $body .= "\tif (git_oid_fromstr(" . $param->getName() . "_, " . $param->getName() . ".c_str() != GIT_OK) {\n";
                     $body .= "\t\tconst git_error *error = giterr_last();\n";
                     $body .= "\t\tSystemLib::throwInvalidArgumentExceptionObject(error->message);\n";
                     $body .= "\t}\n";
