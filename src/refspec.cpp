@@ -57,6 +57,11 @@ int64_t HHVM_FUNCTION(git_refspec_force,
 	auto refspec_ = dyn_cast<Git2Resource>(refspec);
 
 	result = git_refspec_force(HHVM_GIT2_V(refspec_, refspec));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -84,6 +89,11 @@ int64_t HHVM_FUNCTION(git_refspec_src_matches,
 	auto refspec_ = dyn_cast<Git2Resource>(refspec);
 
 	result = git_refspec_src_matches(HHVM_GIT2_V(refspec_, refspec), refname.c_str());
+
+    if (result != GIT_OK && result != 1) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -98,6 +108,11 @@ int64_t HHVM_FUNCTION(git_refspec_dst_matches,
 	auto refspec_ = dyn_cast<Git2Resource>(refspec);
 
 	result = git_refspec_dst_matches(HHVM_GIT2_V(refspec_, refspec), refname.c_str());
+
+    if (result != GIT_OK && result != 1) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -107,13 +122,19 @@ String HHVM_FUNCTION(git_refspec_transform,
 	const Resource& spec,
 	const String& name)
 {
+	int result;
 	String return_value;
 
 	char out;
 
 	auto spec_ = dyn_cast<Git2Resource>(spec);
 
-	git_refspec_transform(&out, (size_t) outlen, HHVM_GIT2_V(spec_, refspec), name.c_str());
+	result = git_refspec_transform(&out, (size_t) outlen, HHVM_GIT2_V(spec_, refspec), name.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = String(&out);
 	return return_value;
 }
@@ -123,13 +144,19 @@ String HHVM_FUNCTION(git_refspec_rtransform,
 	const Resource& spec,
 	const String& name)
 {
+	int result;
 	String return_value;
 
 	char out;
 
 	auto spec_ = dyn_cast<Git2Resource>(spec);
 
-	git_refspec_rtransform(&out, (size_t) outlen, HHVM_GIT2_V(spec_, refspec), name.c_str());
+	result = git_refspec_rtransform(&out, (size_t) outlen, HHVM_GIT2_V(spec_, refspec), name.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = String(&out);
 	return return_value;
 }

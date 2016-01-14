@@ -55,6 +55,7 @@ Resource HHVM_FUNCTION(git_blame_file,
 	const String& path,
 	const Resource& options)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_blame *out = NULL;
@@ -62,7 +63,12 @@ Resource HHVM_FUNCTION(git_blame_file,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto options_ = dyn_cast<Git2Resource>(options);
 
-	git_blame_file(&out, HHVM_GIT2_V(repo_, repository), path.c_str(), HHVM_GIT2_V(options_, blame_options));
+	result = git_blame_file(&out, HHVM_GIT2_V(repo_, repository), path.c_str(), HHVM_GIT2_V(options_, blame_options));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, blame) = out;
 	return Resource(return_value);
 }
@@ -72,13 +78,19 @@ Resource HHVM_FUNCTION(git_blame_buffer,
 	const String& buffer,
 	int64_t buffer_len)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_blame *out = NULL;
 
 	auto reference_ = dyn_cast<Git2Resource>(reference);
 
-	git_blame_buffer(&out, HHVM_GIT2_V(reference_, blame), buffer.c_str(), (uint32_t) buffer_len);
+	result = git_blame_buffer(&out, HHVM_GIT2_V(reference_, blame), buffer.c_str(), (uint32_t) buffer_len);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, blame) = out;
 	return Resource(return_value);
 }

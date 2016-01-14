@@ -73,7 +73,9 @@ class Source extends Printer {
             $body = rtrim($body, ",") . ")\n{";
             
             if ($returnType->typeToHackType() != HackType::VOID) {
-                if (!$hasOutValue) {
+                if ($function->getReturnType()->getType() == "int") {
+                    $body .= "\n\tint result;";
+                } else if (!$hasOutValue) {
                     $body .= "\n\t" . ($function->isConstant() ? "const " : "") . $function->getReturnType()->getType() . " " . str_repeat("*", $function->getPointerLvl()) . "result;";
                 }
                 
@@ -141,7 +143,7 @@ class Source extends Printer {
             $body = rtrim($body) . "\n\n";
             
             /* Build call of libgit function, only assign result if return-type of libgit function ins't void */
-            $body .= "\t". ($returnType->typeToHackType() != HackType::VOID && !$hasOutValue ? "result = " : "") . $function->getName() . "(";
+            $body .= "\t". ($returnType->typeToHackType() != HackType::VOID && ($function->getReturnType()->getType() == "int" || !$hasOutValue) ? "result = " : "") . $function->getName() . "(";
             foreach ($function->getParams() as $k =>$param) {
                 $hackType = $param->getType()->typeToHackType();
                 
@@ -163,8 +165,10 @@ class Source extends Printer {
                                 case HackType::STRING :
                                     if ($param->getType()->getType() == "git_oid") {
                                         $body .= "&" . $param->getName() . "_";
-                                    } else {
+                                    } else if ($param.isConstant()) {
                                         $body .= $param->getName() . ".c_str()";
+                                    } else {
+                                        $body .= $param->getName() . ".mutableData()";
                                     }
                                     break;
                                 case HackType::RESOURCE :
@@ -183,6 +187,15 @@ class Source extends Printer {
                 $body .= ", ";
             }
             $body = rtrim(rtrim($body), ",") . ");\n";
+            
+            /*
+             * if error occurs throw an exception (todo depends on function maybe return null)
+             */
+            if ($function->getReturnType()->getType() == "int") {
+                $body .= "\n\tif (result != GIT_OK" . ( preg_match("/_is_/", $function->getName()) ? " && result != 1" : "") . ") {\n" .
+                	"\t\tSystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);\n" .
+                	"\t}\n\n";
+            }
             
             /*
              * Cast type of result/out value to required type of return_value

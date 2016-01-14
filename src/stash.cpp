@@ -15,6 +15,7 @@ String HHVM_FUNCTION(git_stash_save,
 	const String& message,
 	int64_t flags)
 {
+	int result;
 	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid out;
@@ -22,7 +23,12 @@ String HHVM_FUNCTION(git_stash_save,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto stasher_ = dyn_cast<Git2Resource>(stasher);
 
-	git_stash_save(&out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(stasher_, signature), message.c_str(), (unsigned int) flags);
+	result = git_stash_save(&out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(stasher_, signature), message.c_str(), (unsigned int) flags);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	git_oid_fmt(return_value, &out);
 	return String(return_value);
 }
@@ -42,6 +48,11 @@ int64_t HHVM_FUNCTION(git_stash_foreach,
 	callback_ = NULL;
 
 	result = git_stash_foreach(HHVM_GIT2_V(repo_, repository), /* todo */ callback_, payload_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -56,6 +67,11 @@ int64_t HHVM_FUNCTION(git_stash_drop,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
 	result = git_stash_drop(HHVM_GIT2_V(repo_, repository), (size_t) index);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }

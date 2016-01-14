@@ -14,7 +14,7 @@ String HHVM_FUNCTION(git_merge_base,
 	const String& one,
 	const String& two)
 {
-    int result;
+	int result;
 	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid out;
@@ -32,11 +32,11 @@ String HHVM_FUNCTION(git_merge_base,
 	}
 
 	result = git_merge_base(&out, HHVM_GIT2_V(repo_, repository), &one_, &two_);
-    
-    if (result != 0) {
-        throw SystemLib::AllocExceptionObject("got an error!");
-    }
-    
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	git_oid_fmt(return_value, &out);
 	return String(return_value);
 }
@@ -46,6 +46,7 @@ String HHVM_FUNCTION(git_merge_base_many,
 	int64_t length,
 	const String& input_array)
 {
+	int result;
 	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid out;
@@ -57,7 +58,12 @@ String HHVM_FUNCTION(git_merge_base_many,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_merge_base_many(&out, HHVM_GIT2_V(repo_, repository), (size_t) length, &input_array_);
+	result = git_merge_base_many(&out, HHVM_GIT2_V(repo_, repository), (size_t) length, &input_array_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	git_oid_fmt(return_value, &out);
 	return String(return_value);
 }
@@ -66,6 +72,7 @@ Resource HHVM_FUNCTION(git_merge_head_from_ref,
 	const Resource& repo,
 	const Resource& ref)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_merge_head *out = NULL;
@@ -73,7 +80,12 @@ Resource HHVM_FUNCTION(git_merge_head_from_ref,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto ref_ = dyn_cast<Git2Resource>(ref);
 
-	git_merge_head_from_ref(&out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(ref_, reference));
+	result = git_merge_head_from_ref(&out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(ref_, reference));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, merge_head) = out;
 	return Resource(return_value);
 }
@@ -84,6 +96,7 @@ Resource HHVM_FUNCTION(git_merge_head_from_fetchhead,
 	const String& remote_url,
 	const String& oid)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_merge_head *out = NULL;
@@ -95,7 +108,12 @@ Resource HHVM_FUNCTION(git_merge_head_from_fetchhead,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_merge_head_from_fetchhead(&out, HHVM_GIT2_V(repo_, repository), branch_name.c_str(), remote_url.c_str(), &oid_);
+	result = git_merge_head_from_fetchhead(&out, HHVM_GIT2_V(repo_, repository), branch_name.c_str(), remote_url.c_str(), &oid_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, merge_head) = out;
 	return Resource(return_value);
 }
@@ -104,6 +122,7 @@ Resource HHVM_FUNCTION(git_merge_head_from_oid,
 	const Resource& repo,
 	const String& oid)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_merge_head *out = NULL;
@@ -115,7 +134,12 @@ Resource HHVM_FUNCTION(git_merge_head_from_oid,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_merge_head_from_oid(&out, HHVM_GIT2_V(repo_, repository), &oid_);
+	result = git_merge_head_from_oid(&out, HHVM_GIT2_V(repo_, repository), &oid_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, merge_head) = out;
 	return Resource(return_value);
 }
@@ -138,6 +162,7 @@ Resource HHVM_FUNCTION(git_merge_trees,
 	const Resource& their_tree,
 	const Resource& opts)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_index *out = NULL;
@@ -148,7 +173,12 @@ Resource HHVM_FUNCTION(git_merge_trees,
 	auto their_tree_ = dyn_cast<Git2Resource>(their_tree);
 	auto opts_ = dyn_cast<Git2Resource>(opts);
 
-	git_merge_trees(&out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(ancestor_tree_, tree), HHVM_GIT2_V(our_tree_, tree), HHVM_GIT2_V(their_tree_, tree), HHVM_GIT2_V(opts_, merge_tree_opts));
+	result = git_merge_trees(&out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(ancestor_tree_, tree), HHVM_GIT2_V(our_tree_, tree), HHVM_GIT2_V(their_tree_, tree), HHVM_GIT2_V(opts_, merge_tree_opts));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, index) = out;
 	return Resource(return_value);
 }
@@ -184,6 +214,11 @@ int64_t HHVM_FUNCTION(git_merge_result_is_uptodate,
 	auto merge_result_ = dyn_cast<Git2Resource>(merge_result);
 
 	result = git_merge_result_is_uptodate(HHVM_GIT2_V(merge_result_, merge_result));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -197,6 +232,11 @@ int64_t HHVM_FUNCTION(git_merge_result_is_fastforward,
 	auto merge_result_ = dyn_cast<Git2Resource>(merge_result);
 
 	result = git_merge_result_is_fastforward(HHVM_GIT2_V(merge_result_, merge_result));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -204,13 +244,19 @@ int64_t HHVM_FUNCTION(git_merge_result_is_fastforward,
 String HHVM_FUNCTION(git_merge_result_fastforward_oid,
 	const Resource& merge_result)
 {
+	int result;
 	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid out;
 
 	auto merge_result_ = dyn_cast<Git2Resource>(merge_result);
 
-	git_merge_result_fastforward_oid(&out, HHVM_GIT2_V(merge_result_, merge_result));
+	result = git_merge_result_fastforward_oid(&out, HHVM_GIT2_V(merge_result_, merge_result));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	git_oid_fmt(return_value, &out);
 	return String(return_value);
 }

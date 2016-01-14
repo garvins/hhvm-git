@@ -12,13 +12,19 @@ using namespace HPHP;
 Resource HHVM_FUNCTION(git_revwalk_new,
 	const Resource& repo)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_revwalk *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_revwalk_new(&out, HHVM_GIT2_V(repo_, repository));
+	result = git_revwalk_new(&out, HHVM_GIT2_V(repo_, repository));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, revwalk) = out;
 	return Resource(return_value);
 }
@@ -48,6 +54,11 @@ int64_t HHVM_FUNCTION(git_revwalk_push,
 	}
 
 	result = git_revwalk_push(HHVM_GIT2_V(walk_, revwalk), &id_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -62,6 +73,11 @@ int64_t HHVM_FUNCTION(git_revwalk_push_glob,
 	auto walk_ = dyn_cast<Git2Resource>(walk);
 
 	result = git_revwalk_push_glob(HHVM_GIT2_V(walk_, revwalk), glob.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -75,6 +91,11 @@ int64_t HHVM_FUNCTION(git_revwalk_push_head,
 	auto walk_ = dyn_cast<Git2Resource>(walk);
 
 	result = git_revwalk_push_head(HHVM_GIT2_V(walk_, revwalk));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -95,6 +116,11 @@ int64_t HHVM_FUNCTION(git_revwalk_hide,
 	}
 
 	result = git_revwalk_hide(HHVM_GIT2_V(walk_, revwalk), &commit_id_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -109,6 +135,11 @@ int64_t HHVM_FUNCTION(git_revwalk_hide_glob,
 	auto walk_ = dyn_cast<Git2Resource>(walk);
 
 	result = git_revwalk_hide_glob(HHVM_GIT2_V(walk_, revwalk), glob.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -122,6 +153,11 @@ int64_t HHVM_FUNCTION(git_revwalk_hide_head,
 	auto walk_ = dyn_cast<Git2Resource>(walk);
 
 	result = git_revwalk_hide_head(HHVM_GIT2_V(walk_, revwalk));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -136,6 +172,11 @@ int64_t HHVM_FUNCTION(git_revwalk_push_ref,
 	auto walk_ = dyn_cast<Git2Resource>(walk);
 
 	result = git_revwalk_push_ref(HHVM_GIT2_V(walk_, revwalk), refname.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -150,6 +191,11 @@ int64_t HHVM_FUNCTION(git_revwalk_hide_ref,
 	auto walk_ = dyn_cast<Git2Resource>(walk);
 
 	result = git_revwalk_hide_ref(HHVM_GIT2_V(walk_, revwalk), refname.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -157,13 +203,22 @@ int64_t HHVM_FUNCTION(git_revwalk_hide_ref,
 String HHVM_FUNCTION(git_revwalk_next,
 	const Resource& walk)
 {
+	int result;
 	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid out;
 
 	auto walk_ = dyn_cast<Git2Resource>(walk);
 
-	git_revwalk_next(&out, HHVM_GIT2_V(walk_, revwalk));
+	result = git_revwalk_next(&out, HHVM_GIT2_V(walk_, revwalk));
+
+    if (result == GIT_ITEROVER) {
+        /* todo return nullptr */
+        SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+    } else if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	git_oid_fmt(return_value, &out);
 	return String(return_value);
 }
@@ -188,6 +243,11 @@ int64_t HHVM_FUNCTION(git_revwalk_push_range,
 	auto walk_ = dyn_cast<Git2Resource>(walk);
 
 	result = git_revwalk_push_range(HHVM_GIT2_V(walk_, revwalk), range.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }

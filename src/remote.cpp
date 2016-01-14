@@ -16,7 +16,7 @@ Resource HHVM_FUNCTION(git_remote_create,
 	const String& name,
 	const String& url)
 {
-    int result;
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_remote *out = NULL;
@@ -24,11 +24,11 @@ Resource HHVM_FUNCTION(git_remote_create,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
 	result = git_remote_create(&out, HHVM_GIT2_V(repo_, repository), name.c_str(), url.c_str());
-    
-    if (result != 0) {
-        throw SystemLib::AllocExceptionObject("got an error!");
-    }
-    
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, remote) = out;
 	return Resource(return_value);
 }
@@ -39,13 +39,19 @@ Resource HHVM_FUNCTION(git_remote_create_with_fetchspec,
 	const String& url,
 	const String& fetch)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_remote *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_remote_create_with_fetchspec(&out, HHVM_GIT2_V(repo_, repository), name.c_str(), url.c_str(), fetch.c_str());
+	result = git_remote_create_with_fetchspec(&out, HHVM_GIT2_V(repo_, repository), name.c_str(), url.c_str(), fetch.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, remote) = out;
 	return Resource(return_value);
 }
@@ -55,13 +61,19 @@ Resource HHVM_FUNCTION(git_remote_create_inmemory,
 	const String& fetch,
 	const String& url)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_remote *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_remote_create_inmemory(&out, HHVM_GIT2_V(repo_, repository), fetch.c_str(), url.c_str());
+	result = git_remote_create_inmemory(&out, HHVM_GIT2_V(repo_, repository), fetch.c_str(), url.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, remote) = out;
 	return Resource(return_value);
 }
@@ -70,13 +82,19 @@ Resource HHVM_FUNCTION(git_remote_load,
 	const Resource& repo,
 	const String& name)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_remote *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_remote_load(&out, HHVM_GIT2_V(repo_, repository), name.c_str());
+	result = git_remote_load(&out, HHVM_GIT2_V(repo_, repository), name.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, remote) = out;
 	return Resource(return_value);
 }
@@ -90,6 +108,11 @@ int64_t HHVM_FUNCTION(git_remote_save,
 	auto remote_ = dyn_cast<Git2Resource>(remote);
 
 	result = git_remote_save(HHVM_GIT2_V(remote_, remote));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -156,6 +179,11 @@ int64_t HHVM_FUNCTION(git_remote_set_url,
 	auto remote_ = dyn_cast<Git2Resource>(remote);
 
 	result = git_remote_set_url(HHVM_GIT2_V(remote_, remote), url.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -170,6 +198,11 @@ int64_t HHVM_FUNCTION(git_remote_set_pushurl,
 	auto remote_ = dyn_cast<Git2Resource>(remote);
 
 	result = git_remote_set_pushurl(HHVM_GIT2_V(remote_, remote), url.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -184,6 +217,11 @@ int64_t HHVM_FUNCTION(git_remote_add_fetch,
 	auto remote_ = dyn_cast<Git2Resource>(remote);
 
 	result = git_remote_add_fetch(HHVM_GIT2_V(remote_, remote), refspec.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -199,6 +237,11 @@ int64_t HHVM_FUNCTION(git_remote_get_fetch_refspecs,
 	auto remote_ = dyn_cast<Git2Resource>(remote);
 
 	result = git_remote_get_fetch_refspecs(HHVM_GIT2_V(array_, strarray), HHVM_GIT2_V(remote_, remote));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -214,6 +257,11 @@ int64_t HHVM_FUNCTION(git_remote_set_fetch_refspecs,
 	auto array_ = dyn_cast<Git2Resource>(array);
 
 	result = git_remote_set_fetch_refspecs(HHVM_GIT2_V(remote_, remote), HHVM_GIT2_V(array_, strarray));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -228,6 +276,11 @@ int64_t HHVM_FUNCTION(git_remote_add_push,
 	auto remote_ = dyn_cast<Git2Resource>(remote);
 
 	result = git_remote_add_push(HHVM_GIT2_V(remote_, remote), refspec.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -243,6 +296,11 @@ int64_t HHVM_FUNCTION(git_remote_get_push_refspecs,
 	auto remote_ = dyn_cast<Git2Resource>(remote);
 
 	result = git_remote_get_push_refspecs(HHVM_GIT2_V(array_, strarray), HHVM_GIT2_V(remote_, remote));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -258,6 +316,11 @@ int64_t HHVM_FUNCTION(git_remote_set_push_refspecs,
 	auto array_ = dyn_cast<Git2Resource>(array);
 
 	result = git_remote_set_push_refspecs(HHVM_GIT2_V(remote_, remote), HHVM_GIT2_V(array_, strarray));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -308,6 +371,11 @@ int64_t HHVM_FUNCTION(git_remote_connect,
 	auto remote_ = dyn_cast<Git2Resource>(remote);
 
 	result = git_remote_connect(HHVM_GIT2_V(remote_, remote), (git_direction) direction);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -316,13 +384,19 @@ Resource HHVM_FUNCTION(git_remote_ls,
 	int64_t size,
 	const Resource& remote)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	const git_remote_head **out = NULL;
 
 	auto remote_ = dyn_cast<Git2Resource>(remote);
 
-	git_remote_ls(&out, (size_t*) size, HHVM_GIT2_V(remote_, remote));
+	result = git_remote_ls(&out, (size_t*) size, HHVM_GIT2_V(remote_, remote));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	//HHVM_GIT2_V(return_value, remote_head) = out; todo return as array
 	return Resource(return_value);
 }
@@ -336,6 +410,11 @@ int64_t HHVM_FUNCTION(git_remote_download,
 	auto remote_ = dyn_cast<Git2Resource>(remote);
 
 	result = git_remote_download(HHVM_GIT2_V(remote_, remote));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -349,6 +428,11 @@ int64_t HHVM_FUNCTION(git_remote_connected,
 	auto remote_ = dyn_cast<Git2Resource>(remote);
 
 	result = git_remote_connected(HHVM_GIT2_V(remote_, remote));
+
+    if (result != GIT_OK && result != 1) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -391,6 +475,11 @@ int64_t HHVM_FUNCTION(git_remote_update_tips,
 	auto remote_ = dyn_cast<Git2Resource>(remote);
 
 	result = git_remote_update_tips(HHVM_GIT2_V(remote_, remote));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -404,6 +493,11 @@ int64_t HHVM_FUNCTION(git_remote_fetch,
 	auto remote_ = dyn_cast<Git2Resource>(remote);
 
 	result = git_remote_fetch(HHVM_GIT2_V(remote_, remote));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -415,6 +509,11 @@ int64_t HHVM_FUNCTION(git_remote_valid_url,
 	int64_t return_value;
 
 	result = git_remote_valid_url(url.c_str());
+
+    if (result != GIT_OK && result != 1) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -426,6 +525,11 @@ int64_t HHVM_FUNCTION(git_remote_supported_url,
 	int64_t return_value;
 
 	result = git_remote_supported_url(url.c_str());
+
+    if (result != GIT_OK && result != 1) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -433,13 +537,19 @@ int64_t HHVM_FUNCTION(git_remote_supported_url,
 Resource HHVM_FUNCTION(git_remote_list,
 	const Resource& repo)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_strarray out;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_remote_list(&out, HHVM_GIT2_V(repo_, repository));
+	result = git_remote_list(&out, HHVM_GIT2_V(repo_, repository));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, strarray) = &out;
 	return Resource(return_value);
 }
@@ -465,6 +575,11 @@ int64_t HHVM_FUNCTION(git_remote_set_transport,
 	auto transport_ = dyn_cast<Git2Resource>(transport);
 
 	result = git_remote_set_transport(HHVM_GIT2_V(remote_, remote), HHVM_GIT2_V(transport_, transport));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -486,6 +601,11 @@ int64_t HHVM_FUNCTION(git_remote_set_callbacks,
     }
         
 	result = git_remote_set_callbacks(HHVM_GIT2_V(remote_, remote), &callbacks_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -555,6 +675,11 @@ int64_t HHVM_FUNCTION(git_remote_update_fetchhead,
 	auto remote_ = dyn_cast<Git2Resource>(remote);
 
 	result = git_remote_update_fetchhead(HHVM_GIT2_V(remote_, remote));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -576,6 +701,11 @@ int64_t HHVM_FUNCTION(git_remote_is_valid_name,
 	int64_t return_value;
 
 	result = git_remote_is_valid_name(remote_name.c_str());
+
+    if (result != GIT_OK && result != 1) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }

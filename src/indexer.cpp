@@ -16,6 +16,7 @@ Resource HHVM_FUNCTION(git_indexer_new,
 	const Variant& progress_cb,
 	const Variant& progress_cb_payload)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_indexer *out = NULL;
@@ -25,7 +26,12 @@ Resource HHVM_FUNCTION(git_indexer_new,
 	auto odb_ = dyn_cast<Git2Resource>(odb);
 	progress_cb_ = NULL;
 
-	git_indexer_new(&out, path.c_str(), (unsigned int) mode, HHVM_GIT2_V(odb_, odb), /* todo */ progress_cb_, progress_cb_payload_);
+	result = git_indexer_new(&out, path.c_str(), (unsigned int) mode, HHVM_GIT2_V(odb_, odb), /* todo */ progress_cb_, progress_cb_payload_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, indexer) = out;
 	return Resource(return_value);
 }
@@ -45,6 +51,11 @@ int64_t HHVM_FUNCTION(git_indexer_append,
 	auto stats_ = dyn_cast<Git2Resource>(stats);
 
 	result = git_indexer_append(HHVM_GIT2_V(idx_, indexer), data_, (size_t) size, HHVM_GIT2_V(stats_, transfer_progress));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -60,6 +71,11 @@ int64_t HHVM_FUNCTION(git_indexer_commit,
 	auto stats_ = dyn_cast<Git2Resource>(stats);
 
 	result = git_indexer_commit(HHVM_GIT2_V(idx_, indexer), HHVM_GIT2_V(stats_, transfer_progress));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }

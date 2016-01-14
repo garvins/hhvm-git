@@ -19,6 +19,11 @@ int64_t HHVM_FUNCTION(git_ignore_add_rule,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
 	result = git_ignore_add_rule(HHVM_GIT2_V(repo_, repository), rules.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -32,6 +37,11 @@ int64_t HHVM_FUNCTION(git_ignore_clear_internal_rules,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
 	result = git_ignore_clear_internal_rules(HHVM_GIT2_V(repo_, repository));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -47,6 +57,11 @@ int64_t HHVM_FUNCTION(git_ignore_path_is_ignored,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
 	result = git_ignore_path_is_ignored((int*) ignored, HHVM_GIT2_V(repo_, repository), path.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }

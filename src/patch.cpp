@@ -13,13 +13,19 @@ Resource HHVM_FUNCTION(git_patch_from_diff,
 	const Resource& diff,
 	int64_t idx)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_patch *out = NULL;
 
 	auto diff_ = dyn_cast<Git2Resource>(diff);
 
-	git_patch_from_diff(&out, HHVM_GIT2_V(diff_, diff), (size_t) idx);
+	result = git_patch_from_diff(&out, HHVM_GIT2_V(diff_, diff), (size_t) idx);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, patch) = out;
 	return Resource(return_value);
 }
@@ -31,6 +37,7 @@ Resource HHVM_FUNCTION(git_patch_from_blobs,
 	const String& new_as_path,
 	const Resource& opts)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_patch *out = NULL;
@@ -39,7 +46,12 @@ Resource HHVM_FUNCTION(git_patch_from_blobs,
 	auto new_blob_ = dyn_cast<Git2Resource>(new_blob);
 	auto opts_ = dyn_cast<Git2Resource>(opts);
 
-	git_patch_from_blobs(&out, HHVM_GIT2_V(old_blob_, blob), old_as_path.c_str(), HHVM_GIT2_V(new_blob_, blob), new_as_path.c_str(), HHVM_GIT2_V(opts_, diff_options));
+	result = git_patch_from_blobs(&out, HHVM_GIT2_V(old_blob_, blob), old_as_path.c_str(), HHVM_GIT2_V(new_blob_, blob), new_as_path.c_str(), HHVM_GIT2_V(opts_, diff_options));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, patch) = out;
 	return Resource(return_value);
 }
@@ -52,6 +64,7 @@ Resource HHVM_FUNCTION(git_patch_from_blob_and_buffer,
 	const String& buffer_as_path,
 	const Resource& opts)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_patch *out = NULL;
@@ -59,7 +72,12 @@ Resource HHVM_FUNCTION(git_patch_from_blob_and_buffer,
 	auto old_blob_ = dyn_cast<Git2Resource>(old_blob);
 	auto opts_ = dyn_cast<Git2Resource>(opts);
 
-	git_patch_from_blob_and_buffer(&out, HHVM_GIT2_V(old_blob_, blob), old_as_path.c_str(), buffer.c_str(), (size_t) buffer_len, buffer_as_path.c_str(), HHVM_GIT2_V(opts_, diff_options));
+	result = git_patch_from_blob_and_buffer(&out, HHVM_GIT2_V(old_blob_, blob), old_as_path.c_str(), buffer.c_str(), (size_t) buffer_len, buffer_as_path.c_str(), HHVM_GIT2_V(opts_, diff_options));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, patch) = out;
 	return Resource(return_value);
 }
@@ -110,6 +128,11 @@ int64_t HHVM_FUNCTION(git_patch_line_stats,
 
     // todo return total_context, total_additions and total_deletions as array
 	result = git_patch_line_stats( total_context, total_additions, total_deletions, HHVM_GIT2_V(patch_, patch));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -119,13 +142,19 @@ Resource HHVM_FUNCTION(git_patch_get_hunk,
 	const Resource& patch,
 	int64_t hunk_idx)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	const git_diff_hunk *out = NULL;
 
 	auto patch_ = dyn_cast<Git2Resource>(patch);
 
-	git_patch_get_hunk(&out, (size_t*) lines_in_hunk, HHVM_GIT2_V(patch_, patch), (size_t) hunk_idx);
+	result = git_patch_get_hunk(&out, (size_t*) lines_in_hunk, HHVM_GIT2_V(patch_, patch), (size_t) hunk_idx);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	//HHVM_GIT2_V(return_value, diff_hunk) = out; todo return as array
 	return Resource(return_value);
 }
@@ -140,6 +169,11 @@ int64_t HHVM_FUNCTION(git_patch_num_lines_in_hunk,
 	auto patch_ = dyn_cast<Git2Resource>(patch);
 
 	result = git_patch_num_lines_in_hunk(HHVM_GIT2_V(patch_, patch), (size_t) hunk_idx);
+
+	if (result < 0) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -149,13 +183,19 @@ Resource HHVM_FUNCTION(git_patch_get_line_in_hunk,
 	int64_t hunk_idx,
 	int64_t line_of_hunk)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	const git_diff_line *out = NULL;
 
 	auto patch_ = dyn_cast<Git2Resource>(patch);
 
-	git_patch_get_line_in_hunk(&out, HHVM_GIT2_V(patch_, patch), (size_t) hunk_idx, (size_t) line_of_hunk);
+	result = git_patch_get_line_in_hunk(&out, HHVM_GIT2_V(patch_, patch), (size_t) hunk_idx, (size_t) line_of_hunk);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	//HHVM_GIT2_V(return_value, diff_line) = out; todo return as array
 	return Resource(return_value);
 }
@@ -191,6 +231,11 @@ int64_t HHVM_FUNCTION(git_patch_print,
 	print_cb_ = NULL;
 
 	result = git_patch_print(HHVM_GIT2_V(patch_, patch), /* todo */ print_cb_, payload_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -207,6 +252,11 @@ int64_t HHVM_FUNCTION(git_patch_to_str,
 	auto patch_ = dyn_cast<Git2Resource>(patch);
 
 	result = git_patch_to_str(string_, HHVM_GIT2_V(patch_, patch));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }

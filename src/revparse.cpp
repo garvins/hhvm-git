@@ -13,13 +13,19 @@ Resource HHVM_FUNCTION(git_revparse_single,
 	const Resource& repo,
 	const String& spec)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_object *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_revparse_single(&out, HHVM_GIT2_V(repo_, repository), spec.c_str());
+	result = git_revparse_single(&out, HHVM_GIT2_V(repo_, repository), spec.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, object) = out;
 	return Resource(return_value);
 }
@@ -52,6 +58,11 @@ int64_t HHVM_FUNCTION(git_revparse,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
 	result = git_revparse(HHVM_GIT2_V(revspec_, revspec), HHVM_GIT2_V(repo_, repository), spec.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }

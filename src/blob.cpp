@@ -13,6 +13,7 @@ Resource HHVM_FUNCTION(git_blob_lookup,
 	const Resource& repo,
 	const String& id)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_blob *blob = NULL;
@@ -24,7 +25,12 @@ Resource HHVM_FUNCTION(git_blob_lookup,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_blob_lookup(&blob, HHVM_GIT2_V(repo_, repository), &id_);
+	result = git_blob_lookup(&blob, HHVM_GIT2_V(repo_, repository), &id_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, blob) = blob;
 	return Resource(return_value);
 }
@@ -34,6 +40,7 @@ Resource HHVM_FUNCTION(git_blob_lookup_prefix,
 	const String& id,
 	int64_t len)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_blob *blob = NULL;
@@ -45,7 +52,12 @@ Resource HHVM_FUNCTION(git_blob_lookup_prefix,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_blob_lookup_prefix(&blob, HHVM_GIT2_V(repo_, repository), &id_, (size_t) len);
+	result = git_blob_lookup_prefix(&blob, HHVM_GIT2_V(repo_, repository), &id_, (size_t) len);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, blob) = blob;
 	return Resource(return_value);
 }
@@ -119,13 +131,19 @@ Resource HHVM_FUNCTION(git_blob_filtered_content,
 	const String& as_path,
 	int64_t check_for_binary_data)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_buf out;
 
 	auto blob_ = dyn_cast<Git2Resource>(blob);
 
-	git_blob_filtered_content(&out, HHVM_GIT2_V(blob_, blob), as_path.c_str(), (int) check_for_binary_data);
+	result = git_blob_filtered_content(&out, HHVM_GIT2_V(blob_, blob), as_path.c_str(), (int) check_for_binary_data);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, buf) = &out;
 	return Resource(return_value);
 }
@@ -134,13 +152,19 @@ String HHVM_FUNCTION(git_blob_create_fromworkdir,
 	const Resource& repo,
 	const String& relative_path)
 {
+	int result;
 	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid id;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_blob_create_fromworkdir(&id, HHVM_GIT2_V(repo_, repository), relative_path.c_str());
+	result = git_blob_create_fromworkdir(&id, HHVM_GIT2_V(repo_, repository), relative_path.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	git_oid_fmt(return_value, &id);
 	return String(return_value);
 }
@@ -149,13 +173,19 @@ String HHVM_FUNCTION(git_blob_create_fromdisk,
 	const Resource& repo,
 	const String& path)
 {
+	int result;
 	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid id;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_blob_create_fromdisk(&id, HHVM_GIT2_V(repo_, repository), path.c_str());
+	result = git_blob_create_fromdisk(&id, HHVM_GIT2_V(repo_, repository), path.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	git_oid_fmt(return_value, &id);
 	return String(return_value);
 }
@@ -166,6 +196,7 @@ String HHVM_FUNCTION(git_blob_create_fromchunks,
 	const Variant& callback,
 	const Variant& payload)
 {
+	int result;
 	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid id;
@@ -175,7 +206,12 @@ String HHVM_FUNCTION(git_blob_create_fromchunks,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	callback_ = NULL;
 
-	git_blob_create_fromchunks(&id, HHVM_GIT2_V(repo_, repository), hintpath.c_str(), /* todo */ callback_, payload_);
+	result = git_blob_create_fromchunks(&id, HHVM_GIT2_V(repo_, repository), hintpath.c_str(), /* todo */ callback_, payload_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	git_oid_fmt(return_value, &id);
 	return String(return_value);
 }
@@ -185,6 +221,7 @@ String HHVM_FUNCTION(git_blob_create_frombuffer,
 	const Variant& buffer,
 	int64_t len)
 {
+	int result;
 	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid oid;
@@ -192,7 +229,12 @@ String HHVM_FUNCTION(git_blob_create_frombuffer,
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_blob_create_frombuffer(&oid, HHVM_GIT2_V(repo_, repository), buffer_, (size_t) len);
+	result = git_blob_create_frombuffer(&oid, HHVM_GIT2_V(repo_, repository), buffer_, (size_t) len);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	git_oid_fmt(return_value, &oid);
 	return String(return_value);
 }
@@ -206,6 +248,11 @@ int64_t HHVM_FUNCTION(git_blob_is_binary,
 	auto blob_ = dyn_cast<Git2Resource>(blob);
 
 	result = git_blob_is_binary(HHVM_GIT2_V(blob_, blob));
+
+	if (result != GIT_OK && result != 1) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }

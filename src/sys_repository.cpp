@@ -11,11 +11,17 @@ using namespace HPHP;
 
 Resource HHVM_FUNCTION(git_repository_new)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_repository *out = NULL;
 
-	git_repository_new(&out);
+	result = git_repository_new(&out);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, repository) = out;
 	return Resource(return_value);
 }
@@ -39,6 +45,11 @@ int64_t HHVM_FUNCTION(git_repository_reinit_filesystem,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
 	result = git_repository_reinit_filesystem(HHVM_GIT2_V(repo_, repository), (int) recurse_submodules);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }

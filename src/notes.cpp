@@ -13,13 +13,19 @@ Resource HHVM_FUNCTION(git_note_iterator_new,
 	const Resource& repo,
 	const String& notes_ref)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_note_iterator *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_note_iterator_new(&out, HHVM_GIT2_V(repo_, repository), notes_ref.c_str());
+	result = git_note_iterator_new(&out, HHVM_GIT2_V(repo_, repository), notes_ref.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, note_iterator) = out;
 	return Resource(return_value);
 }
@@ -37,6 +43,7 @@ String HHVM_FUNCTION(git_note_next,
 	const String& annotated_id,
 	const Resource& it)
 {
+	int result;
 	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid note_id;
@@ -48,7 +55,15 @@ String HHVM_FUNCTION(git_note_next,
 	}
 	auto it_ = dyn_cast<Git2Resource>(it);
 
-	git_note_next(&note_id, &annotated_id_, HHVM_GIT2_V(it_, note_iterator));
+	result = git_note_next(&note_id, &annotated_id_, HHVM_GIT2_V(it_, note_iterator));
+
+    if (result == GIT_ITEROVER) {
+        /* todo return nullptr */
+        SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+    } else if (result != GIT_OK) {
+        SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+    }
+
 	git_oid_fmt(return_value, &note_id);
 	return String(return_value);
 }
@@ -58,6 +73,7 @@ Resource HHVM_FUNCTION(git_note_read,
 	const String& notes_ref,
 	const String& oid)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_note *out = NULL;
@@ -69,7 +85,12 @@ Resource HHVM_FUNCTION(git_note_read,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_note_read(&out, HHVM_GIT2_V(repo_, repository), notes_ref.c_str(), &oid_);
+	result = git_note_read(&out, HHVM_GIT2_V(repo_, repository), notes_ref.c_str(), &oid_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, note) = out;
 	return Resource(return_value);
 }
@@ -109,6 +130,7 @@ String HHVM_FUNCTION(git_note_create,
 	const String& note,
 	int64_t force)
 {
+	int result;
 	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid out;
@@ -122,7 +144,12 @@ String HHVM_FUNCTION(git_note_create,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_note_create(&out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(author_, signature), HHVM_GIT2_V(committer_, signature), notes_ref.c_str(), &oid_, note.c_str(), (int) force);
+	result = git_note_create(&out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(author_, signature), HHVM_GIT2_V(committer_, signature), notes_ref.c_str(), &oid_, note.c_str(), (int) force);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	git_oid_fmt(return_value, &out);
 	return String(return_value);
 }
@@ -148,6 +175,11 @@ int64_t HHVM_FUNCTION(git_note_remove,
 	}
 
 	result = git_note_remove(HHVM_GIT2_V(repo_, repository), notes_ref.c_str(), HHVM_GIT2_V(author_, signature), HHVM_GIT2_V(committer_, signature), &oid_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -164,13 +196,19 @@ void HHVM_FUNCTION(git_note_free,
 String HHVM_FUNCTION(git_note_default_ref,
 	const Resource& repo)
 {
+	int result;
 	String return_value;
 
 	const char *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_note_default_ref(&out, HHVM_GIT2_V(repo_, repository));
+	result = git_note_default_ref(&out, HHVM_GIT2_V(repo_, repository));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = String(out);
 	return return_value;
 }
@@ -191,6 +229,11 @@ int64_t HHVM_FUNCTION(git_note_foreach,
 	note_cb_ = NULL;
 
 	result = git_note_foreach(HHVM_GIT2_V(repo_, repository), notes_ref.c_str(), /* todo */ note_cb_, payload_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }

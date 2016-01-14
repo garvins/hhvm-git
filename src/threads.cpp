@@ -15,6 +15,11 @@ int64_t HHVM_FUNCTION(git_threads_init)
 	int64_t return_value;
 
 	result = git_threads_init();
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }

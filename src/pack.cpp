@@ -12,13 +12,19 @@ using namespace HPHP;
 Resource HHVM_FUNCTION(git_packbuilder_new,
 	const Resource& repo)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_packbuilder *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_packbuilder_new(&out, HHVM_GIT2_V(repo_, repository));
+	result = git_packbuilder_new(&out, HHVM_GIT2_V(repo_, repository));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, packbuilder) = out;
 	return Resource(return_value);
 }
@@ -33,6 +39,11 @@ int64_t HHVM_FUNCTION(git_packbuilder_set_threads,
 	auto pb_ = dyn_cast<Git2Resource>(pb);
 
 	result = git_packbuilder_set_threads(HHVM_GIT2_V(pb_, packbuilder), (unsigned int) n);
+
+	if (result < 0) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -54,6 +65,11 @@ int64_t HHVM_FUNCTION(git_packbuilder_insert,
 	}
 
 	result = git_packbuilder_insert(HHVM_GIT2_V(pb_, packbuilder), &id_, name.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -74,6 +90,11 @@ int64_t HHVM_FUNCTION(git_packbuilder_insert_tree,
 	}
 
 	result = git_packbuilder_insert_tree(HHVM_GIT2_V(pb_, packbuilder), &id_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -94,6 +115,11 @@ int64_t HHVM_FUNCTION(git_packbuilder_insert_commit,
 	}
 
 	result = git_packbuilder_insert_commit(HHVM_GIT2_V(pb_, packbuilder), &id_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -115,6 +141,11 @@ int64_t HHVM_FUNCTION(git_packbuilder_write,
 	progress_cb_ = NULL;
 
 	result = git_packbuilder_write(HHVM_GIT2_V(pb_, packbuilder), path.c_str(), (unsigned int) mode, /* todo */ progress_cb_, progress_cb_payload_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -147,6 +178,11 @@ int64_t HHVM_FUNCTION(git_packbuilder_foreach,
 	cb_ = NULL;
 
 	result = git_packbuilder_foreach(HHVM_GIT2_V(pb_, packbuilder), /* todo */ cb_, payload_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -192,6 +228,11 @@ int64_t HHVM_FUNCTION(git_packbuilder_set_callbacks,
 	progress_cb_ = NULL;
 
 	result = git_packbuilder_set_callbacks(HHVM_GIT2_V(pb_, packbuilder), /* todo */ progress_cb_, progress_cb_payload_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }

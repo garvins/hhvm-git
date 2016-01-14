@@ -13,13 +13,19 @@ Resource HHVM_FUNCTION(git_reflog_read,
 	const Resource& repo,
 	const String& name)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_reflog *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_reflog_read(&out, HHVM_GIT2_V(repo_, repository), name.c_str());
+	result = git_reflog_read(&out, HHVM_GIT2_V(repo_, repository), name.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, reflog) = out;
 	return Resource(return_value);
 }
@@ -33,6 +39,11 @@ int64_t HHVM_FUNCTION(git_reflog_write,
 	auto reflog_ = dyn_cast<Git2Resource>(reflog);
 
 	result = git_reflog_write(HHVM_GIT2_V(reflog_, reflog));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -56,6 +67,11 @@ int64_t HHVM_FUNCTION(git_reflog_append,
 	auto committer_ = dyn_cast<Git2Resource>(committer);
 
 	result = git_reflog_append(HHVM_GIT2_V(reflog_, reflog), &id_, HHVM_GIT2_V(committer_, signature), msg.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -80,6 +96,11 @@ int64_t HHVM_FUNCTION(git_reflog_append_to,
 	auto committer_ = dyn_cast<Git2Resource>(committer);
 
 	result = git_reflog_append_to(HHVM_GIT2_V(repo_, repository), name.c_str(), &id_, HHVM_GIT2_V(committer_, signature), msg.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -109,6 +130,11 @@ int64_t HHVM_FUNCTION(git_reflog_delete,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
 	result = git_reflog_delete(HHVM_GIT2_V(repo_, repository), name.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -151,6 +177,11 @@ int64_t HHVM_FUNCTION(git_reflog_drop,
 	auto reflog_ = dyn_cast<Git2Resource>(reflog);
 
 	result = git_reflog_drop(HHVM_GIT2_V(reflog_, reflog), (size_t) idx, (int) rewrite_previous_entry);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }

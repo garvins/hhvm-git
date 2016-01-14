@@ -14,6 +14,7 @@ Resource HHVM_FUNCTION(git_object_lookup,
 	const String& id,
 	int64_t type)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_object *object = NULL;
@@ -25,7 +26,12 @@ Resource HHVM_FUNCTION(git_object_lookup,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_object_lookup(&object, HHVM_GIT2_V(repo_, repository), &id_, (git_otype) type);
+	result = git_object_lookup(&object, HHVM_GIT2_V(repo_, repository), &id_, (git_otype) type);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, object) = object;
 	return Resource(return_value);
 }
@@ -36,6 +42,7 @@ Resource HHVM_FUNCTION(git_object_lookup_prefix,
 	int64_t len,
 	int64_t type)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_object *object_out = NULL;
@@ -47,7 +54,12 @@ Resource HHVM_FUNCTION(git_object_lookup_prefix,
 		SystemLib::throwInvalidArgumentExceptionObject(error->message);
 	}
 
-	git_object_lookup_prefix(&object_out, HHVM_GIT2_V(repo_, repository), &id_, (size_t) len, (git_otype) type);
+	result = git_object_lookup_prefix(&object_out, HHVM_GIT2_V(repo_, repository), &id_, (size_t) len, (git_otype) type);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, object) = object_out;
 	return Resource(return_value);
 }
@@ -57,13 +69,19 @@ Resource HHVM_FUNCTION(git_object_lookup_bypath,
 	const String& path,
 	int64_t type)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_object *out = NULL;
 
 	auto treeish_ = dyn_cast<Git2Resource>(treeish);
 
-	git_object_lookup_bypath(&out, HHVM_GIT2_V(treeish_, object), path.c_str(), (git_otype) type);
+	result = git_object_lookup_bypath(&out, HHVM_GIT2_V(treeish_, object), path.c_str(), (git_otype) type);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, object) = out;
 	return Resource(return_value);
 }
@@ -145,6 +163,11 @@ int64_t HHVM_FUNCTION(git_object_typeisloose,
 	int64_t return_value;
 
 	result = git_object_typeisloose((git_otype) type);
+
+	if (result != GIT_OK && result != 1) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -164,13 +187,19 @@ Resource HHVM_FUNCTION(git_object_peel,
 	const Resource& object,
 	int64_t target_type)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_object *peeled = NULL;
 
 	auto object_ = dyn_cast<Git2Resource>(object);
 
-	git_object_peel(&peeled, HHVM_GIT2_V(object_, object), (git_otype) target_type);
+	result = git_object_peel(&peeled, HHVM_GIT2_V(object_, object), (git_otype) target_type);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, object) = peeled;
 	return Resource(return_value);
 }
@@ -178,13 +207,19 @@ Resource HHVM_FUNCTION(git_object_peel,
 Resource HHVM_FUNCTION(git_object_dup,
 	const Resource& source)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_object *dest = NULL;
 
 	auto source_ = dyn_cast<Git2Resource>(source);
 
-	git_object_dup(&dest, HHVM_GIT2_V(source_, object));
+	result = git_object_dup(&dest, HHVM_GIT2_V(source_, object));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, object) = dest;
 	return Resource(return_value);
 }

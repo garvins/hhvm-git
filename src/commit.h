@@ -83,7 +83,6 @@ String HHVM_FUNCTION(git_commit_create,
 	const String& message_encoding,
 	const String& message,
 	const Resource& tree,
-	int64_t parent_count,
 	const Array& parents);
 
 String HHVM_FUNCTION(git_commit_create_v,

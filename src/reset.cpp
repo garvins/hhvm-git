@@ -21,6 +21,11 @@ int64_t HHVM_FUNCTION(git_reset,
 	auto target_ = dyn_cast<Git2Resource>(target);
 
 	result = git_reset(HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(target_, object), (git_reset_t) reset_type);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -38,6 +43,11 @@ int64_t HHVM_FUNCTION(git_reset_default,
 	auto pathspecs_ = dyn_cast<Git2Resource>(pathspecs);
 
 	result = git_reset_default(HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(target_, object), HHVM_GIT2_V(pathspecs_, strarray));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }

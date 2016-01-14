@@ -47,6 +47,15 @@ int64_t HHVM_FUNCTION(git_checkout_head,
 	auto opts_ = dyn_cast<Git2Resource>(opts);
 
 	result = git_checkout_head(HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(opts_, checkout_opts));
+
+    if (result == GIT_EUNBORNBRANCH) {
+        /* HEAD points to an non existing branch */
+        SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+    }
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -64,6 +73,11 @@ int64_t HHVM_FUNCTION(git_checkout_index,
 	auto opts_ = dyn_cast<Git2Resource>(opts);
 
 	result = git_checkout_index(HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(index_, index), HHVM_GIT2_V(opts_, checkout_opts));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -87,7 +101,8 @@ int64_t HHVM_FUNCTION(git_checkout_tree,
     	strings[i] = __strings[i].toString().mutableData();
     }
     
-    memset(__opts, '\0', sizeof(git_checkout_opts));
+    __opts = (git_checkout_opts*) malloc(sizeof(git_checkout_opts*));
+    
     __opts->version = (unsigned int) opts[String("version")].toInt64();
     __opts->checkout_strategy = (unsigned int) opts[String("checkout_strategy")].toInt64();
     __opts->disable_filters = (int) opts[String("disable_filters")].toInt64();

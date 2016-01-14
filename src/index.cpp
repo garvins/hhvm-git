@@ -13,22 +13,34 @@ using namespace HPHP;
 Resource HHVM_FUNCTION(git_index_open,
 	const String& index_path)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_index *out = NULL;
 
-	git_index_open(&out, index_path.c_str());
+	result = git_index_open(&out, index_path.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, index) = out;
 	return Resource(return_value);
 }
 
 Resource HHVM_FUNCTION(git_index_new)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_index *out = NULL;
 
-	git_index_new(&out);
+	result = git_index_new(&out);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, index) = out;
 	return Resource(return_value);
 }
@@ -66,6 +78,11 @@ int64_t HHVM_FUNCTION(git_index_caps,
 	auto index_ = dyn_cast<Git2Resource>(index);
 
 	result = git_index_caps(HHVM_GIT2_V(index_, index));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -80,6 +97,11 @@ int64_t HHVM_FUNCTION(git_index_set_caps,
 	auto index_ = dyn_cast<Git2Resource>(index);
 
 	result = git_index_set_caps(HHVM_GIT2_V(index_, index), (unsigned int) caps);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -94,6 +116,11 @@ int64_t HHVM_FUNCTION(git_index_read,
 	auto index_ = dyn_cast<Git2Resource>(index);
 
 	result = git_index_read(HHVM_GIT2_V(index_, index), (int) force);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -107,6 +134,11 @@ int64_t HHVM_FUNCTION(git_index_write,
 	auto index_ = dyn_cast<Git2Resource>(index);
 
 	result = git_index_write(HHVM_GIT2_V(index_, index));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -135,6 +167,11 @@ int64_t HHVM_FUNCTION(git_index_read_tree,
 	auto tree_ = dyn_cast<Git2Resource>(tree);
 
 	result = git_index_read_tree(HHVM_GIT2_V(index_, index), HHVM_GIT2_V(tree_, tree));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -142,13 +179,19 @@ int64_t HHVM_FUNCTION(git_index_read_tree,
 String HHVM_FUNCTION(git_index_write_tree,
 	const Resource& index)
 {
+	int result;
 	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid out;
 
 	auto index_ = dyn_cast<Git2Resource>(index);
 
-	git_index_write_tree(&out, HHVM_GIT2_V(index_, index));
+	result = git_index_write_tree(&out, HHVM_GIT2_V(index_, index));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	git_oid_fmt(return_value, &out);
 	return String(return_value);
 }
@@ -157,6 +200,7 @@ String HHVM_FUNCTION(git_index_write_tree_to,
 	const Resource& index,
 	const Resource& repo)
 {
+	int result;
 	char return_value[GIT_OID_HEXSZ+1] = {0};
 
 	git_oid out;
@@ -164,7 +208,12 @@ String HHVM_FUNCTION(git_index_write_tree_to,
 	auto index_ = dyn_cast<Git2Resource>(index);
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_index_write_tree_to(&out, HHVM_GIT2_V(index_, index), HHVM_GIT2_V(repo_, repository));
+	result = git_index_write_tree_to(&out, HHVM_GIT2_V(index_, index), HHVM_GIT2_V(repo_, repository));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	git_oid_fmt(return_value, &out);
 	return String(return_value);
 }
@@ -231,6 +280,11 @@ int64_t HHVM_FUNCTION(git_index_remove,
 	auto index_ = dyn_cast<Git2Resource>(index);
 
 	result = git_index_remove(HHVM_GIT2_V(index_, index), path.c_str(), (int) stage);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -246,6 +300,11 @@ int64_t HHVM_FUNCTION(git_index_remove_directory,
 	auto index_ = dyn_cast<Git2Resource>(index);
 
 	result = git_index_remove_directory(HHVM_GIT2_V(index_, index), dir.c_str(), (int) stage);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -264,7 +323,7 @@ int64_t HHVM_FUNCTION(git_index_add,
         SystemLib::throwInvalidArgumentExceptionObject(error->message);
     }
     
-    memset(entry, '\0', sizeof(git_index_entry));
+    entry = (git_index_entry*) malloc(sizeof(git_index_entry*));
     
     entry->ctime.seconds = (git_time_t) 0; //todo
     entry->ctime.nanoseconds = (unsigned int) 0; //todo
@@ -297,6 +356,11 @@ int64_t HHVM_FUNCTION(git_index_entry_stage,
 	auto entry_ = dyn_cast<Git2Resource>(entry);
 
 	result = git_index_entry_stage(HHVM_GIT2_V(entry_, index_entry));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -311,6 +375,11 @@ int64_t HHVM_FUNCTION(git_index_add_bypath,
 	auto index_ = dyn_cast<Git2Resource>(index);
 
 	result = git_index_add_bypath(HHVM_GIT2_V(index_, index), path.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -325,6 +394,11 @@ int64_t HHVM_FUNCTION(git_index_remove_bypath,
 	auto index_ = dyn_cast<Git2Resource>(index);
 
 	result = git_index_remove_bypath(HHVM_GIT2_V(index_, index), path.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -347,6 +421,11 @@ int64_t HHVM_FUNCTION(git_index_add_all,
 	callback_ = NULL;
 
 	result = git_index_add_all(HHVM_GIT2_V(index_, index), HHVM_GIT2_V(pathspec_, strarray), (unsigned int) flags, /* todo */ callback_, payload_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -368,6 +447,11 @@ int64_t HHVM_FUNCTION(git_index_remove_all,
 	callback_ = NULL;
 
 	result = git_index_remove_all(HHVM_GIT2_V(index_, index), HHVM_GIT2_V(pathspec_, strarray), /* todo */ callback_, payload_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -389,6 +473,11 @@ int64_t HHVM_FUNCTION(git_index_update_all,
 	callback_ = NULL;
 
 	result = git_index_update_all(HHVM_GIT2_V(index_, index), HHVM_GIT2_V(pathspec_, strarray), /* todo */ callback_, payload_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -404,6 +493,11 @@ int64_t HHVM_FUNCTION(git_index_find,
 	auto index_ = dyn_cast<Git2Resource>(index);
 
 	result = git_index_find((size_t*) at_pos, HHVM_GIT2_V(index_, index), path.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -423,6 +517,11 @@ int64_t HHVM_FUNCTION(git_index_conflict_add,
 	auto their_entry_ = dyn_cast<Git2Resource>(their_entry);
 
 	result = git_index_conflict_add(HHVM_GIT2_V(index_, index), HHVM_GIT2_V(ancestor_entry_, index_entry), HHVM_GIT2_V(our_entry_, index_entry), HHVM_GIT2_V(their_entry_, index_entry));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -500,6 +599,11 @@ int64_t HHVM_FUNCTION(git_index_conflict_remove,
 	auto index_ = dyn_cast<Git2Resource>(index);
 
 	result = git_index_conflict_remove(HHVM_GIT2_V(index_, index), path.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -522,6 +626,11 @@ int64_t HHVM_FUNCTION(git_index_has_conflicts,
 	auto index_ = dyn_cast<Git2Resource>(index);
 
 	result = git_index_has_conflicts(HHVM_GIT2_V(index_, index));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -529,13 +638,19 @@ int64_t HHVM_FUNCTION(git_index_has_conflicts,
 Resource HHVM_FUNCTION(git_index_conflict_iterator_new,
 	const Resource& index)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_index_conflict_iterator *iterator_out = NULL;
 
 	auto index_ = dyn_cast<Git2Resource>(index);
 
-	git_index_conflict_iterator_new(&iterator_out, HHVM_GIT2_V(index_, index));
+	result = git_index_conflict_iterator_new(&iterator_out, HHVM_GIT2_V(index_, index));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, index_conflict_iterator) = iterator_out;
 	return Resource(return_value);
 }
@@ -543,6 +658,7 @@ Resource HHVM_FUNCTION(git_index_conflict_iterator_new,
 Array HHVM_FUNCTION(git_index_conflict_next,
 	const Resource& iterator)
 {
+    int result;
 	Array return_value;
     Array ancestor, our, their;
     
@@ -553,7 +669,14 @@ Array HHVM_FUNCTION(git_index_conflict_next,
 
 	auto iterator_ = dyn_cast<Git2Resource>(iterator);
 
-    git_index_conflict_next(&ancestor_out, &our_out, &their_out, HHVM_GIT2_V(iterator_, index_conflict_iterator));
+    result = git_index_conflict_next(&ancestor_out, &our_out, &their_out, HHVM_GIT2_V(iterator_, index_conflict_iterator));
+    
+    if (result == GIT_ITEROVER) {
+        /* todo return nullptr */
+        SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	} else if (result != GIT_OK) {
+        SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+    }
     
     git_oid_fmt(ancestor_buf, &ancestor_out->oid);
     ancestor = make_map_array("ctime", 0, //todo

@@ -12,13 +12,19 @@ using namespace HPHP;
 Resource HHVM_FUNCTION(git_pathspec_new,
 	const Resource& pathspec)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_pathspec *out = NULL;
 
 	auto pathspec_ = dyn_cast<Git2Resource>(pathspec);
 
-	git_pathspec_new(&out, HHVM_GIT2_V(pathspec_, strarray));
+	result = git_pathspec_new(&out, HHVM_GIT2_V(pathspec_, strarray));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, pathspec) = out;
 	return Resource(return_value);
 }
@@ -43,6 +49,11 @@ int64_t HHVM_FUNCTION(git_pathspec_matches_path,
 	auto ps_ = dyn_cast<Git2Resource>(ps);
 
 	result = git_pathspec_matches_path(HHVM_GIT2_V(ps_, pathspec), (uint32_t) flags, path.c_str());
+
+	if (result != GIT_OK && result != 1) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -52,6 +63,7 @@ Resource HHVM_FUNCTION(git_pathspec_match_workdir,
 	int64_t flags,
 	const Resource& ps)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_pathspec_match_list *out = NULL;
@@ -59,7 +71,12 @@ Resource HHVM_FUNCTION(git_pathspec_match_workdir,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto ps_ = dyn_cast<Git2Resource>(ps);
 
-	git_pathspec_match_workdir(&out, HHVM_GIT2_V(repo_, repository), (uint32_t) flags, HHVM_GIT2_V(ps_, pathspec));
+	result = git_pathspec_match_workdir(&out, HHVM_GIT2_V(repo_, repository), (uint32_t) flags, HHVM_GIT2_V(ps_, pathspec));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, pathspec_match_list) = out;
 	return Resource(return_value);
 }
@@ -69,6 +86,7 @@ Resource HHVM_FUNCTION(git_pathspec_match_index,
 	int64_t flags,
 	const Resource& ps)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_pathspec_match_list *out = NULL;
@@ -76,7 +94,12 @@ Resource HHVM_FUNCTION(git_pathspec_match_index,
 	auto index_ = dyn_cast<Git2Resource>(index);
 	auto ps_ = dyn_cast<Git2Resource>(ps);
 
-	git_pathspec_match_index(&out, HHVM_GIT2_V(index_, index), (uint32_t) flags, HHVM_GIT2_V(ps_, pathspec));
+	result = git_pathspec_match_index(&out, HHVM_GIT2_V(index_, index), (uint32_t) flags, HHVM_GIT2_V(ps_, pathspec));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, pathspec_match_list) = out;
 	return Resource(return_value);
 }
@@ -86,6 +109,7 @@ Resource HHVM_FUNCTION(git_pathspec_match_tree,
 	int64_t flags,
 	const Resource& ps)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_pathspec_match_list *out = NULL;
@@ -93,7 +117,12 @@ Resource HHVM_FUNCTION(git_pathspec_match_tree,
 	auto tree_ = dyn_cast<Git2Resource>(tree);
 	auto ps_ = dyn_cast<Git2Resource>(ps);
 
-	git_pathspec_match_tree(&out, HHVM_GIT2_V(tree_, tree), (uint32_t) flags, HHVM_GIT2_V(ps_, pathspec));
+	result = git_pathspec_match_tree(&out, HHVM_GIT2_V(tree_, tree), (uint32_t) flags, HHVM_GIT2_V(ps_, pathspec));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, pathspec_match_list) = out;
 	return Resource(return_value);
 }
@@ -103,6 +132,7 @@ Resource HHVM_FUNCTION(git_pathspec_match_diff,
 	int64_t flags,
 	const Resource& ps)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_pathspec_match_list *out = NULL;
@@ -110,7 +140,12 @@ Resource HHVM_FUNCTION(git_pathspec_match_diff,
 	auto diff_ = dyn_cast<Git2Resource>(diff);
 	auto ps_ = dyn_cast<Git2Resource>(ps);
 
-	git_pathspec_match_diff(&out, HHVM_GIT2_V(diff_, diff), (uint32_t) flags, HHVM_GIT2_V(ps_, pathspec));
+	result = git_pathspec_match_diff(&out, HHVM_GIT2_V(diff_, diff), (uint32_t) flags, HHVM_GIT2_V(ps_, pathspec));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, pathspec_match_list) = out;
 	return Resource(return_value);
 }

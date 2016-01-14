@@ -24,13 +24,19 @@ Resource HHVM_FUNCTION(git_filter_list_new,
 	const Resource& repo,
 	int64_t mode)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_filter_list *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_filter_list_new(&out, HHVM_GIT2_V(repo_, repository), (git_filter_mode_t) mode);
+	result = git_filter_list_new(&out, HHVM_GIT2_V(repo_, repository), (git_filter_mode_t) mode);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, filter_list) = out;
 	return Resource(return_value);
 }
@@ -49,6 +55,11 @@ int64_t HHVM_FUNCTION(git_filter_list_push,
 	auto filter_ = dyn_cast<Git2Resource>(filter);
 
 	result = git_filter_list_push(HHVM_GIT2_V(fl_, filter_list), HHVM_GIT2_V(filter_, filter), payload_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -142,6 +153,11 @@ int64_t HHVM_FUNCTION(git_filter_register,
 	auto filter_ = dyn_cast<Git2Resource>(filter);
 
 	result = git_filter_register(name.c_str(), HHVM_GIT2_V(filter_, filter), (int) priority);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -153,6 +169,11 @@ int64_t HHVM_FUNCTION(git_filter_unregister,
 	int64_t return_value;
 
 	result = git_filter_unregister(name.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }

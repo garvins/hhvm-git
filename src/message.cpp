@@ -14,11 +14,17 @@ String HHVM_FUNCTION(git_message_prettify,
 	const String& message,
 	int64_t strip_comments)
 {
+	int result;
 	String return_value;
 
 	char out;
 
-	git_message_prettify(&out, (size_t) out_size, message.c_str(), (int) strip_comments);
+	result = git_message_prettify(&out, (size_t) out_size, message.c_str(), (int) strip_comments);
+
+	if (result < 0) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = String(&out);
 	return return_value;
 }

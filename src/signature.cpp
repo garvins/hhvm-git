@@ -17,11 +17,17 @@ Resource HHVM_FUNCTION(git_signature_new,
 	int64_t time,
 	int64_t offset)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_signature *out = NULL;
 
-	git_signature_new(&out, name.c_str(), email.c_str(), (git_time_t) time, (int) offset);
+	result = git_signature_new(&out, name.c_str(), email.c_str(), (git_time_t) time, (int) offset);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, signature) = out;
 	return Resource(return_value);
 }
@@ -52,13 +58,19 @@ Array HHVM_FUNCTION(git_signature_now,
 Resource HHVM_FUNCTION(git_signature_default,
 	const Resource& repo)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_signature *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_signature_default(&out, HHVM_GIT2_V(repo_, repository));
+	result = git_signature_default(&out, HHVM_GIT2_V(repo_, repository));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, signature) = out;
 	return Resource(return_value);
 }

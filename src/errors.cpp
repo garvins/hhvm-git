@@ -41,6 +41,11 @@ int64_t HHVM_FUNCTION(giterr_detach,
 	auto cpy_ = dyn_cast<Git2Resource>(cpy);
 
 	result = giterr_detach(HHVM_GIT2_V(cpy_, error));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }

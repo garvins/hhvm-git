@@ -294,7 +294,6 @@ function git_commit_create(resource $repo,
                            string $message_encoding,
                            string $message,
                            resource $tree,
-                           int $parent_count,
                            array $parents): string;
 
 <<__Native>>
@@ -1559,7 +1558,7 @@ function git_reference_iterator_glob_new(resource $repo,
                                          string $glob): resource;
 
 <<__Native>>
-function git_reference_next(resource $iter): resource;
+function git_reference_next(resource $iter): mixed;
 
 <<__Native>>
 function git_reference_next_name(resource $iter): string;

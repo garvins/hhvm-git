@@ -18,6 +18,11 @@ int64_t HHVM_FUNCTION(git_index_name_entrycount,
 	auto index_ = dyn_cast<Git2Resource>(index);
 
 	result = git_index_name_entrycount(HHVM_GIT2_V(index_, index));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -48,6 +53,11 @@ int64_t HHVM_FUNCTION(git_index_name_add,
 	auto index_ = dyn_cast<Git2Resource>(index);
 
 	result = git_index_name_add(HHVM_GIT2_V(index_, index), ancestor.c_str(), ours.c_str(), theirs.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -70,6 +80,11 @@ int64_t HHVM_FUNCTION(git_index_reuc_entrycount,
 	auto index_ = dyn_cast<Git2Resource>(index);
 
 	result = git_index_reuc_entrycount(HHVM_GIT2_V(index_, index));
+
+	if (result < 0) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -85,6 +100,11 @@ int64_t HHVM_FUNCTION(git_index_reuc_find,
 	auto index_ = dyn_cast<Git2Resource>(index);
 
 	result = git_index_reuc_find((size_t*) at_pos, HHVM_GIT2_V(index_, index), path.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -149,6 +169,11 @@ int64_t HHVM_FUNCTION(git_index_reuc_add,
 	}
 
 	result = git_index_reuc_add(HHVM_GIT2_V(index_, index), path.c_str(), (int) ancestor_mode, &ancestor_id_, (int) our_mode, &our_id_, (int) their_mode, &their_id_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -163,6 +188,11 @@ int64_t HHVM_FUNCTION(git_index_reuc_remove,
 	auto index_ = dyn_cast<Git2Resource>(index);
 
 	result = git_index_reuc_remove(HHVM_GIT2_V(index_, index), (size_t) n);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }

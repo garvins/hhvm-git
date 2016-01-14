@@ -15,7 +15,7 @@ Resource HHVM_FUNCTION(git_branch_create,
 	const Resource& target,
 	int64_t force)
 {
-    int result;
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_reference *out = NULL;
@@ -24,11 +24,11 @@ Resource HHVM_FUNCTION(git_branch_create,
 	auto target_ = dyn_cast<Git2Resource>(target);
 
 	result = git_branch_create(&out, HHVM_GIT2_V(repo_, repository), branch_name.c_str(), HHVM_GIT2_V(target_, commit), (int) force);
-    
-    if (result != 0) {
-        throw SystemLib::AllocExceptionObject("got an error!");
-    }
-    
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, reference) = out;
 	return Resource(return_value);
 }
@@ -42,6 +42,11 @@ int64_t HHVM_FUNCTION(git_branch_delete,
 	auto branch_ = dyn_cast<Git2Resource>(branch);
 
 	result = git_branch_delete(HHVM_GIT2_V(branch_, reference));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -50,13 +55,19 @@ Resource HHVM_FUNCTION(git_branch_iterator_new,
 	const Resource& repo,
 	int64_t list_flags)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_branch_iterator *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_branch_iterator_new(&out, HHVM_GIT2_V(repo_, repository), (git_branch_t) list_flags);
+	result = git_branch_iterator_new(&out, HHVM_GIT2_V(repo_, repository), (git_branch_t) list_flags);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, branch_iterator) = out;
 	return Resource(return_value);
 }
@@ -65,13 +76,19 @@ Resource HHVM_FUNCTION(git_branch_next,
 	int64_t out_type,
 	const Resource& iter)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_reference *out = NULL;
 
 	auto iter_ = dyn_cast<Git2Resource>(iter);
 
-	git_branch_next(&out, (git_branch_t*) out_type, HHVM_GIT2_V(iter_, branch_iterator));
+	result = git_branch_next(&out, (git_branch_t*) out_type, HHVM_GIT2_V(iter_, branch_iterator));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, reference) = out;
 	return Resource(return_value);
 }
@@ -90,13 +107,19 @@ Resource HHVM_FUNCTION(git_branch_move,
 	const String& new_branch_name,
 	int64_t force)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_reference *out = NULL;
 
 	auto branch_ = dyn_cast<Git2Resource>(branch);
 
-	git_branch_move(&out, HHVM_GIT2_V(branch_, reference), new_branch_name.c_str(), (int) force);
+	result = git_branch_move(&out, HHVM_GIT2_V(branch_, reference), new_branch_name.c_str(), (int) force);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, reference) = out;
 	return Resource(return_value);
 }
@@ -106,13 +129,19 @@ Resource HHVM_FUNCTION(git_branch_lookup,
 	const String& branch_name,
 	int64_t branch_type)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_reference *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_branch_lookup(&out, HHVM_GIT2_V(repo_, repository), branch_name.c_str(), (git_branch_t) branch_type);
+	result = git_branch_lookup(&out, HHVM_GIT2_V(repo_, repository), branch_name.c_str(), (git_branch_t) branch_type);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, reference) = out;
 	return Resource(return_value);
 }
@@ -120,13 +149,19 @@ Resource HHVM_FUNCTION(git_branch_lookup,
 String HHVM_FUNCTION(git_branch_name,
 	const Resource& ref)
 {
+	int result;
 	String return_value;
 
 	const char *out = NULL;
 
 	auto ref_ = dyn_cast<Git2Resource>(ref);
 
-	git_branch_name(&out, HHVM_GIT2_V(ref_, reference));
+	result = git_branch_name(&out, HHVM_GIT2_V(ref_, reference));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = String(out);
 	return return_value;
 }
@@ -134,13 +169,19 @@ String HHVM_FUNCTION(git_branch_name,
 Resource HHVM_FUNCTION(git_branch_upstream,
 	const Resource& branch)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_reference *out = NULL;
 
 	auto branch_ = dyn_cast<Git2Resource>(branch);
 
-	git_branch_upstream(&out, HHVM_GIT2_V(branch_, reference));
+	result = git_branch_upstream(&out, HHVM_GIT2_V(branch_, reference));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, reference) = out;
 	return Resource(return_value);
 }
@@ -155,6 +196,11 @@ int64_t HHVM_FUNCTION(git_branch_set_upstream,
 	auto branch_ = dyn_cast<Git2Resource>(branch);
 
 	result = git_branch_set_upstream(HHVM_GIT2_V(branch_, reference), upstream_name.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -164,13 +210,19 @@ String HHVM_FUNCTION(git_branch_upstream_name,
 	const Resource& repo,
 	const String& canonical_branch_name)
 {
+	int result;
 	String return_value;
 
 	char tracking_branch_name_out;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_branch_upstream_name(&tracking_branch_name_out, (size_t) buffer_size, HHVM_GIT2_V(repo_, repository), canonical_branch_name.c_str());
+	result = git_branch_upstream_name(&tracking_branch_name_out, (size_t) buffer_size, HHVM_GIT2_V(repo_, repository), canonical_branch_name.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = String(&tracking_branch_name_out);
 	return return_value;
 }
@@ -184,6 +236,11 @@ int64_t HHVM_FUNCTION(git_branch_is_head,
 	auto branch_ = dyn_cast<Git2Resource>(branch);
 
 	result = git_branch_is_head(HHVM_GIT2_V(branch_, reference));
+
+	if (result != GIT_OK || result == 1) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -193,13 +250,19 @@ String HHVM_FUNCTION(git_branch_remote_name,
 	const Resource& repo,
 	const String& canonical_branch_name)
 {
+	int result;
 	String return_value;
 
 	char remote_name_out;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_branch_remote_name(&remote_name_out, (size_t) buffer_size, HHVM_GIT2_V(repo_, repository), canonical_branch_name.c_str());
+	result = git_branch_remote_name(&remote_name_out, (size_t) buffer_size, HHVM_GIT2_V(repo_, repository), canonical_branch_name.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = String(&remote_name_out);
 	return return_value;
 }

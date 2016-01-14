@@ -22,6 +22,11 @@ int64_t HHVM_FUNCTION(git_config_add_backend,
 	auto file_ = dyn_cast<Git2Resource>(file);
 
 	result = git_config_add_backend(HHVM_GIT2_V(cfg_, config), HHVM_GIT2_V(file_, config_backend), (git_config_level_t) level, (int) force);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }

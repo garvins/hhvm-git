@@ -14,13 +14,19 @@ Resource HHVM_FUNCTION(git_clone,
 	const String& local_path,
 	const Resource& options)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_repository *out = NULL;
 
 	auto options_ = dyn_cast<Git2Resource>(options);
 
-	git_clone(&out, url.c_str(), local_path.c_str(), HHVM_GIT2_V(options_, clone_options));
+	result = git_clone(&out, url.c_str(), local_path.c_str(), HHVM_GIT2_V(options_, clone_options));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, repository) = out;
 	return Resource(return_value);
 }
@@ -39,6 +45,11 @@ int64_t HHVM_FUNCTION(git_clone_into,
 	auto co_opts_ = dyn_cast<Git2Resource>(co_opts);
 
 	result = git_clone_into(HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(remote_, remote), HHVM_GIT2_V(co_opts_, checkout_opts), branch.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }

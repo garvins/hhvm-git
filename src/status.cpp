@@ -24,6 +24,11 @@ int64_t HHVM_FUNCTION(git_status_foreach,
 	callback_ = NULL;
 
 	result = git_status_foreach(HHVM_GIT2_V(repo_, repository), /* todo */ callback_, payload_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -45,6 +50,11 @@ int64_t HHVM_FUNCTION(git_status_foreach_ext,
 	callback_ = NULL;
 
 	result = git_status_foreach_ext(HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(opts_, status_options), /* todo */ callback_, payload_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -60,6 +70,11 @@ int64_t HHVM_FUNCTION(git_status_file,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
 	result = git_status_file((unsigned int*) status_flags, HHVM_GIT2_V(repo_, repository), path.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -68,6 +83,7 @@ Resource HHVM_FUNCTION(git_status_list_new,
 	const Resource& repo,
 	const Resource& opts)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_status_list *out = NULL;
@@ -75,7 +91,12 @@ Resource HHVM_FUNCTION(git_status_list_new,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto opts_ = dyn_cast<Git2Resource>(opts);
 
-	git_status_list_new(&out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(opts_, status_options));
+	result = git_status_list_new(&out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(opts_, status_options));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, status_list) = out;
 	return Resource(return_value);
 }
@@ -127,6 +148,11 @@ int64_t HHVM_FUNCTION(git_status_should_ignore,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
 	result = git_status_should_ignore((int*) ignored, HHVM_GIT2_V(repo_, repository), path.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }

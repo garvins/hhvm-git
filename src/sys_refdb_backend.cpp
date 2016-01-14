@@ -12,13 +12,19 @@ using namespace HPHP;
 Resource HHVM_FUNCTION(git_refdb_backend_fs,
 	const Resource& repo)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_refdb_backend *backend_out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_refdb_backend_fs(&backend_out, HHVM_GIT2_V(repo_, repository));
+	result = git_refdb_backend_fs(&backend_out, HHVM_GIT2_V(repo_, repository));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, refdb_backend) = backend_out;
 	return Resource(return_value);
 }
@@ -34,6 +40,11 @@ int64_t HHVM_FUNCTION(git_refdb_set_backend,
 	auto backend_ = dyn_cast<Git2Resource>(backend);
 
 	result = git_refdb_set_backend(HHVM_GIT2_V(refdb_, refdb), HHVM_GIT2_V(backend_, refdb_backend));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }

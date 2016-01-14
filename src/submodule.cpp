@@ -13,13 +13,19 @@ Resource HHVM_FUNCTION(git_submodule_lookup,
 	const Resource& repo,
 	const String& name)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_submodule *submodule = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_submodule_lookup(&submodule, HHVM_GIT2_V(repo_, repository), name.c_str());
+	result = git_submodule_lookup(&submodule, HHVM_GIT2_V(repo_, repository), name.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, submodule) = submodule;
 	return Resource(return_value);
 }
@@ -47,13 +53,19 @@ Resource HHVM_FUNCTION(git_submodule_add_setup,
 	const String& path,
 	int64_t use_gitlink)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_submodule *submodule = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_submodule_add_setup(&submodule, HHVM_GIT2_V(repo_, repository), url.c_str(), path.c_str(), (int) use_gitlink);
+	result = git_submodule_add_setup(&submodule, HHVM_GIT2_V(repo_, repository), url.c_str(), path.c_str(), (int) use_gitlink);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, submodule) = submodule;
 	return Resource(return_value);
 }
@@ -67,6 +79,11 @@ int64_t HHVM_FUNCTION(git_submodule_add_finalize,
 	auto submodule_ = dyn_cast<Git2Resource>(submodule);
 
 	result = git_submodule_add_finalize(HHVM_GIT2_V(submodule_, submodule));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -81,6 +98,11 @@ int64_t HHVM_FUNCTION(git_submodule_add_to_index,
 	auto submodule_ = dyn_cast<Git2Resource>(submodule);
 
 	result = git_submodule_add_to_index(HHVM_GIT2_V(submodule_, submodule), (int) write_index);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -94,6 +116,11 @@ int64_t HHVM_FUNCTION(git_submodule_save,
 	auto submodule_ = dyn_cast<Git2Resource>(submodule);
 
 	result = git_submodule_save(HHVM_GIT2_V(submodule_, submodule));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -160,6 +187,11 @@ int64_t HHVM_FUNCTION(git_submodule_set_url,
 	auto submodule_ = dyn_cast<Git2Resource>(submodule);
 
 	result = git_submodule_set_url(HHVM_GIT2_V(submodule_, submodule), url.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -266,6 +298,11 @@ int64_t HHVM_FUNCTION(git_submodule_fetch_recurse_submodules,
 	auto submodule_ = dyn_cast<Git2Resource>(submodule);
 
 	result = git_submodule_fetch_recurse_submodules(HHVM_GIT2_V(submodule_, submodule));
+
+	if (result != GIT_OK && result != 1) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -280,6 +317,11 @@ int64_t HHVM_FUNCTION(git_submodule_set_fetch_recurse_submodules,
 	auto submodule_ = dyn_cast<Git2Resource>(submodule);
 
 	result = git_submodule_set_fetch_recurse_submodules(HHVM_GIT2_V(submodule_, submodule), (int) fetch_recurse_submodules);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -294,6 +336,11 @@ int64_t HHVM_FUNCTION(git_submodule_init,
 	auto submodule_ = dyn_cast<Git2Resource>(submodule);
 
 	result = git_submodule_init(HHVM_GIT2_V(submodule_, submodule), (int) overwrite);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -307,6 +354,11 @@ int64_t HHVM_FUNCTION(git_submodule_sync,
 	auto submodule_ = dyn_cast<Git2Resource>(submodule);
 
 	result = git_submodule_sync(HHVM_GIT2_V(submodule_, submodule));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -314,13 +366,19 @@ int64_t HHVM_FUNCTION(git_submodule_sync,
 Resource HHVM_FUNCTION(git_submodule_open,
 	const Resource& submodule)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_repository *repo = NULL;
 
 	auto submodule_ = dyn_cast<Git2Resource>(submodule);
 
-	git_submodule_open(&repo, HHVM_GIT2_V(submodule_, submodule));
+	result = git_submodule_open(&repo, HHVM_GIT2_V(submodule_, submodule));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, repository) = repo;
 	return Resource(return_value);
 }
@@ -334,6 +392,11 @@ int64_t HHVM_FUNCTION(git_submodule_reload,
 	auto submodule_ = dyn_cast<Git2Resource>(submodule);
 
 	result = git_submodule_reload(HHVM_GIT2_V(submodule_, submodule));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -347,6 +410,11 @@ int64_t HHVM_FUNCTION(git_submodule_reload_all,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
 	result = git_submodule_reload_all(HHVM_GIT2_V(repo_, repository));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -361,6 +429,11 @@ int64_t HHVM_FUNCTION(git_submodule_status,
 	auto submodule_ = dyn_cast<Git2Resource>(submodule);
 
 	result = git_submodule_status((unsigned int*) status, HHVM_GIT2_V(submodule_, submodule));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -375,6 +448,11 @@ int64_t HHVM_FUNCTION(git_submodule_location,
 	auto submodule_ = dyn_cast<Git2Resource>(submodule);
 
 	result = git_submodule_location((unsigned int*) location_status, HHVM_GIT2_V(submodule_, submodule));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }

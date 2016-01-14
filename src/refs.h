@@ -101,7 +101,7 @@ Resource HHVM_FUNCTION(git_reference_iterator_glob_new,
 	const Resource& repo,
 	const String& glob);
 
-Resource HHVM_FUNCTION(git_reference_next,
+Variant HHVM_FUNCTION(git_reference_next,
 	const Resource& iter);
 
 String HHVM_FUNCTION(git_reference_next_name,

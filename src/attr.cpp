@@ -26,13 +26,19 @@ String HHVM_FUNCTION(git_attr_get,
 	const String& path,
 	const String& name)
 {
+	int result;
 	String return_value;
 
 	const char *value_out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_attr_get(&value_out, HHVM_GIT2_V(repo_, repository), (uint32_t) flags, path.c_str(), name.c_str());
+	result = git_attr_get(&value_out, HHVM_GIT2_V(repo_, repository), (uint32_t) flags, path.c_str(), name.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = String(value_out);
 	return return_value;
 }
@@ -44,6 +50,7 @@ String HHVM_FUNCTION(git_attr_get_many,
 	int64_t num_attr,
 	const Array& names)
 {
+	int result;
 	String return_value;
 
 	const char *values_out = NULL;
@@ -51,7 +58,12 @@ String HHVM_FUNCTION(git_attr_get_many,
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
-	git_attr_get_many(&values_out, HHVM_GIT2_V(repo_, repository), (uint32_t) flags, path.c_str(), (size_t) num_attr, names_);
+	result = git_attr_get_many(&values_out, HHVM_GIT2_V(repo_, repository), (uint32_t) flags, path.c_str(), (size_t) num_attr, names_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = String(values_out);
 	return return_value;
 }
@@ -73,6 +85,11 @@ int64_t HHVM_FUNCTION(git_attr_foreach,
 	callback_ = NULL;
 
 	result = git_attr_foreach(HHVM_GIT2_V(repo_, repository), (uint32_t) flags, path.c_str(), /* todo */ callback_, payload_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -97,6 +114,11 @@ int64_t HHVM_FUNCTION(git_attr_add_macro,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
 	result = git_attr_add_macro(HHVM_GIT2_V(repo_, repository), name.c_str(), values.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }

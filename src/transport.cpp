@@ -18,6 +18,11 @@ int64_t HHVM_FUNCTION(git_cred_has_username,
 	auto cred_ = dyn_cast<Git2Resource>(cred);
 
 	result = git_cred_has_username(HHVM_GIT2_V(cred_, cred));
+
+	if (result != GIT_OK && result != 1) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -26,11 +31,17 @@ Resource HHVM_FUNCTION(git_cred_userpass_plaintext_new,
 	const String& username,
 	const String& password)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_cred *out = NULL;
 
-	git_cred_userpass_plaintext_new(&out, username.c_str(), password.c_str());
+	result = git_cred_userpass_plaintext_new(&out, username.c_str(), password.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, cred) = out;
 	return Resource(return_value);
 }
@@ -41,11 +52,17 @@ Resource HHVM_FUNCTION(git_cred_ssh_key_new,
 	const String& privatekey,
 	const String& passphrase)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_cred *out = NULL;
 
-	git_cred_ssh_key_new(&out, username.c_str(), publickey.c_str(), privatekey.c_str(), passphrase.c_str());
+	result = git_cred_ssh_key_new(&out, username.c_str(), publickey.c_str(), privatekey.c_str(), passphrase.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, cred) = out;
 	return Resource(return_value);
 }
@@ -57,6 +74,7 @@ Resource HHVM_FUNCTION(git_cred_ssh_custom_new,
 	const Variant& sign_fn,
 	const Variant& sign_data)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_cred *out = NULL;
@@ -65,18 +83,29 @@ Resource HHVM_FUNCTION(git_cred_ssh_custom_new,
 
 	sign_fn_ = NULL;
 
-	git_cred_ssh_custom_new(&out, username.c_str(), publickey.c_str(), (size_t) publickey_len, /* todo */ sign_fn_, sign_data_);
+	result = git_cred_ssh_custom_new(&out, username.c_str(), publickey.c_str(), (size_t) publickey_len, /* todo */ sign_fn_, sign_data_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, cred) = out;
 	return Resource(return_value);
 }
 
 Resource HHVM_FUNCTION(git_cred_default_new)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_cred *out = NULL;
 
-	git_cred_default_new(&out);
+	result = git_cred_default_new(&out);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, cred) = out;
 	return Resource(return_value);
 }
@@ -85,13 +114,19 @@ Resource HHVM_FUNCTION(git_transport_new,
 	const Resource& owner,
 	const String& url)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_transport *out = NULL;
 
 	auto owner_ = dyn_cast<Git2Resource>(owner);
 
-	git_transport_new(&out, HHVM_GIT2_V(owner_, remote), url.c_str());
+	result = git_transport_new(&out, HHVM_GIT2_V(owner_, remote), url.c_str());
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, transport) = out;
 	return Resource(return_value);
 }
@@ -111,6 +146,11 @@ int64_t HHVM_FUNCTION(git_transport_register,
 	cb_ = NULL;
 
 	result = git_transport_register(prefix.c_str(), (unsigned) priority, /* todo */ cb_, param_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -123,6 +163,11 @@ int64_t HHVM_FUNCTION(git_transport_unregister,
 	int64_t return_value;
 
 	result = git_transport_unregister(prefix.c_str(), (unsigned) priority);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -131,6 +176,7 @@ Resource HHVM_FUNCTION(git_transport_dummy,
 	const Resource& owner,
 	const Variant& payload)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_transport *out = NULL;
@@ -138,7 +184,12 @@ Resource HHVM_FUNCTION(git_transport_dummy,
 
 	auto owner_ = dyn_cast<Git2Resource>(owner);
 
-	git_transport_dummy(&out, HHVM_GIT2_V(owner_, remote), payload_);
+	result = git_transport_dummy(&out, HHVM_GIT2_V(owner_, remote), payload_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, transport) = out;
 	return Resource(return_value);
 }
@@ -147,6 +198,7 @@ Resource HHVM_FUNCTION(git_transport_local,
 	const Resource& owner,
 	const Variant& payload)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_transport *out = NULL;
@@ -154,7 +206,12 @@ Resource HHVM_FUNCTION(git_transport_local,
 
 	auto owner_ = dyn_cast<Git2Resource>(owner);
 
-	git_transport_local(&out, HHVM_GIT2_V(owner_, remote), payload_);
+	result = git_transport_local(&out, HHVM_GIT2_V(owner_, remote), payload_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, transport) = out;
 	return Resource(return_value);
 }
@@ -163,6 +220,7 @@ Resource HHVM_FUNCTION(git_transport_smart,
 	const Resource& owner,
 	const Variant& payload)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_transport *out = NULL;
@@ -170,7 +228,12 @@ Resource HHVM_FUNCTION(git_transport_smart,
 
 	auto owner_ = dyn_cast<Git2Resource>(owner);
 
-	git_transport_smart(&out, HHVM_GIT2_V(owner_, remote), payload_);
+	result = git_transport_smart(&out, HHVM_GIT2_V(owner_, remote), payload_);
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, transport) = out;
 	return Resource(return_value);
 }
@@ -178,13 +241,19 @@ Resource HHVM_FUNCTION(git_transport_smart,
 Resource HHVM_FUNCTION(git_smart_subtransport_http,
 	const Resource& owner)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_smart_subtransport *out = NULL;
 
 	auto owner_ = dyn_cast<Git2Resource>(owner);
 
-	git_smart_subtransport_http(&out, HHVM_GIT2_V(owner_, transport));
+	result = git_smart_subtransport_http(&out, HHVM_GIT2_V(owner_, transport));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, smart_subtransport) = out;
 	return Resource(return_value);
 }
@@ -192,13 +261,19 @@ Resource HHVM_FUNCTION(git_smart_subtransport_http,
 Resource HHVM_FUNCTION(git_smart_subtransport_git,
 	const Resource& owner)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_smart_subtransport *out = NULL;
 
 	auto owner_ = dyn_cast<Git2Resource>(owner);
 
-	git_smart_subtransport_git(&out, HHVM_GIT2_V(owner_, transport));
+	result = git_smart_subtransport_git(&out, HHVM_GIT2_V(owner_, transport));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, smart_subtransport) = out;
 	return Resource(return_value);
 }
@@ -206,13 +281,19 @@ Resource HHVM_FUNCTION(git_smart_subtransport_git,
 Resource HHVM_FUNCTION(git_smart_subtransport_ssh,
 	const Resource& owner)
 {
+	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_smart_subtransport *out = NULL;
 
 	auto owner_ = dyn_cast<Git2Resource>(owner);
 
-	git_smart_subtransport_ssh(&out, HHVM_GIT2_V(owner_, transport));
+	result = git_smart_subtransport_ssh(&out, HHVM_GIT2_V(owner_, transport));
+
+	if (result != GIT_OK) {
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	}
+
 	HHVM_GIT2_V(return_value, smart_subtransport) = out;
 	return Resource(return_value);
 }

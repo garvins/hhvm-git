@@ -28,6 +28,14 @@ int64_t HHVM_FUNCTION(git_buf_grow,
 	auto buffer_ = dyn_cast<Git2Resource>(buffer);
 
 	result = git_buf_grow(HHVM_GIT2_V(buffer_, buf), (size_t) target_size);
+    
+    if (result ==  -1) {
+        /* allocation failure */
+        SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+    } else if (result != GIT_OK) {
+        SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+    }
+
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -45,6 +53,14 @@ int64_t HHVM_FUNCTION(git_buf_set,
 	auto buffer_ = dyn_cast<Git2Resource>(buffer);
 
 	result = git_buf_set(HHVM_GIT2_V(buffer_, buf), data_, (size_t) datalen);
+
+    if (result ==  -1) {
+        /* allocation failure */
+		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+    } else if (result != GIT_OK) {
+        SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+    }
+
 	return_value = (int64_t) result;
 	return return_value;
 }
