@@ -24,7 +24,8 @@ Resource HHVM_FUNCTION(git_clone,
 	result = git_clone(&out, url.c_str(), local_path.c_str(), HHVM_GIT2_V(options_, clone_options));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, repository) = out;
@@ -47,7 +48,8 @@ int64_t HHVM_FUNCTION(git_clone_into,
 	result = git_clone_into(HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(remote_, remote), HHVM_GIT2_V(co_opts_, checkout_opts), branch.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;

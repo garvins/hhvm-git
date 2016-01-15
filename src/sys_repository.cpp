@@ -19,7 +19,8 @@ Resource HHVM_FUNCTION(git_repository_new)
 	result = git_repository_new(&out);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, repository) = out;
@@ -47,7 +48,8 @@ int64_t HHVM_FUNCTION(git_repository_reinit_filesystem,
 	result = git_repository_reinit_filesystem(HHVM_GIT2_V(repo_, repository), (int) recurse_submodules);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;

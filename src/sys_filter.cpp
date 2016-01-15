@@ -34,7 +34,8 @@ Resource HHVM_FUNCTION(git_filter_list_new,
 	result = git_filter_list_new(&out, HHVM_GIT2_V(repo_, repository), (git_filter_mode_t) mode);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, filter_list) = out;
@@ -57,7 +58,8 @@ int64_t HHVM_FUNCTION(git_filter_list_push,
 	result = git_filter_list_push(HHVM_GIT2_V(fl_, filter_list), HHVM_GIT2_V(filter_, filter), payload_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -155,7 +157,8 @@ int64_t HHVM_FUNCTION(git_filter_register,
 	result = git_filter_register(name.c_str(), HHVM_GIT2_V(filter_, filter), (int) priority);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -171,7 +174,8 @@ int64_t HHVM_FUNCTION(git_filter_unregister,
 	result = git_filter_unregister(name.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;

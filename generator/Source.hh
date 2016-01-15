@@ -135,7 +135,7 @@ class Source extends Printer {
                 } else if ($hackType == HackType::STRING && $param->getType()->getType() == "git_oid") {
                     $body .= "\tif (git_oid_fromstr(&" . $param->getName() . "_, " . $param->getName() . ".c_str()) != GIT_OK) {\n";
                     $body .= "\t\tconst git_error *error = giterr_last();\n";
-                    $body .= "\t\tSystemLib::throwInvalidArgumentExceptionObject(error->message);\n";
+                    $body .= "\t\tSystemLib::throwInvalidArgumentExceptionObject(error ? error->message : \"no error message\");\n";
                     $body .= "\t}\n";
                 }
             }
@@ -144,7 +144,7 @@ class Source extends Printer {
             
             /* Build call of libgit function, only assign result if return-type of libgit function ins't void */
             $body .= "\t". ($returnType->typeToHackType() != HackType::VOID && ($function->getReturnType()->getType() == "int" || !$hasOutValue) ? "result = " : "") . $function->getName() . "(";
-            foreach ($function->getParams() as $k =>$param) {
+            foreach ($function->getParams() as $k => $param) {
                 $hackType = $param->getType()->typeToHackType();
                 
                 if ($k == 0 && $hasOutValue) {
@@ -165,7 +165,7 @@ class Source extends Printer {
                                 case HackType::STRING :
                                     if ($param->getType()->getType() == "git_oid") {
                                         $body .= "&" . $param->getName() . "_";
-                                    } else if ($param.isConstant()) {
+                                    } else if ($param->isConstant()) {
                                         $body .= $param->getName() . ".c_str()";
                                     } else {
                                         $body .= $param->getName() . ".mutableData()";
@@ -193,7 +193,8 @@ class Source extends Printer {
              */
             if ($function->getReturnType()->getType() == "int") {
                 $body .= "\n\tif (result != GIT_OK" . ( preg_match("/_is_/", $function->getName()) ? " && result != 1" : "") . ") {\n" .
-                	"\t\tSystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);\n" .
+                	"\t\tconst git_error* error = giterr_last();\n" .
+                	"\t\tSystemLib::throwInvalidArgumentExceptionObject(error ? error->message : \"no error message\");\n" .
                 	"\t}\n\n";
             }
             

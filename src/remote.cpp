@@ -26,7 +26,8 @@ Resource HHVM_FUNCTION(git_remote_create,
 	result = git_remote_create(&out, HHVM_GIT2_V(repo_, repository), name.c_str(), url.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, remote) = out;
@@ -49,7 +50,8 @@ Resource HHVM_FUNCTION(git_remote_create_with_fetchspec,
 	result = git_remote_create_with_fetchspec(&out, HHVM_GIT2_V(repo_, repository), name.c_str(), url.c_str(), fetch.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, remote) = out;
@@ -71,7 +73,8 @@ Resource HHVM_FUNCTION(git_remote_create_inmemory,
 	result = git_remote_create_inmemory(&out, HHVM_GIT2_V(repo_, repository), fetch.c_str(), url.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, remote) = out;
@@ -92,7 +95,8 @@ Resource HHVM_FUNCTION(git_remote_load,
 	result = git_remote_load(&out, HHVM_GIT2_V(repo_, repository), name.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, remote) = out;
@@ -110,7 +114,8 @@ int64_t HHVM_FUNCTION(git_remote_save,
 	result = git_remote_save(HHVM_GIT2_V(remote_, remote));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -181,7 +186,8 @@ int64_t HHVM_FUNCTION(git_remote_set_url,
 	result = git_remote_set_url(HHVM_GIT2_V(remote_, remote), url.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -200,7 +206,8 @@ int64_t HHVM_FUNCTION(git_remote_set_pushurl,
 	result = git_remote_set_pushurl(HHVM_GIT2_V(remote_, remote), url.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -219,7 +226,8 @@ int64_t HHVM_FUNCTION(git_remote_add_fetch,
 	result = git_remote_add_fetch(HHVM_GIT2_V(remote_, remote), refspec.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -239,7 +247,8 @@ int64_t HHVM_FUNCTION(git_remote_get_fetch_refspecs,
 	result = git_remote_get_fetch_refspecs(HHVM_GIT2_V(array_, strarray), HHVM_GIT2_V(remote_, remote));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -259,7 +268,8 @@ int64_t HHVM_FUNCTION(git_remote_set_fetch_refspecs,
 	result = git_remote_set_fetch_refspecs(HHVM_GIT2_V(remote_, remote), HHVM_GIT2_V(array_, strarray));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -278,7 +288,8 @@ int64_t HHVM_FUNCTION(git_remote_add_push,
 	result = git_remote_add_push(HHVM_GIT2_V(remote_, remote), refspec.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -298,7 +309,8 @@ int64_t HHVM_FUNCTION(git_remote_get_push_refspecs,
 	result = git_remote_get_push_refspecs(HHVM_GIT2_V(array_, strarray), HHVM_GIT2_V(remote_, remote));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -318,7 +330,8 @@ int64_t HHVM_FUNCTION(git_remote_set_push_refspecs,
 	result = git_remote_set_push_refspecs(HHVM_GIT2_V(remote_, remote), HHVM_GIT2_V(array_, strarray));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -373,7 +386,8 @@ int64_t HHVM_FUNCTION(git_remote_connect,
 	result = git_remote_connect(HHVM_GIT2_V(remote_, remote), (git_direction) direction);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -394,7 +408,8 @@ Resource HHVM_FUNCTION(git_remote_ls,
 	result = git_remote_ls(&out, (size_t*) size, HHVM_GIT2_V(remote_, remote));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	//HHVM_GIT2_V(return_value, remote_head) = out; todo return as array
@@ -412,7 +427,8 @@ int64_t HHVM_FUNCTION(git_remote_download,
 	result = git_remote_download(HHVM_GIT2_V(remote_, remote));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -430,7 +446,8 @@ int64_t HHVM_FUNCTION(git_remote_connected,
 	result = git_remote_connected(HHVM_GIT2_V(remote_, remote));
 
     if (result != GIT_OK && result != 1) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -477,7 +494,8 @@ int64_t HHVM_FUNCTION(git_remote_update_tips,
 	result = git_remote_update_tips(HHVM_GIT2_V(remote_, remote));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -495,7 +513,8 @@ int64_t HHVM_FUNCTION(git_remote_fetch,
 	result = git_remote_fetch(HHVM_GIT2_V(remote_, remote));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -511,7 +530,8 @@ int64_t HHVM_FUNCTION(git_remote_valid_url,
 	result = git_remote_valid_url(url.c_str());
 
     if (result != GIT_OK && result != 1) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -526,8 +546,9 @@ int64_t HHVM_FUNCTION(git_remote_supported_url,
 
 	result = git_remote_supported_url(url.c_str());
 
-    if (result != GIT_OK && result != 1) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	if (result != GIT_OK) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -547,7 +568,8 @@ Resource HHVM_FUNCTION(git_remote_list,
 	result = git_remote_list(&out, HHVM_GIT2_V(repo_, repository));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, strarray) = &out;
@@ -577,7 +599,8 @@ int64_t HHVM_FUNCTION(git_remote_set_transport,
 	result = git_remote_set_transport(HHVM_GIT2_V(remote_, remote), HHVM_GIT2_V(transport_, transport));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -603,7 +626,8 @@ int64_t HHVM_FUNCTION(git_remote_set_callbacks,
 	result = git_remote_set_callbacks(HHVM_GIT2_V(remote_, remote), &callbacks_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -677,7 +701,8 @@ int64_t HHVM_FUNCTION(git_remote_update_fetchhead,
 	result = git_remote_update_fetchhead(HHVM_GIT2_V(remote_, remote));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -702,8 +727,9 @@ int64_t HHVM_FUNCTION(git_remote_is_valid_name,
 
 	result = git_remote_is_valid_name(remote_name.c_str());
 
-    if (result != GIT_OK && result != 1) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	if (result != GIT_OK && result != 1) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;

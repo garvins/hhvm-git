@@ -22,7 +22,8 @@ Resource HHVM_FUNCTION(git_pathspec_new,
 	result = git_pathspec_new(&out, HHVM_GIT2_V(pathspec_, strarray));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, pathspec) = out;
@@ -51,7 +52,8 @@ int64_t HHVM_FUNCTION(git_pathspec_matches_path,
 	result = git_pathspec_matches_path(HHVM_GIT2_V(ps_, pathspec), (uint32_t) flags, path.c_str());
 
 	if (result != GIT_OK && result != 1) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -74,7 +76,8 @@ Resource HHVM_FUNCTION(git_pathspec_match_workdir,
 	result = git_pathspec_match_workdir(&out, HHVM_GIT2_V(repo_, repository), (uint32_t) flags, HHVM_GIT2_V(ps_, pathspec));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, pathspec_match_list) = out;
@@ -97,7 +100,8 @@ Resource HHVM_FUNCTION(git_pathspec_match_index,
 	result = git_pathspec_match_index(&out, HHVM_GIT2_V(index_, index), (uint32_t) flags, HHVM_GIT2_V(ps_, pathspec));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, pathspec_match_list) = out;
@@ -120,7 +124,8 @@ Resource HHVM_FUNCTION(git_pathspec_match_tree,
 	result = git_pathspec_match_tree(&out, HHVM_GIT2_V(tree_, tree), (uint32_t) flags, HHVM_GIT2_V(ps_, pathspec));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, pathspec_match_list) = out;
@@ -143,7 +148,8 @@ Resource HHVM_FUNCTION(git_pathspec_match_diff,
 	result = git_pathspec_match_diff(&out, HHVM_GIT2_V(diff_, diff), (uint32_t) flags, HHVM_GIT2_V(ps_, pathspec));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, pathspec_match_list) = out;

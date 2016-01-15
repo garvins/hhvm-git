@@ -36,7 +36,8 @@ String HHVM_FUNCTION(git_attr_get,
 	result = git_attr_get(&value_out, HHVM_GIT2_V(repo_, repository), (uint32_t) flags, path.c_str(), name.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = String(value_out);
@@ -61,7 +62,8 @@ String HHVM_FUNCTION(git_attr_get_many,
 	result = git_attr_get_many(&values_out, HHVM_GIT2_V(repo_, repository), (uint32_t) flags, path.c_str(), (size_t) num_attr, names_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = String(values_out);
@@ -87,7 +89,8 @@ int64_t HHVM_FUNCTION(git_attr_foreach,
 	result = git_attr_foreach(HHVM_GIT2_V(repo_, repository), (uint32_t) flags, path.c_str(), /* todo */ callback_, payload_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -116,7 +119,8 @@ int64_t HHVM_FUNCTION(git_attr_add_macro,
 	result = git_attr_add_macro(HHVM_GIT2_V(repo_, repository), name.c_str(), values.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;

@@ -23,7 +23,8 @@ Resource HHVM_FUNCTION(git_revparse_single,
 	result = git_revparse_single(&out, HHVM_GIT2_V(repo_, repository), spec.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, object) = out;
@@ -60,7 +61,8 @@ int64_t HHVM_FUNCTION(git_revparse,
 	result = git_revparse(HHVM_GIT2_V(revspec_, revspec), HHVM_GIT2_V(repo_, repository), spec.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;

@@ -25,7 +25,8 @@ Resource HHVM_FUNCTION(git_signature_new,
 	result = git_signature_new(&out, name.c_str(), email.c_str(), (git_time_t) time, (int) offset);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, signature) = out;
@@ -68,7 +69,8 @@ Resource HHVM_FUNCTION(git_signature_default,
 	result = git_signature_default(&out, HHVM_GIT2_V(repo_, repository));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, signature) = out;

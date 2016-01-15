@@ -31,9 +31,11 @@ int64_t HHVM_FUNCTION(git_buf_grow,
     
     if (result ==  -1) {
         /* allocation failure */
-        SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+        const git_error *error = giterr_last();
+        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
     } else if (result != GIT_OK) {
-        SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+        const git_error *error = giterr_last();
+        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
     }
 
 	return_value = (int64_t) result;

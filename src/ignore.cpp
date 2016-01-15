@@ -21,7 +21,8 @@ int64_t HHVM_FUNCTION(git_ignore_add_rule,
 	result = git_ignore_add_rule(HHVM_GIT2_V(repo_, repository), rules.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -39,7 +40,8 @@ int64_t HHVM_FUNCTION(git_ignore_clear_internal_rules,
 	result = git_ignore_clear_internal_rules(HHVM_GIT2_V(repo_, repository));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -58,8 +60,10 @@ int64_t HHVM_FUNCTION(git_ignore_path_is_ignored,
 
 	result = git_ignore_path_is_ignored((int*) ignored, HHVM_GIT2_V(repo_, repository), path.c_str());
 
-	if (result != GIT_OK) {
 		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	if (result != GIT_OK) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;

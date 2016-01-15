@@ -22,7 +22,8 @@ Resource HHVM_FUNCTION(git_revwalk_new,
 	result = git_revwalk_new(&out, HHVM_GIT2_V(repo_, repository));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, revwalk) = out;
@@ -56,7 +57,8 @@ int64_t HHVM_FUNCTION(git_revwalk_push,
 	result = git_revwalk_push(HHVM_GIT2_V(walk_, revwalk), &id_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -75,7 +77,8 @@ int64_t HHVM_FUNCTION(git_revwalk_push_glob,
 	result = git_revwalk_push_glob(HHVM_GIT2_V(walk_, revwalk), glob.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -93,7 +96,8 @@ int64_t HHVM_FUNCTION(git_revwalk_push_head,
 	result = git_revwalk_push_head(HHVM_GIT2_V(walk_, revwalk));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -118,7 +122,8 @@ int64_t HHVM_FUNCTION(git_revwalk_hide,
 	result = git_revwalk_hide(HHVM_GIT2_V(walk_, revwalk), &commit_id_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -137,7 +142,8 @@ int64_t HHVM_FUNCTION(git_revwalk_hide_glob,
 	result = git_revwalk_hide_glob(HHVM_GIT2_V(walk_, revwalk), glob.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -155,7 +161,8 @@ int64_t HHVM_FUNCTION(git_revwalk_hide_head,
 	result = git_revwalk_hide_head(HHVM_GIT2_V(walk_, revwalk));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -174,7 +181,8 @@ int64_t HHVM_FUNCTION(git_revwalk_push_ref,
 	result = git_revwalk_push_ref(HHVM_GIT2_V(walk_, revwalk), refname.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -193,7 +201,8 @@ int64_t HHVM_FUNCTION(git_revwalk_hide_ref,
 	result = git_revwalk_hide_ref(HHVM_GIT2_V(walk_, revwalk), refname.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -214,9 +223,11 @@ String HHVM_FUNCTION(git_revwalk_next,
 
     if (result == GIT_ITEROVER) {
         /* todo return nullptr */
-        SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+        const git_error *error = giterr_last();
+        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
     } else if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+        const git_error *error = giterr_last();
+        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	git_oid_fmt(return_value, &out);
@@ -245,7 +256,8 @@ int64_t HHVM_FUNCTION(git_revwalk_push_range,
 	result = git_revwalk_push_range(HHVM_GIT2_V(walk_, revwalk), range.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;

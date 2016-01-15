@@ -65,8 +65,9 @@ Resource HHVM_FUNCTION(git_blame_file,
 
 	result = git_blame_file(&out, HHVM_GIT2_V(repo_, repository), path.c_str(), HHVM_GIT2_V(options_, blame_options));
 
-	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+    if (result != GIT_OK) {
+        const git_error *error = giterr_last();
+        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, blame) = out;
@@ -87,8 +88,9 @@ Resource HHVM_FUNCTION(git_blame_buffer,
 
 	result = git_blame_buffer(&out, HHVM_GIT2_V(reference_, blame), buffer.c_str(), (uint32_t) buffer_len);
 
-	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+    if (result != GIT_OK) {
+        const git_error *error = giterr_last();
+        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, blame) = out;

@@ -19,8 +19,9 @@ int64_t HHVM_FUNCTION(git_cred_has_username,
 
 	result = git_cred_has_username(HHVM_GIT2_V(cred_, cred));
 
-	if (result != GIT_OK && result != 1) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+    if (result != GIT_OK && result != 1) {
+        const git_error *error = giterr_last();
+        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -39,7 +40,8 @@ Resource HHVM_FUNCTION(git_cred_userpass_plaintext_new,
 	result = git_cred_userpass_plaintext_new(&out, username.c_str(), password.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, cred) = out;
@@ -60,7 +62,8 @@ Resource HHVM_FUNCTION(git_cred_ssh_key_new,
 	result = git_cred_ssh_key_new(&out, username.c_str(), publickey.c_str(), privatekey.c_str(), passphrase.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, cred) = out;
@@ -86,7 +89,8 @@ Resource HHVM_FUNCTION(git_cred_ssh_custom_new,
 	result = git_cred_ssh_custom_new(&out, username.c_str(), publickey.c_str(), (size_t) publickey_len, /* todo */ sign_fn_, sign_data_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, cred) = out;
@@ -103,7 +107,8 @@ Resource HHVM_FUNCTION(git_cred_default_new)
 	result = git_cred_default_new(&out);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, cred) = out;
@@ -124,7 +129,8 @@ Resource HHVM_FUNCTION(git_transport_new,
 	result = git_transport_new(&out, HHVM_GIT2_V(owner_, remote), url.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, transport) = out;
@@ -148,7 +154,8 @@ int64_t HHVM_FUNCTION(git_transport_register,
 	result = git_transport_register(prefix.c_str(), (unsigned) priority, /* todo */ cb_, param_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -165,7 +172,8 @@ int64_t HHVM_FUNCTION(git_transport_unregister,
 	result = git_transport_unregister(prefix.c_str(), (unsigned) priority);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -187,7 +195,8 @@ Resource HHVM_FUNCTION(git_transport_dummy,
 	result = git_transport_dummy(&out, HHVM_GIT2_V(owner_, remote), payload_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, transport) = out;
@@ -209,7 +218,8 @@ Resource HHVM_FUNCTION(git_transport_local,
 	result = git_transport_local(&out, HHVM_GIT2_V(owner_, remote), payload_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, transport) = out;
@@ -231,7 +241,8 @@ Resource HHVM_FUNCTION(git_transport_smart,
 	result = git_transport_smart(&out, HHVM_GIT2_V(owner_, remote), payload_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, transport) = out;
@@ -251,7 +262,8 @@ Resource HHVM_FUNCTION(git_smart_subtransport_http,
 	result = git_smart_subtransport_http(&out, HHVM_GIT2_V(owner_, transport));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, smart_subtransport) = out;
@@ -271,7 +283,8 @@ Resource HHVM_FUNCTION(git_smart_subtransport_git,
 	result = git_smart_subtransport_git(&out, HHVM_GIT2_V(owner_, transport));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, smart_subtransport) = out;
@@ -291,7 +304,8 @@ Resource HHVM_FUNCTION(git_smart_subtransport_ssh,
 	result = git_smart_subtransport_ssh(&out, HHVM_GIT2_V(owner_, transport));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, smart_subtransport) = out;

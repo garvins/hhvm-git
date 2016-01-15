@@ -22,7 +22,8 @@ Resource HHVM_FUNCTION(git_refdb_backend_fs,
 	result = git_refdb_backend_fs(&backend_out, HHVM_GIT2_V(repo_, repository));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, refdb_backend) = backend_out;
@@ -42,7 +43,8 @@ int64_t HHVM_FUNCTION(git_refdb_set_backend,
 	result = git_refdb_set_backend(HHVM_GIT2_V(refdb_, refdb), HHVM_GIT2_V(backend_, refdb_backend));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;

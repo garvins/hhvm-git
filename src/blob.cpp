@@ -28,7 +28,8 @@ Resource HHVM_FUNCTION(git_blob_lookup,
 	result = git_blob_lookup(&blob, HHVM_GIT2_V(repo_, repository), &id_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, blob) = blob;
@@ -55,7 +56,8 @@ Resource HHVM_FUNCTION(git_blob_lookup_prefix,
 	result = git_blob_lookup_prefix(&blob, HHVM_GIT2_V(repo_, repository), &id_, (size_t) len);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, blob) = blob;
@@ -141,7 +143,8 @@ Resource HHVM_FUNCTION(git_blob_filtered_content,
 	result = git_blob_filtered_content(&out, HHVM_GIT2_V(blob_, blob), as_path.c_str(), (int) check_for_binary_data);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, buf) = &out;
@@ -162,7 +165,8 @@ String HHVM_FUNCTION(git_blob_create_fromworkdir,
 	result = git_blob_create_fromworkdir(&id, HHVM_GIT2_V(repo_, repository), relative_path.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	git_oid_fmt(return_value, &id);
@@ -183,7 +187,8 @@ String HHVM_FUNCTION(git_blob_create_fromdisk,
 	result = git_blob_create_fromdisk(&id, HHVM_GIT2_V(repo_, repository), path.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	git_oid_fmt(return_value, &id);
@@ -209,7 +214,8 @@ String HHVM_FUNCTION(git_blob_create_fromchunks,
 	result = git_blob_create_fromchunks(&id, HHVM_GIT2_V(repo_, repository), hintpath.c_str(), /* todo */ callback_, payload_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	git_oid_fmt(return_value, &id);
@@ -232,7 +238,8 @@ String HHVM_FUNCTION(git_blob_create_frombuffer,
 	result = git_blob_create_frombuffer(&oid, HHVM_GIT2_V(repo_, repository), buffer_, (size_t) len);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	git_oid_fmt(return_value, &oid);
@@ -250,7 +257,8 @@ int64_t HHVM_FUNCTION(git_blob_is_binary,
 	result = git_blob_is_binary(HHVM_GIT2_V(blob_, blob));
 
 	if (result != GIT_OK && result != 1) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;

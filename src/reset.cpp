@@ -23,7 +23,8 @@ int64_t HHVM_FUNCTION(git_reset,
 	result = git_reset(HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(target_, object), (git_reset_t) reset_type);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -45,7 +46,8 @@ int64_t HHVM_FUNCTION(git_reset_default,
 	result = git_reset_default(HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(target_, object), HHVM_GIT2_V(pathspecs_, strarray));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;

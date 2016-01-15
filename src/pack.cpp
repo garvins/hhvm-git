@@ -22,7 +22,8 @@ Resource HHVM_FUNCTION(git_packbuilder_new,
 	result = git_packbuilder_new(&out, HHVM_GIT2_V(repo_, repository));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, packbuilder) = out;
@@ -40,8 +41,9 @@ int64_t HHVM_FUNCTION(git_packbuilder_set_threads,
 
 	result = git_packbuilder_set_threads(HHVM_GIT2_V(pb_, packbuilder), (unsigned int) n);
 
-	if (result < 0) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+    if (result < 0) {
+        const git_error *error = giterr_last();
+        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -67,7 +69,8 @@ int64_t HHVM_FUNCTION(git_packbuilder_insert,
 	result = git_packbuilder_insert(HHVM_GIT2_V(pb_, packbuilder), &id_, name.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -92,7 +95,8 @@ int64_t HHVM_FUNCTION(git_packbuilder_insert_tree,
 	result = git_packbuilder_insert_tree(HHVM_GIT2_V(pb_, packbuilder), &id_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -117,7 +121,8 @@ int64_t HHVM_FUNCTION(git_packbuilder_insert_commit,
 	result = git_packbuilder_insert_commit(HHVM_GIT2_V(pb_, packbuilder), &id_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -143,7 +148,8 @@ int64_t HHVM_FUNCTION(git_packbuilder_write,
 	result = git_packbuilder_write(HHVM_GIT2_V(pb_, packbuilder), path.c_str(), (unsigned int) mode, /* todo */ progress_cb_, progress_cb_payload_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -180,7 +186,8 @@ int64_t HHVM_FUNCTION(git_packbuilder_foreach,
 	result = git_packbuilder_foreach(HHVM_GIT2_V(pb_, packbuilder), /* todo */ cb_, payload_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -230,7 +237,8 @@ int64_t HHVM_FUNCTION(git_packbuilder_set_callbacks,
 	result = git_packbuilder_set_callbacks(HHVM_GIT2_V(pb_, packbuilder), /* todo */ progress_cb_, progress_cb_payload_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;

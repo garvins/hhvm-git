@@ -29,7 +29,8 @@ Resource HHVM_FUNCTION(git_indexer_new,
 	result = git_indexer_new(&out, path.c_str(), (unsigned int) mode, HHVM_GIT2_V(odb_, odb), /* todo */ progress_cb_, progress_cb_payload_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, indexer) = out;
@@ -53,7 +54,8 @@ int64_t HHVM_FUNCTION(git_indexer_append,
 	result = git_indexer_append(HHVM_GIT2_V(idx_, indexer), data_, (size_t) size, HHVM_GIT2_V(stats_, transfer_progress));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -73,7 +75,8 @@ int64_t HHVM_FUNCTION(git_indexer_commit,
 	result = git_indexer_commit(HHVM_GIT2_V(idx_, indexer), HHVM_GIT2_V(stats_, transfer_progress));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;

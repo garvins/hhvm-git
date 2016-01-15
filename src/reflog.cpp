@@ -23,7 +23,8 @@ Resource HHVM_FUNCTION(git_reflog_read,
 	result = git_reflog_read(&out, HHVM_GIT2_V(repo_, repository), name.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, reflog) = out;
@@ -41,7 +42,8 @@ int64_t HHVM_FUNCTION(git_reflog_write,
 	result = git_reflog_write(HHVM_GIT2_V(reflog_, reflog));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -69,7 +71,8 @@ int64_t HHVM_FUNCTION(git_reflog_append,
 	result = git_reflog_append(HHVM_GIT2_V(reflog_, reflog), &id_, HHVM_GIT2_V(committer_, signature), msg.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -98,7 +101,8 @@ int64_t HHVM_FUNCTION(git_reflog_append_to,
 	result = git_reflog_append_to(HHVM_GIT2_V(repo_, repository), name.c_str(), &id_, HHVM_GIT2_V(committer_, signature), msg.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -132,7 +136,8 @@ int64_t HHVM_FUNCTION(git_reflog_delete,
 	result = git_reflog_delete(HHVM_GIT2_V(repo_, repository), name.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -179,7 +184,8 @@ int64_t HHVM_FUNCTION(git_reflog_drop,
 	result = git_reflog_drop(HHVM_GIT2_V(reflog_, reflog), (size_t) idx, (int) rewrite_previous_entry);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;

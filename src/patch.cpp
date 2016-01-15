@@ -23,7 +23,8 @@ Resource HHVM_FUNCTION(git_patch_from_diff,
 	result = git_patch_from_diff(&out, HHVM_GIT2_V(diff_, diff), (size_t) idx);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, patch) = out;
@@ -49,7 +50,8 @@ Resource HHVM_FUNCTION(git_patch_from_blobs,
 	result = git_patch_from_blobs(&out, HHVM_GIT2_V(old_blob_, blob), old_as_path.c_str(), HHVM_GIT2_V(new_blob_, blob), new_as_path.c_str(), HHVM_GIT2_V(opts_, diff_options));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, patch) = out;
@@ -75,7 +77,8 @@ Resource HHVM_FUNCTION(git_patch_from_blob_and_buffer,
 	result = git_patch_from_blob_and_buffer(&out, HHVM_GIT2_V(old_blob_, blob), old_as_path.c_str(), buffer.c_str(), (size_t) buffer_len, buffer_as_path.c_str(), HHVM_GIT2_V(opts_, diff_options));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, patch) = out;
@@ -130,7 +133,8 @@ int64_t HHVM_FUNCTION(git_patch_line_stats,
 	result = git_patch_line_stats( total_context, total_additions, total_deletions, HHVM_GIT2_V(patch_, patch));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -152,7 +156,8 @@ Resource HHVM_FUNCTION(git_patch_get_hunk,
 	result = git_patch_get_hunk(&out, (size_t*) lines_in_hunk, HHVM_GIT2_V(patch_, patch), (size_t) hunk_idx);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	//HHVM_GIT2_V(return_value, diff_hunk) = out; todo return as array
@@ -171,7 +176,8 @@ int64_t HHVM_FUNCTION(git_patch_num_lines_in_hunk,
 	result = git_patch_num_lines_in_hunk(HHVM_GIT2_V(patch_, patch), (size_t) hunk_idx);
 
 	if (result < 0) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -193,7 +199,8 @@ Resource HHVM_FUNCTION(git_patch_get_line_in_hunk,
 	result = git_patch_get_line_in_hunk(&out, HHVM_GIT2_V(patch_, patch), (size_t) hunk_idx, (size_t) line_of_hunk);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	//HHVM_GIT2_V(return_value, diff_line) = out; todo return as array
@@ -233,7 +240,8 @@ int64_t HHVM_FUNCTION(git_patch_print,
 	result = git_patch_print(HHVM_GIT2_V(patch_, patch), /* todo */ print_cb_, payload_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -254,7 +262,8 @@ int64_t HHVM_FUNCTION(git_patch_to_str,
 	result = git_patch_to_str(string_, HHVM_GIT2_V(patch_, patch));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;

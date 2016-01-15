@@ -28,7 +28,8 @@ Resource HHVM_FUNCTION(git_tree_lookup,
 	result = git_tree_lookup(&out, HHVM_GIT2_V(repo_, repository), &id_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, tree) = out;
@@ -55,7 +56,8 @@ Resource HHVM_FUNCTION(git_tree_lookup_prefix,
 	result = git_tree_lookup_prefix(&out, HHVM_GIT2_V(repo_, repository), &id_, (size_t) len);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, tree) = out;
@@ -174,7 +176,8 @@ Resource HHVM_FUNCTION(git_tree_entry_bypath,
 	result = git_tree_entry_bypath(&out, HHVM_GIT2_V(root_, tree), path.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, tree_entry) = out;
@@ -299,7 +302,8 @@ Resource HHVM_FUNCTION(git_tree_entry_to_object,
 	result = git_tree_entry_to_object(&object_out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(entry_, tree_entry));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, object) = object_out;
@@ -319,7 +323,8 @@ Resource HHVM_FUNCTION(git_treebuilder_create,
 	result = git_treebuilder_create(&out, HHVM_GIT2_V(source_, tree));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, treebuilder) = out;
@@ -346,7 +351,8 @@ int64_t HHVM_FUNCTION(git_treebuilder_entrycount,
 	result = git_treebuilder_entrycount(HHVM_GIT2_V(bld_, treebuilder));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -397,7 +403,8 @@ Resource HHVM_FUNCTION(git_treebuilder_insert,
 	result = git_treebuilder_insert(&out, HHVM_GIT2_V(bld_, treebuilder), filename.c_str(), &id_, (git_filemode_t) filemode);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	//HHVM_GIT2_V(return_value, tree_entry) = out; todo return as array
@@ -416,7 +423,8 @@ int64_t HHVM_FUNCTION(git_treebuilder_remove,
 	result = git_treebuilder_remove(HHVM_GIT2_V(bld_, treebuilder), filename.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -458,7 +466,8 @@ int64_t HHVM_FUNCTION(git_treebuilder_write,
 	result = git_treebuilder_write(&id_, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(bld_, treebuilder));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -483,7 +492,8 @@ int64_t HHVM_FUNCTION(git_tree_walk,
 	result = git_tree_walk(HHVM_GIT2_V(tree_, tree), (git_treewalk_mode) mode, /* todo */ callback_, payload_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;

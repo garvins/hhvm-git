@@ -26,7 +26,8 @@ int64_t HHVM_FUNCTION(git_libgit2_capabilities)
 	result = git_libgit2_capabilities();
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -42,7 +43,8 @@ int64_t HHVM_FUNCTION(git_libgit2_opts,
 	result = git_libgit2_opts((int) option);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;

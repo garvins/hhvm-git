@@ -23,7 +23,8 @@ Resource HHVM_FUNCTION(git_submodule_lookup,
 	result = git_submodule_lookup(&submodule, HHVM_GIT2_V(repo_, repository), name.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, submodule) = submodule;
@@ -63,7 +64,8 @@ Resource HHVM_FUNCTION(git_submodule_add_setup,
 	result = git_submodule_add_setup(&submodule, HHVM_GIT2_V(repo_, repository), url.c_str(), path.c_str(), (int) use_gitlink);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, submodule) = submodule;
@@ -81,7 +83,8 @@ int64_t HHVM_FUNCTION(git_submodule_add_finalize,
 	result = git_submodule_add_finalize(HHVM_GIT2_V(submodule_, submodule));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -100,7 +103,8 @@ int64_t HHVM_FUNCTION(git_submodule_add_to_index,
 	result = git_submodule_add_to_index(HHVM_GIT2_V(submodule_, submodule), (int) write_index);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -118,7 +122,8 @@ int64_t HHVM_FUNCTION(git_submodule_save,
 	result = git_submodule_save(HHVM_GIT2_V(submodule_, submodule));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -189,7 +194,8 @@ int64_t HHVM_FUNCTION(git_submodule_set_url,
 	result = git_submodule_set_url(HHVM_GIT2_V(submodule_, submodule), url.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -299,8 +305,9 @@ int64_t HHVM_FUNCTION(git_submodule_fetch_recurse_submodules,
 
 	result = git_submodule_fetch_recurse_submodules(HHVM_GIT2_V(submodule_, submodule));
 
-	if (result != GIT_OK && result != 1) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+    if (result != GIT_OK && result != 1) {
+        const git_error *error = giterr_last();
+        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -319,7 +326,8 @@ int64_t HHVM_FUNCTION(git_submodule_set_fetch_recurse_submodules,
 	result = git_submodule_set_fetch_recurse_submodules(HHVM_GIT2_V(submodule_, submodule), (int) fetch_recurse_submodules);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -338,7 +346,8 @@ int64_t HHVM_FUNCTION(git_submodule_init,
 	result = git_submodule_init(HHVM_GIT2_V(submodule_, submodule), (int) overwrite);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -356,7 +365,8 @@ int64_t HHVM_FUNCTION(git_submodule_sync,
 	result = git_submodule_sync(HHVM_GIT2_V(submodule_, submodule));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -376,7 +386,8 @@ Resource HHVM_FUNCTION(git_submodule_open,
 	result = git_submodule_open(&repo, HHVM_GIT2_V(submodule_, submodule));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, repository) = repo;
@@ -394,7 +405,8 @@ int64_t HHVM_FUNCTION(git_submodule_reload,
 	result = git_submodule_reload(HHVM_GIT2_V(submodule_, submodule));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -412,7 +424,8 @@ int64_t HHVM_FUNCTION(git_submodule_reload_all,
 	result = git_submodule_reload_all(HHVM_GIT2_V(repo_, repository));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -431,7 +444,8 @@ int64_t HHVM_FUNCTION(git_submodule_status,
 	result = git_submodule_status((unsigned int*) status, HHVM_GIT2_V(submodule_, submodule));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -450,7 +464,8 @@ int64_t HHVM_FUNCTION(git_submodule_location,
 	result = git_submodule_location((unsigned int*) location_status, HHVM_GIT2_V(submodule_, submodule));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;

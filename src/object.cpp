@@ -29,7 +29,8 @@ Resource HHVM_FUNCTION(git_object_lookup,
 	result = git_object_lookup(&object, HHVM_GIT2_V(repo_, repository), &id_, (git_otype) type);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, object) = object;
@@ -57,7 +58,8 @@ Resource HHVM_FUNCTION(git_object_lookup_prefix,
 	result = git_object_lookup_prefix(&object_out, HHVM_GIT2_V(repo_, repository), &id_, (size_t) len, (git_otype) type);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, object) = object_out;
@@ -79,7 +81,8 @@ Resource HHVM_FUNCTION(git_object_lookup_bypath,
 	result = git_object_lookup_bypath(&out, HHVM_GIT2_V(treeish_, object), path.c_str(), (git_otype) type);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, object) = out;
@@ -164,8 +167,9 @@ int64_t HHVM_FUNCTION(git_object_typeisloose,
 
 	result = git_object_typeisloose((git_otype) type);
 
-	if (result != GIT_OK && result != 1) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+    if (result != GIT_OK && result != 1) {
+        const git_error *error = giterr_last();
+        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -197,7 +201,8 @@ Resource HHVM_FUNCTION(git_object_peel,
 	result = git_object_peel(&peeled, HHVM_GIT2_V(object_, object), (git_otype) target_type);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, object) = peeled;
@@ -217,7 +222,8 @@ Resource HHVM_FUNCTION(git_object_dup,
 	result = git_object_dup(&dest, HHVM_GIT2_V(source_, object));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, object) = dest;

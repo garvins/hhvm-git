@@ -22,7 +22,8 @@ Resource HHVM_FUNCTION(git_push_new,
 	result = git_push_new(&out, HHVM_GIT2_V(remote_, remote));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, push) = out;
@@ -42,7 +43,8 @@ int64_t HHVM_FUNCTION(git_push_set_options,
 	result = git_push_set_options(HHVM_GIT2_V(push_, push), HHVM_GIT2_V(opts_, push_options));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -71,7 +73,8 @@ int64_t HHVM_FUNCTION(git_push_set_callbacks,
 	result = git_push_set_callbacks(HHVM_GIT2_V(push_, push), /* todo */ pack_progress_cb_, pack_progress_cb_payload_, /* todo */ transfer_progress_cb_, transfer_progress_cb_payload_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -90,7 +93,8 @@ int64_t HHVM_FUNCTION(git_push_add_refspec,
 	result = git_push_add_refspec(HHVM_GIT2_V(push_, push), refspec.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -108,7 +112,8 @@ int64_t HHVM_FUNCTION(git_push_update_tips,
 	result = git_push_update_tips(HHVM_GIT2_V(push_, push));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -126,7 +131,8 @@ int64_t HHVM_FUNCTION(git_push_finish,
 	result = git_push_finish(HHVM_GIT2_V(push_, push));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -144,7 +150,8 @@ int64_t HHVM_FUNCTION(git_push_unpack_ok,
 	result = git_push_unpack_ok(HHVM_GIT2_V(push_, push));
 
 	if (result != GIT_OK && result != 1) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;

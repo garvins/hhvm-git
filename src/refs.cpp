@@ -23,7 +23,8 @@ Resource HHVM_FUNCTION(git_reference_lookup,
 	result = git_reference_lookup(&out, HHVM_GIT2_V(repo_, repository), name.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, reference) = out;
@@ -44,7 +45,8 @@ String HHVM_FUNCTION(git_reference_name_to_id,
 	result = git_reference_name_to_id(&out, HHVM_GIT2_V(repo_, repository), name.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	git_oid_fmt(return_value, &out);
@@ -65,7 +67,8 @@ Resource HHVM_FUNCTION(git_reference_dwim,
 	result = git_reference_dwim(&out, HHVM_GIT2_V(repo_, repository), shorthand.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, reference) = out;
@@ -88,7 +91,8 @@ Resource HHVM_FUNCTION(git_reference_symbolic_create,
 	result = git_reference_symbolic_create(&out, HHVM_GIT2_V(repo_, repository), name.c_str(), target.c_str(), (int) force);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, reference) = out;
@@ -116,7 +120,8 @@ Resource HHVM_FUNCTION(git_reference_create,
 	result = git_reference_create(&out, HHVM_GIT2_V(repo_, repository), name.c_str(), &id_, (int) force);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, reference) = out;
@@ -201,7 +206,8 @@ Resource HHVM_FUNCTION(git_reference_resolve,
 	result = git_reference_resolve(&out, HHVM_GIT2_V(ref_, reference));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, reference) = out;
@@ -235,7 +241,8 @@ Resource HHVM_FUNCTION(git_reference_symbolic_set_target,
 	result = git_reference_symbolic_set_target(&out, HHVM_GIT2_V(ref_, reference), target.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, reference) = out;
@@ -261,7 +268,8 @@ Resource HHVM_FUNCTION(git_reference_set_target,
 	result = git_reference_set_target(&out, HHVM_GIT2_V(ref_, reference), &id_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, reference) = out;
@@ -283,7 +291,8 @@ Resource HHVM_FUNCTION(git_reference_rename,
 	result = git_reference_rename(&new_ref, HHVM_GIT2_V(ref_, reference), new_name.c_str(), (int) force);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, reference) = new_ref;
@@ -301,7 +310,8 @@ int64_t HHVM_FUNCTION(git_reference_delete,
 	result = git_reference_delete(HHVM_GIT2_V(ref_, reference));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -321,7 +331,8 @@ int64_t HHVM_FUNCTION(git_reference_list,
 	result = git_reference_list(HHVM_GIT2_V(array_, strarray), HHVM_GIT2_V(repo_, repository));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -345,7 +356,8 @@ int64_t HHVM_FUNCTION(git_reference_foreach,
 	result = git_reference_foreach(HHVM_GIT2_V(repo_, repository), /* todo */ callback_, payload_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -369,7 +381,8 @@ int64_t HHVM_FUNCTION(git_reference_foreach_name,
 	result = git_reference_foreach_name(HHVM_GIT2_V(repo_, repository), /* todo */ callback_, payload_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -398,7 +411,8 @@ int64_t HHVM_FUNCTION(git_reference_cmp,
 	result = git_reference_cmp(HHVM_GIT2_V(ref1_, reference), HHVM_GIT2_V(ref2_, reference));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -418,7 +432,8 @@ Resource HHVM_FUNCTION(git_reference_iterator_new,
 	result = git_reference_iterator_new(&out, HHVM_GIT2_V(repo_, repository));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, reference_iterator) = out;
@@ -439,7 +454,8 @@ Resource HHVM_FUNCTION(git_reference_iterator_glob_new,
 	result = git_reference_iterator_glob_new(&out, HHVM_GIT2_V(repo_, repository), glob.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, reference_iterator) = out;
@@ -461,11 +477,9 @@ Variant HHVM_FUNCTION(git_reference_next,
     if (result == GIT_ITEROVER) {
         //todo return null
         return Variant(false);
-        const git_error *error = giterr_last();
-        SystemLib::throwInvalidArgumentExceptionObject(error->message);
     } else if (result != GIT_OK) {
         const git_error *error = giterr_last();
-        SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
     }
     
 	HHVM_GIT2_V(return_value, reference) = out;
@@ -485,7 +499,8 @@ String HHVM_FUNCTION(git_reference_next_name,
 	result = git_reference_next_name(&out, HHVM_GIT2_V(iter_, reference_iterator));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = String(out);
@@ -519,7 +534,8 @@ int64_t HHVM_FUNCTION(git_reference_foreach_glob,
 	result = git_reference_foreach_glob(HHVM_GIT2_V(repo_, repository), glob.c_str(), /* todo */ callback_, payload_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -536,8 +552,9 @@ int64_t HHVM_FUNCTION(git_reference_has_log,
 
 	result = git_reference_has_log(HHVM_GIT2_V(ref_, reference));
 
-	if (result != GIT_OK && result != 1) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+    if (result != GIT_OK && result != 1) {
+        const git_error *error = giterr_last();
+        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -554,8 +571,9 @@ int64_t HHVM_FUNCTION(git_reference_is_branch,
 
 	result = git_reference_is_branch(HHVM_GIT2_V(ref_, reference));
 
-    if (result != GIT_OK && result != 1) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	if (result != GIT_OK && result != 1) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -572,8 +590,9 @@ int64_t HHVM_FUNCTION(git_reference_is_remote,
 
 	result = git_reference_is_remote(HHVM_GIT2_V(ref_, reference));
 
-    if (result != GIT_OK && result != 1) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	if (result != GIT_OK && result != 1) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -590,8 +609,9 @@ int64_t HHVM_FUNCTION(git_reference_is_tag,
 
 	result = git_reference_is_tag(HHVM_GIT2_V(ref_, reference));
 
-    if (result != GIT_OK && result != 1) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	if (result != GIT_OK && result != 1) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -611,7 +631,8 @@ String HHVM_FUNCTION(git_reference_normalize_name,
 	result = git_reference_normalize_name(&buffer_out, (size_t) buffer_size, name.c_str(), (unsigned int) flags);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = String(&buffer_out);
@@ -632,7 +653,8 @@ Resource HHVM_FUNCTION(git_reference_peel,
 	result = git_reference_peel(&out, HHVM_GIT2_V(ref_, reference), (git_otype) type);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, object) = out;
@@ -647,8 +669,9 @@ int64_t HHVM_FUNCTION(git_reference_is_valid_name,
 
 	result = git_reference_is_valid_name(refname.c_str());
 
-    if (result != GIT_OK && result != 1) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	if (result != GIT_OK && result != 1) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;

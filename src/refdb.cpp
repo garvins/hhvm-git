@@ -22,7 +22,8 @@ Resource HHVM_FUNCTION(git_refdb_new,
 	result = git_refdb_new(&out, HHVM_GIT2_V(repo_, repository));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, refdb) = out;
@@ -42,7 +43,8 @@ Resource HHVM_FUNCTION(git_refdb_open,
 	result = git_refdb_open(&out, HHVM_GIT2_V(repo_, repository));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, refdb) = out;
@@ -60,7 +62,8 @@ int64_t HHVM_FUNCTION(git_refdb_compress,
 	result = git_refdb_compress(HHVM_GIT2_V(refdb_, refdb));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;

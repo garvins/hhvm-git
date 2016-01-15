@@ -31,7 +31,8 @@ int64_t HHVM_FUNCTION(git_strarray_copy,
 	result = git_strarray_copy(HHVM_GIT2_V(tgt_, strarray), HHVM_GIT2_V(src_, strarray));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;

@@ -26,7 +26,8 @@ String HHVM_FUNCTION(git_stash_save,
 	result = git_stash_save(&out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(stasher_, signature), message.c_str(), (unsigned int) flags);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	git_oid_fmt(return_value, &out);
@@ -50,7 +51,8 @@ int64_t HHVM_FUNCTION(git_stash_foreach,
 	result = git_stash_foreach(HHVM_GIT2_V(repo_, repository), /* todo */ callback_, payload_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -69,7 +71,8 @@ int64_t HHVM_FUNCTION(git_stash_drop,
 	result = git_stash_drop(HHVM_GIT2_V(repo_, repository), (size_t) index);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;

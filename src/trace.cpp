@@ -23,7 +23,8 @@ int64_t HHVM_FUNCTION(git_trace_set,
 	result = git_trace_set((git_trace_level_t) level, /* todo */ cb_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;

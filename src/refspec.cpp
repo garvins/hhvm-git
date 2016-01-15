@@ -59,7 +59,8 @@ int64_t HHVM_FUNCTION(git_refspec_force,
 	result = git_refspec_force(HHVM_GIT2_V(refspec_, refspec));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -91,7 +92,8 @@ int64_t HHVM_FUNCTION(git_refspec_src_matches,
 	result = git_refspec_src_matches(HHVM_GIT2_V(refspec_, refspec), refname.c_str());
 
     if (result != GIT_OK && result != 1) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -110,7 +112,8 @@ int64_t HHVM_FUNCTION(git_refspec_dst_matches,
 	result = git_refspec_dst_matches(HHVM_GIT2_V(refspec_, refspec), refname.c_str());
 
     if (result != GIT_OK && result != 1) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -132,7 +135,8 @@ String HHVM_FUNCTION(git_refspec_transform,
 	result = git_refspec_transform(&out, (size_t) outlen, HHVM_GIT2_V(spec_, refspec), name.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = String(&out);
@@ -154,7 +158,8 @@ String HHVM_FUNCTION(git_refspec_rtransform,
 	result = git_refspec_rtransform(&out, (size_t) outlen, HHVM_GIT2_V(spec_, refspec), name.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = String(&out);

@@ -28,7 +28,8 @@ Resource HHVM_FUNCTION(git_tag_lookup,
 	result = git_tag_lookup(&out, HHVM_GIT2_V(repo_, repository), &id_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, tag) = out;
@@ -55,7 +56,8 @@ Resource HHVM_FUNCTION(git_tag_lookup_prefix,
 	result = git_tag_lookup_prefix(&out, HHVM_GIT2_V(repo_, repository), &id_, (size_t) len);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, tag) = out;
@@ -110,7 +112,8 @@ Resource HHVM_FUNCTION(git_tag_target,
 	result = git_tag_target(&target_out, HHVM_GIT2_V(tag_, tag));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, object) = target_out;
@@ -202,7 +205,8 @@ String HHVM_FUNCTION(git_tag_create,
 	result = git_tag_create(&oid, HHVM_GIT2_V(repo_, repository), tag_name.c_str(), HHVM_GIT2_V(target_, object), HHVM_GIT2_V(tagger_, signature), message.c_str(), (int) force);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	git_oid_fmt(return_value, &oid);
@@ -228,7 +232,8 @@ String HHVM_FUNCTION(git_tag_annotation_create,
 	result = git_tag_annotation_create(&oid, HHVM_GIT2_V(repo_, repository), tag_name.c_str(), HHVM_GIT2_V(target_, object), HHVM_GIT2_V(tagger_, signature), message.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	git_oid_fmt(return_value, &oid);
@@ -250,7 +255,8 @@ String HHVM_FUNCTION(git_tag_create_frombuffer,
 	result = git_tag_create_frombuffer(&oid, HHVM_GIT2_V(repo_, repository), buffer.c_str(), (int) force);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	git_oid_fmt(return_value, &oid);
@@ -274,7 +280,8 @@ String HHVM_FUNCTION(git_tag_create_lightweight,
 	result = git_tag_create_lightweight(&oid, HHVM_GIT2_V(repo_, repository), tag_name.c_str(), HHVM_GIT2_V(target_, object), (int) force);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	git_oid_fmt(return_value, &oid);
@@ -293,7 +300,8 @@ int64_t HHVM_FUNCTION(git_tag_delete,
 	result = git_tag_delete(HHVM_GIT2_V(repo_, repository), tag_name.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -313,7 +321,8 @@ int64_t HHVM_FUNCTION(git_tag_list,
 	result = git_tag_list(HHVM_GIT2_V(tag_names_, strarray), HHVM_GIT2_V(repo_, repository));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -334,7 +343,8 @@ int64_t HHVM_FUNCTION(git_tag_list_match,
 	result = git_tag_list_match(HHVM_GIT2_V(tag_names_, strarray), pattern.c_str(), HHVM_GIT2_V(repo_, repository));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -358,7 +368,8 @@ int64_t HHVM_FUNCTION(git_tag_foreach,
 	result = git_tag_foreach(HHVM_GIT2_V(repo_, repository), /* todo */ callback_, payload_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -378,7 +389,8 @@ Resource HHVM_FUNCTION(git_tag_peel,
 	result = git_tag_peel(&tag_target_out, HHVM_GIT2_V(tag_, tag));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, object) = tag_target_out;

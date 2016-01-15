@@ -26,7 +26,8 @@ Resource HHVM_FUNCTION(git_filter_list_load,
 	result = git_filter_list_load(&filters, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(blob_, blob), path.c_str(), (git_filter_mode_t) mode);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, filter_list) = filters;
@@ -48,7 +49,8 @@ Resource HHVM_FUNCTION(git_filter_list_apply_to_data,
 	result = git_filter_list_apply_to_data(&out, HHVM_GIT2_V(filters_, filter_list), HHVM_GIT2_V(in_, buf));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, buf) = &out;
@@ -71,7 +73,8 @@ Resource HHVM_FUNCTION(git_filter_list_apply_to_file,
 	result = git_filter_list_apply_to_file(&out, HHVM_GIT2_V(filters_, filter_list), HHVM_GIT2_V(repo_, repository), path.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, buf) = &out;
@@ -93,7 +96,8 @@ Resource HHVM_FUNCTION(git_filter_list_apply_to_blob,
 	result = git_filter_list_apply_to_blob(&out, HHVM_GIT2_V(filters_, filter_list), HHVM_GIT2_V(blob_, blob));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, buf) = &out;

@@ -20,7 +20,8 @@ String HHVM_FUNCTION(git_config_find_global,
 	result = git_config_find_global(&out, (size_t) length);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = String(&out);
@@ -38,7 +39,8 @@ String HHVM_FUNCTION(git_config_find_xdg,
 	result = git_config_find_xdg(&out, (size_t) length);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = String(&out);
@@ -56,7 +58,8 @@ String HHVM_FUNCTION(git_config_find_system,
 	result = git_config_find_system(&out, (size_t) length);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = String(&out);
@@ -73,7 +76,8 @@ Resource HHVM_FUNCTION(git_config_open_default)
 	result = git_config_open_default(&out);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, config) = out;
@@ -90,7 +94,8 @@ Resource HHVM_FUNCTION(git_config_new)
 	result = git_config_new(&out);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, config) = out;
@@ -111,7 +116,8 @@ int64_t HHVM_FUNCTION(git_config_add_file_ondisk,
 	result = git_config_add_file_ondisk(HHVM_GIT2_V(cfg_, config), path.c_str(), (git_config_level_t) level, (int) force);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -129,7 +135,8 @@ Resource HHVM_FUNCTION(git_config_open_ondisk,
 	result = git_config_open_ondisk(&out, path.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, config) = out;
@@ -150,7 +157,8 @@ Resource HHVM_FUNCTION(git_config_open_level,
 	result = git_config_open_level(&out, HHVM_GIT2_V(parent_, config), (git_config_level_t) level);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, config) = out;
@@ -170,7 +178,8 @@ Resource HHVM_FUNCTION(git_config_open_global,
 	result = git_config_open_global(&out, HHVM_GIT2_V(config_, config));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, config) = out;
@@ -188,7 +197,8 @@ int64_t HHVM_FUNCTION(git_config_refresh,
 	result = git_config_refresh(HHVM_GIT2_V(cfg_, config));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -218,7 +228,8 @@ Resource HHVM_FUNCTION(git_config_get_entry,
 	result = git_config_get_entry(&out, HHVM_GIT2_V(cfg_, config), name.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	//HHVM_GIT2_V(return_value, config_entry) = out; todo return as array
@@ -239,7 +250,8 @@ int64_t HHVM_FUNCTION(git_config_get_int32,
 	result = git_config_get_int32(&out, HHVM_GIT2_V(cfg_, config), name.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) out;
@@ -260,7 +272,8 @@ int64_t HHVM_FUNCTION(git_config_get_int64,
 	result = git_config_get_int64(&out, HHVM_GIT2_V(cfg_, config), name.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) out;
@@ -281,7 +294,8 @@ int64_t HHVM_FUNCTION(git_config_get_bool,
 	result = git_config_get_bool(&out, HHVM_GIT2_V(cfg_, config), name.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) out;
@@ -302,7 +316,8 @@ String HHVM_FUNCTION(git_config_get_string,
 	result = git_config_get_string(&out, HHVM_GIT2_V(cfg_, config), name.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = String(out);
@@ -328,7 +343,8 @@ int64_t HHVM_FUNCTION(git_config_get_multivar_foreach,
 	result = git_config_get_multivar_foreach(HHVM_GIT2_V(cfg_, config), name.c_str(), regexp.c_str(), /* todo */ callback_, payload_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -350,7 +366,8 @@ Resource HHVM_FUNCTION(git_config_multivar_iterator_new,
 	result = git_config_multivar_iterator_new(&out, HHVM_GIT2_V(cfg_, config), name.c_str(), regexp.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, config_iterator) = out;
@@ -371,9 +388,11 @@ Resource HHVM_FUNCTION(git_config_next,
 
     if (result == GIT_ITEROVER) {
         // todo return nullptr
-        SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+        const git_error *error = giterr_last();
+        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
     } else if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+        const git_error *error = giterr_last();
+        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, config_entry) = entry;
@@ -402,7 +421,8 @@ int64_t HHVM_FUNCTION(git_config_set_int32,
 	result = git_config_set_int32(HHVM_GIT2_V(cfg_, config), name.c_str(), (int32_t) value);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -422,7 +442,8 @@ int64_t HHVM_FUNCTION(git_config_set_int64,
 	result = git_config_set_int64(HHVM_GIT2_V(cfg_, config), name.c_str(), (int64_t) value);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -442,7 +463,8 @@ int64_t HHVM_FUNCTION(git_config_set_bool,
 	result = git_config_set_bool(HHVM_GIT2_V(cfg_, config), name.c_str(), (int) value);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -462,7 +484,8 @@ int64_t HHVM_FUNCTION(git_config_set_string,
 	result = git_config_set_string(HHVM_GIT2_V(cfg_, config), name.c_str(), value.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -483,7 +506,8 @@ int64_t HHVM_FUNCTION(git_config_set_multivar,
 	result = git_config_set_multivar(HHVM_GIT2_V(cfg_, config), name.c_str(), regexp.c_str(), value.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -502,7 +526,8 @@ int64_t HHVM_FUNCTION(git_config_delete_entry,
 	result = git_config_delete_entry(HHVM_GIT2_V(cfg_, config), name.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -522,7 +547,8 @@ int64_t HHVM_FUNCTION(git_config_delete_multivar,
 	result = git_config_delete_multivar(HHVM_GIT2_V(cfg_, config), name.c_str(), regexp.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -546,7 +572,8 @@ int64_t HHVM_FUNCTION(git_config_foreach,
 	result = git_config_foreach(HHVM_GIT2_V(cfg_, config), /* todo */ callback_, payload_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -566,7 +593,8 @@ Resource HHVM_FUNCTION(git_config_iterator_new,
 	result = git_config_iterator_new(&out, HHVM_GIT2_V(cfg_, config));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, config_iterator) = out;
@@ -587,7 +615,8 @@ Resource HHVM_FUNCTION(git_config_iterator_glob_new,
 	result = git_config_iterator_glob_new(&out, HHVM_GIT2_V(cfg_, config), regexp.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, config_iterator) = out;
@@ -612,7 +641,8 @@ int64_t HHVM_FUNCTION(git_config_foreach_match,
 	result = git_config_foreach_match(HHVM_GIT2_V(cfg_, config), regexp.c_str(), /* todo */ callback_, payload_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -636,7 +666,8 @@ int64_t HHVM_FUNCTION(git_config_get_mapped,
 	result = git_config_get_mapped(&out, HHVM_GIT2_V(cfg_, config), name.c_str(), HHVM_GIT2_V(maps_, cvar_map), (size_t) map_n);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) out;
@@ -658,7 +689,8 @@ int64_t HHVM_FUNCTION(git_config_lookup_map_value,
 	result = git_config_lookup_map_value(&out, HHVM_GIT2_V(maps_, cvar_map), (size_t) map_n, value.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) out;
@@ -676,7 +708,8 @@ int64_t HHVM_FUNCTION(git_config_parse_bool,
 	result = git_config_parse_bool(&out, value.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) out;
@@ -694,7 +727,8 @@ int64_t HHVM_FUNCTION(git_config_parse_int32,
 	result = git_config_parse_int32(&out, value.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) out;
@@ -712,7 +746,8 @@ int64_t HHVM_FUNCTION(git_config_parse_int64,
 	result = git_config_parse_int64(&out, value.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) out;

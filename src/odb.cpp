@@ -19,7 +19,8 @@ Resource HHVM_FUNCTION(git_odb_new)
 	result = git_odb_new(&out);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, odb) = out;
@@ -37,7 +38,8 @@ Resource HHVM_FUNCTION(git_odb_open,
 	result = git_odb_open(&out, objects_dir.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, odb) = out;
@@ -56,7 +58,8 @@ int64_t HHVM_FUNCTION(git_odb_add_disk_alternate,
 	result = git_odb_add_disk_alternate(HHVM_GIT2_V(odb_, odb), path.c_str());
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -91,7 +94,8 @@ Resource HHVM_FUNCTION(git_odb_read,
 	result = git_odb_read(&out, HHVM_GIT2_V(db_, odb), &id_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, odb_object) = out;
@@ -118,7 +122,8 @@ Resource HHVM_FUNCTION(git_odb_read_prefix,
 	result = git_odb_read_prefix(&out, HHVM_GIT2_V(db_, odb), &short_id_, (size_t) len);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, odb_object) = out;
@@ -145,7 +150,8 @@ int64_t HHVM_FUNCTION(git_odb_read_header,
 	result = git_odb_read_header(&len_out, (git_otype*) type_out, HHVM_GIT2_V(db_, odb), &id_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) len_out;
@@ -169,8 +175,9 @@ int64_t HHVM_FUNCTION(git_odb_exists,
 
 	result = git_odb_exists(HHVM_GIT2_V(db_, odb), &id_);
 
-	if (result != GIT_OK && result != 1) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+    if (result != GIT_OK && result != 1) {
+        const git_error *error = giterr_last();
+        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -188,7 +195,8 @@ int64_t HHVM_FUNCTION(git_odb_refresh,
 	result = git_odb_refresh(HHVM_GIT2_V(db_, odb));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -212,7 +220,8 @@ int64_t HHVM_FUNCTION(git_odb_foreach,
 	result = git_odb_foreach(HHVM_GIT2_V(db_, odb), /* todo */ cb_, payload_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -236,7 +245,8 @@ String HHVM_FUNCTION(git_odb_write,
 	result = git_odb_write(&out, HHVM_GIT2_V(odb_, odb), data_, (size_t) len, (git_otype) type);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	git_oid_fmt(return_value, &out);
@@ -258,7 +268,8 @@ Resource HHVM_FUNCTION(git_odb_open_wstream,
 	result = git_odb_open_wstream(&out, HHVM_GIT2_V(db_, odb), (size_t) size, (git_otype) type);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, odb_stream) = out;
@@ -278,7 +289,8 @@ int64_t HHVM_FUNCTION(git_odb_stream_write,
 	result = git_odb_stream_write(HHVM_GIT2_V(stream_, odb_stream), buffer.c_str(), (size_t) len);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -298,7 +310,8 @@ String HHVM_FUNCTION(git_odb_stream_finalize_write,
 	result = git_odb_stream_finalize_write(&out, HHVM_GIT2_V(stream_, odb_stream));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	git_oid_fmt(return_value, &out);
@@ -318,7 +331,8 @@ int64_t HHVM_FUNCTION(git_odb_stream_read,
 	result = git_odb_stream_read(HHVM_GIT2_V(stream_, odb_stream), buffer.mutableData(), (size_t) len);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -353,7 +367,8 @@ Resource HHVM_FUNCTION(git_odb_open_rstream,
 	result = git_odb_open_rstream(&out, HHVM_GIT2_V(db_, odb), &oid_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, odb_stream) = out;
@@ -378,7 +393,8 @@ Resource HHVM_FUNCTION(git_odb_write_pack,
 	result = git_odb_write_pack(&out, HHVM_GIT2_V(db_, odb), /* todo */ progress_cb_, progress_payload_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, odb_writepack) = out;
@@ -399,7 +415,8 @@ String HHVM_FUNCTION(git_odb_hash,
 	result = git_odb_hash(&out, data_, (size_t) len, (git_otype) type);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	git_oid_fmt(return_value, &out);
@@ -418,7 +435,8 @@ String HHVM_FUNCTION(git_odb_hashfile,
 	result = git_odb_hashfile(&out, path.c_str(), (git_otype) type);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	git_oid_fmt(return_value, &out);
@@ -438,7 +456,8 @@ Resource HHVM_FUNCTION(git_odb_object_dup,
 	result = git_odb_object_dup(&dest, HHVM_GIT2_V(source_, odb_object));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, odb_object) = dest;
@@ -516,7 +535,8 @@ int64_t HHVM_FUNCTION(git_odb_add_backend,
 	result = git_odb_add_backend(HHVM_GIT2_V(odb_, odb), HHVM_GIT2_V(backend_, odb_backend), (int) priority);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -537,7 +557,8 @@ int64_t HHVM_FUNCTION(git_odb_add_alternate,
 	result = git_odb_add_alternate(HHVM_GIT2_V(odb_, odb), HHVM_GIT2_V(backend_, odb_backend), (int) priority);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -571,7 +592,8 @@ Resource HHVM_FUNCTION(git_odb_get_backend,
 	result = git_odb_get_backend(&out, HHVM_GIT2_V(odb_, odb), (size_t) pos);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, odb_backend) = out;

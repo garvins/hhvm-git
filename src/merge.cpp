@@ -34,7 +34,8 @@ String HHVM_FUNCTION(git_merge_base,
 	result = git_merge_base(&out, HHVM_GIT2_V(repo_, repository), &one_, &two_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	git_oid_fmt(return_value, &out);
@@ -61,7 +62,8 @@ String HHVM_FUNCTION(git_merge_base_many,
 	result = git_merge_base_many(&out, HHVM_GIT2_V(repo_, repository), (size_t) length, &input_array_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	git_oid_fmt(return_value, &out);
@@ -83,7 +85,8 @@ Resource HHVM_FUNCTION(git_merge_head_from_ref,
 	result = git_merge_head_from_ref(&out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(ref_, reference));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, merge_head) = out;
@@ -111,7 +114,8 @@ Resource HHVM_FUNCTION(git_merge_head_from_fetchhead,
 	result = git_merge_head_from_fetchhead(&out, HHVM_GIT2_V(repo_, repository), branch_name.c_str(), remote_url.c_str(), &oid_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, merge_head) = out;
@@ -137,7 +141,8 @@ Resource HHVM_FUNCTION(git_merge_head_from_oid,
 	result = git_merge_head_from_oid(&out, HHVM_GIT2_V(repo_, repository), &oid_);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, merge_head) = out;
@@ -176,7 +181,8 @@ Resource HHVM_FUNCTION(git_merge_trees,
 	result = git_merge_trees(&out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(ancestor_tree_, tree), HHVM_GIT2_V(our_tree_, tree), HHVM_GIT2_V(their_tree_, tree), HHVM_GIT2_V(opts_, merge_tree_opts));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, index) = out;
@@ -215,8 +221,9 @@ int64_t HHVM_FUNCTION(git_merge_result_is_uptodate,
 
 	result = git_merge_result_is_uptodate(HHVM_GIT2_V(merge_result_, merge_result));
 
-	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	if (result != GIT_OK && result != 1) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -233,8 +240,9 @@ int64_t HHVM_FUNCTION(git_merge_result_is_fastforward,
 
 	result = git_merge_result_is_fastforward(HHVM_GIT2_V(merge_result_, merge_result));
 
-	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	if (result != GIT_OK && result != 1) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -254,7 +262,8 @@ String HHVM_FUNCTION(git_merge_result_fastforward_oid,
 	result = git_merge_result_fastforward_oid(&out, HHVM_GIT2_V(merge_result_, merge_result));
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	git_oid_fmt(return_value, &out);

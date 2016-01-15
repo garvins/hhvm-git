@@ -24,7 +24,8 @@ int64_t HHVM_FUNCTION(git_config_add_backend,
 	result = git_config_add_backend(HHVM_GIT2_V(cfg_, config), HHVM_GIT2_V(file_, config_backend), (git_config_level_t) level, (int) force);
 
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
