@@ -495,8 +495,8 @@ function git_diff_free(resource $diff): void;
 <<__Native>>
 function git_diff_tree_to_tree(resource $repo,
                                resource $old_tree,
-                               resource $new_tree,
-                               array $opts): resource;
+                               ?resource $new_tree = null,
+                               ?array $opts = array()): resource;
 
 <<__Native>>
 function git_diff_tree_to_index(resource $repo,
@@ -559,7 +559,7 @@ function git_diff_status_char(int $status): string;
 function git_diff_print(resource $diff,
                         int $format,
                         mixed $print_cb,
-                        mixed $payload): int;
+                        ?mixed $payload): int;
 
 <<__Native>>
 function git_diff_blobs(resource $old_blob,
