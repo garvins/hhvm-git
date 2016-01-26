@@ -6,6 +6,8 @@
  */
 
 #include "hphp/runtime/base/builtin-functions.h"
+#include "hphp/runtime/vm/vm-regs.h"
+#include "hphp/runtime/base/array-init.h"
 
 #include "remote.h"
 
@@ -607,6 +609,51 @@ int64_t HHVM_FUNCTION(git_remote_set_transport,
 	return return_value;
 }
 
+typedef struct hhvm_git2_remote_cb_t {
+    Variant callbacks[4];
+    Variant *payload;
+} hhvm_git2_remote_cb_t;
+
+static int credentials_cb(git_cred **cred, const char *url, const char *username_from_url, unsigned int allowed_types, void *data)
+{
+    hhvm_git2_remote_cb_t *cb = (hhvm_git2_remote_cb_t*) data;
+    int retval = 1;
+    String param_url = "";
+    String param_username_from_url = "";
+    int64_t param_allowed_types = 0;
+    Variant result;
+    
+    if (cb != NULL) {
+        if (url != NULL) {
+            param_url = String(url);
+        }
+        if (username_from_url != NULL) {
+            param_username_from_url = String(username_from_url);
+        }
+        
+        Array arr;
+        if (cb->payload != NULL) {
+            arr = make_packed_array(param_url, param_username_from_url, param_allowed_types, *cb->payload);
+        } else {
+            arr = make_packed_array(param_url, param_username_from_url, param_allowed_types);
+        }
+        param_allowed_types = (int64_t) allowed_types;
+        result = vm_call_user_func(cb->callbacks[0], arr);
+    }
+    if (result.isResource()) {
+        auto cred_ = dyn_cast<Git2Resource>(result.toResource());
+        *cred = HHVM_GIT2_V(cred_, cred);
+    } else {
+        /*
+         * There will be a segfault if cred are not allocated.
+         * cred allocated without any value will cause and infinitiv loop
+         */
+        git_cred_userpass_plaintext_new(cred, "" , "");
+    }
+    
+    return retval;
+}
+
 int64_t HHVM_FUNCTION(git_remote_set_callbacks,
 	const Resource& remote,
 	const Array& callbacks)
@@ -614,17 +661,18 @@ int64_t HHVM_FUNCTION(git_remote_set_callbacks,
 	int result;
 	int64_t return_value;
     git_remote_callbacks callbacks_ = GIT_REMOTE_CALLBACKS_INIT;
+    hhvm_git2_remote_cb_t *payload = NULL;
+    Variant cred_cb;
 
-	auto remote_ = dyn_cast<Git2Resource>(remote);
+    auto remote_ = dyn_cast<Git2Resource>(remote);
+    callbacks_.credentials = credentials_cb;
+    payload = (hhvm_git2_remote_cb_t*) calloc(1, sizeof(hhvm_git2_remote_cb_t));
+    cred_cb = callbacks[String("credentials")];
+    payload->callbacks[0] = cred_cb;
+    callbacks_.payload = payload;
     
-    if (is_callable(callbacks[String("credentials")])) {
-        // callbacks_.credentials = <todo Konvertierung> callbacks[String("credentials")];
-    } else {
-        throw SystemLib::AllocExceptionObject("is no callback");
-    }
-        
 	result = git_remote_set_callbacks(HHVM_GIT2_V(remote_, remote), &callbacks_);
-
+    
 	if (result != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
