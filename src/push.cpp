@@ -5,6 +5,9 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
+#include "hphp/runtime/base/builtin-functions.h"
+#include "hphp/runtime/base/array-init.h"
+
 #include "push.h"
 
 using namespace HPHP;
@@ -158,6 +161,43 @@ int64_t HHVM_FUNCTION(git_push_unpack_ok,
 	return return_value;
 }
 
+typedef struct hhvm_git2_push_status_foreach_cb_t {
+    Variant callback;
+    Variant payload;
+} hhvm_git2_push_status_foreach_cb_t;
+
+static int hhvm_git2_push_status_foreach_cb(const char *ref, const char *msg, void *data)
+{
+    hhvm_git2_push_status_foreach_cb_t *cb = (hhvm_git2_push_status_foreach_cb_t*) data;
+    String param_ref = "", param_msg = "";
+    Variant result;
+    Array arr;
+    int retval = 0;
+    
+    if (cb != NULL) {
+        if (ref != NULL) {
+            param_ref = String(ref);
+        }
+        if (msg != NULL) {
+            param_msg = String(msg);
+        }
+        
+        if (cb->payload.isInitialized()) {
+            arr = make_packed_array(param_ref, param_msg, cb->payload);
+        } else {
+            arr = make_packed_array(param_ref, param_msg);
+        }
+        
+        result = vm_call_user_func(cb->callback, arr);
+    }
+    
+    if (result.isInteger()) {
+        retval = (int) result.toInt64();
+    }
+    
+    return retval;
+}
+
 int64_t HHVM_FUNCTION(git_push_status_foreach,
 	const Resource& push,
     const Variant& cb,
@@ -165,13 +205,15 @@ int64_t HHVM_FUNCTION(git_push_status_foreach,
 {
 	int result;
 	int64_t return_value;
-
-	void *data_ = NULL;
+    
+    hhvm_git2_push_status_foreach_cb_t *payload = (hhvm_git2_push_status_foreach_cb_t*) calloc(1, sizeof(hhvm_git2_push_status_foreach_cb_t));
+    payload->callback = cb;
+    payload->payload = data;
 
 	auto push_ = dyn_cast<Git2Resource>(push);
 
-	//result = git_push_status_foreach(HHVM_GIT2_V(push_, push), (int) cb, data_); todo
-	return_value = (int64_t) result;
+    result = git_push_status_foreach(HHVM_GIT2_V(push_, push), hhvm_git2_push_status_foreach_cb, payload);
+    return_value = (int64_t) result;
 	return return_value;
 }
 

@@ -294,7 +294,7 @@ String HHVM_FUNCTION(git_diff_status_char,
 typedef struct hhvm_git2_git_diff_line_cb_t {
     Variant callback;
     Variant payload;
-} hhvm_git2_remote_cb_t;
+} hhvm_git2_git_diff_line_cb_t;
 
 int hhvm_git2_git_diff_line_cb(const git_diff_delta *delta, const git_diff_hunk *hunk, const git_diff_line *line, void *payload) {
     hhvm_git2_git_diff_line_cb_t *cb = (hhvm_git2_git_diff_line_cb_t*) payload;
