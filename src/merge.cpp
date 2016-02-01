@@ -199,15 +199,15 @@ Resource HHVM_FUNCTION(git_merge,
     
     // todo handle multiple heads an handle opts
     
-	git_merge_result **out = NULL;
+	git_merge_result *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto their_heads_ = dyn_cast<Git2Resource>(their_heads);
     
     heads[0] = HHVM_GIT2_V(their_heads_, merge_head);
 
-	git_merge(out, HHVM_GIT2_V(repo_, repository), heads, 1, NULL);
-	HHVM_GIT2_V(return_value, merge_result) = *out;
+	git_merge(&out, HHVM_GIT2_V(repo_, repository), heads, 1, NULL);
+	HHVM_GIT2_V(return_value, merge_result) = out;
 	return Resource(return_value);
 }
 
