@@ -63,7 +63,7 @@ Resource HHVM_FUNCTION(git_diff_tree_to_index,
 Resource HHVM_FUNCTION(git_diff_index_to_workdir,
 	const Resource& repo,
 	const Resource& index,
-	const Resource& opts)
+	const Array& opts)
 {
 	int result;
 	auto return_value = req::make<Git2Resource>();
@@ -72,9 +72,8 @@ Resource HHVM_FUNCTION(git_diff_index_to_workdir,
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto index_ = dyn_cast<Git2Resource>(index);
-	auto opts_ = dyn_cast<Git2Resource>(opts);
 
-	result = git_diff_index_to_workdir(&diff, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(index_, index), HHVM_GIT2_V(opts_, diff_options));
+	result = git_diff_index_to_workdir(&diff, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(index_, index), NULL);
 
 	if (result != GIT_OK) {
 		const git_error *error = giterr_last();
@@ -88,7 +87,7 @@ Resource HHVM_FUNCTION(git_diff_index_to_workdir,
 Resource HHVM_FUNCTION(git_diff_tree_to_workdir,
 	const Resource& repo,
 	const Resource& old_tree,
-	const Resource& opts)
+	const Array& opts)
 {
 	int result;
 	auto return_value = req::make<Git2Resource>();
@@ -97,9 +96,8 @@ Resource HHVM_FUNCTION(git_diff_tree_to_workdir,
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto old_tree_ = dyn_cast<Git2Resource>(old_tree);
-	auto opts_ = dyn_cast<Git2Resource>(opts);
 
-	result = git_diff_tree_to_workdir(&diff, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(old_tree_, tree), HHVM_GIT2_V(opts_, diff_options));
+	result = git_diff_tree_to_workdir(&diff, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(old_tree_, tree), NULL);
 
 	if (result != GIT_OK) {
 		const git_error *error = giterr_last();
@@ -196,6 +194,10 @@ int64_t HHVM_FUNCTION(git_diff_num_deltas,
 	int64_t return_value;
 
 	auto diff_ = dyn_cast<Git2Resource>(diff);
+    
+    if (!HHVM_GIT2_V(diff_, diff)) {
+        SystemLib::throwInvalidArgumentExceptionObject("diff is null");
+    }
 
 	result = git_diff_num_deltas(HHVM_GIT2_V(diff_, diff));
 	return_value = (int64_t) result;

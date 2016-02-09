@@ -30,12 +30,12 @@ Resource HHVM_FUNCTION(git_diff_tree_to_index,
 Resource HHVM_FUNCTION(git_diff_index_to_workdir,
 	const Resource& repo,
 	const Resource& index,
-	const Resource& opts);
+	const Array& opts = null_array);
 
 Resource HHVM_FUNCTION(git_diff_tree_to_workdir,
 	const Resource& repo,
 	const Resource& old_tree,
-	const Resource& opts);
+	const Array& opts = null_array);
 
 Resource HHVM_FUNCTION(git_diff_tree_to_workdir_with_index,
 	const Resource& repo,

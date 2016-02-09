@@ -10,43 +10,85 @@
 
 using namespace HPHP;
 
+int hhvm_git2_array_to_git_checkout_opts(git_checkout_opts **out, Array opts)
+{
+    git_checkout_opts *__opts = NULL, def = GIT_CHECKOUT_OPTS_INIT;
+    char** strings;
+
+    __opts = (git_checkout_opts*) malloc(sizeof(git_checkout_opts*));
+    memcpy(__opts, &def, sizeof(git_checkout_opts));
+    
+    Array __paths = opts[String("oaths")].toArray();
+    Array __strings = __paths[String("strings")].toArray();
+    size_t count = (size_t) __paths[String("count")].toInt64();
+    
+    strings = (char**) malloc(count * sizeof(char*));
+    for (int i = 0; i < count; i++) {
+        strings[i] = __strings[i].toString().mutableData();
+    }
+    
+    __opts->version = (unsigned int) opts[String("version")].toInt64();
+    __opts->checkout_strategy = (unsigned int) opts[String("checkout_strategy")].toInt64();
+    __opts->disable_filters = (int) opts[String("disable_filters")].toInt64();
+    __opts->dir_mode = (unsigned int) opts[String("dir_mode")].toInt64();
+    __opts->file_mode = (unsigned int) opts[String("file_mode")].toInt64();
+    __opts->file_open_flags = (int) opts[String("file_open_flags")].toInt64();
+    __opts->notify_flags = (unsigned int) opts[String("notify_flags")].toInt64();
+    __opts->notify_cb = NULL; //todo
+    __opts->notify_payload = NULL; //todo
+    __opts->progress_cb = NULL; //todo
+    __opts->progress_payload = NULL; //todo
+    __opts->paths.strings = strings;
+    __opts->paths.count = count;
+    __opts->target_directory = opts[String("target_directory")].toString().c_str();
+    __opts->our_label = opts[String("our_label")].toString().c_str();
+    __opts->their_label = opts[String("their_label")].toString().c_str();
+    
+    *out = __opts;
+    return 0;
+}
+
 Array HHVM_FUNCTION(git_checkout_opts_new)
 {
     Array return_value;
     
+    git_checkout_opts opts = GIT_CHECKOUT_OPTS_INIT;
+    
     return_value = make_map_array(
-                                  "version" , GIT_CHECKOUT_OPTS_VERSION,
-                                  "checkout_strategy", 0,
-                                  "disable_filters", 0,
-                                  "checkout_strategy", 0,
-                                  "dir_mode", 0,
-                                  "file_mode", 0,
-                                  "file_open_flags", 0,
-                                  "notify_flags", 0,
+                                  "version" , (int64_t) opts.version,
+                                  "checkout_strategy", (int64_t) opts.checkout_strategy,
+                                  "disable_filters", (int64_t) opts.disable_filters,
+                                  "checkout_strategy", (int64_t) opts.checkout_strategy,
+                                  "dir_mode", (int64_t) opts.dir_mode,
+                                  "file_mode", (int64_t) opts.file_mode,
+                                  "file_open_flags", (int64_t) opts.file_open_flags,
+                                  "notify_flags", (int64_t) opts.notify_flags,
                                   "notify_cb", NULL,
                                   "notify_payload", NULL,
                                   "progress_cb", NULL,
                                   "progress_payload", NULL,
                                   "paths", make_map_array("strings", Array::Create(), "count", 0),
                                   "baseline", NULL,
-                                  "target_directory", "",
-                                  "our_label", "",
-                                  "their_label", "");
+                                  "target_directory", (opts.target_directory ? String(opts.target_directory) : ""),
+                                  "our_label", (opts.our_label ? String(opts.our_label) : ""),
+                                  "their_label", (opts.their_label ? String(opts.their_label) : ""));
     
     return return_value;
 }
 
 int64_t HHVM_FUNCTION(git_checkout_head,
 	const Resource& repo,
-	const Resource& opts)
+	const Array& opts)
 {
 	int result;
-	int64_t return_value;
-
-	auto repo_ = dyn_cast<Git2Resource>(repo);
-	auto opts_ = dyn_cast<Git2Resource>(opts);
-
-	result = git_checkout_head(HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(opts_, checkout_opts));
+    int64_t return_value;
+    git_checkout_opts *__opts;
+    
+    hhvm_git2_array_to_git_checkout_opts(&__opts , opts);
+    
+    auto repo_ = dyn_cast<Git2Resource>(repo);
+    
+    result = git_checkout_head(HHVM_GIT2_V(repo_, repository), __opts);
 
     if (result == GIT_EUNBORNBRANCH) {
         /* HEAD points to an non existing branch */
@@ -65,16 +107,18 @@ int64_t HHVM_FUNCTION(git_checkout_head,
 int64_t HHVM_FUNCTION(git_checkout_index,
 	const Resource& repo,
 	const Resource& index,
-	const Resource& opts)
+	const Array& opts)
 {
 	int result;
-	int64_t return_value;
-
+    int64_t return_value;
+    git_checkout_opts *__opts;
+    
+    hhvm_git2_array_to_git_checkout_opts(&__opts , opts);
+    
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto index_ = dyn_cast<Git2Resource>(index);
-	auto opts_ = dyn_cast<Git2Resource>(opts);
 
-	result = git_checkout_index(HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(index_, index), HHVM_GIT2_V(opts_, checkout_opts));
+	result = git_checkout_index(HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(index_, index), __opts);
 
 	if (result != GIT_OK) {
 		const git_error *error = giterr_last();
@@ -94,35 +138,8 @@ int64_t HHVM_FUNCTION(git_checkout_tree,
 	int64_t return_value;
     git_checkout_opts *__opts;
     
-    Array __paths = opts[String("oaths")].toArray();
-    size_t count = (size_t) __paths[String("count")].toInt64();
-    Array __strings = __paths[String("strings")].toArray();
-    char** strings;
+    hhvm_git2_array_to_git_checkout_opts(&__opts , opts);
     
-    strings = (char**) malloc(count * sizeof(char*));
-    for (int i = 0; i < count; i++) {
-    	strings[i] = __strings[i].toString().mutableData();
-    }
-    
-    __opts = (git_checkout_opts*) malloc(sizeof(git_checkout_opts*));
-    
-    __opts->version = (unsigned int) opts[String("version")].toInt64();
-    __opts->checkout_strategy = (unsigned int) opts[String("checkout_strategy")].toInt64();
-    __opts->disable_filters = (int) opts[String("disable_filters")].toInt64();
-    __opts->dir_mode = (unsigned int) opts[String("dir_mode")].toInt64();
-    __opts->file_mode = (unsigned int) opts[String("file_mode")].toInt64();
-    __opts->file_open_flags = (int) opts[String("file_open_flags")].toInt64();
-    __opts->notify_flags = (unsigned int) opts[String("notify_flags")].toInt64();
-    __opts->notify_cb = NULL; //todo
-    __opts->notify_payload = NULL; //todo
-    __opts->progress_cb = NULL; //todo
-	__opts->progress_payload = NULL; //todo
-    __opts->paths.strings = strings;
-    __opts->paths.count = count;
-    __opts->target_directory = opts[String("target_directory")].toString().c_str();
-    __opts->our_label = opts[String("our_label")].toString().c_str();
-    __opts->their_label = opts[String("their_label")].toString().c_str();
-
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto treeish_ = dyn_cast<Git2Resource>(treeish);
 

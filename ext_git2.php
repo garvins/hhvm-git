@@ -194,12 +194,12 @@ function git_checkout_opts_new(): array;
 
 <<__Native>>
 function git_checkout_head(resource $repo,
-                           resource $opts): int;
+                           array $opts): int;
 
 <<__Native>>
 function git_checkout_index(resource $repo,
                             resource $index,
-                            resource $opts): int;
+                            array $opts): int;
 
 <<__Native>>
 function git_checkout_tree(resource $repo,
@@ -500,24 +500,24 @@ function git_diff_tree_to_tree(resource $repo,
 
 <<__Native>>
 function git_diff_tree_to_index(resource $repo,
-                                resource $old_tree,
-                                resource $index,
-                                array $opts): resource;
+                                resource $old_tree = null,
+                                ?resource $index = null,
+                                ?array $opts = array()): resource;
 
 <<__Native>>
 function git_diff_index_to_workdir(resource $repo,
-                                   resource $index,
-                                   resource $opts): resource;
+                                   ?resource $index = null,
+                                   ?array $opts = array()): resource;
 
 <<__Native>>
 function git_diff_tree_to_workdir(resource $repo,
-                                  resource $old_tree,
-                                  resource $opts): resource;
+                                  ?resource $old_tree = null,
+                                  ?array $opts = array()): resource;
 
 <<__Native>>
 function git_diff_tree_to_workdir_with_index(resource $repo,
-                                             resource $old_tree,
-                                             array $opts): resource;
+                                             ?resource $old_tree = null,
+                                             ?array $opts = array()): resource;
 
 <<__Native>>
 function git_diff_merge(resource $onto,
@@ -849,7 +849,7 @@ function git_merge_trees(resource $repo,
                          resource $ancestor_tree,
                          resource $our_tree,
                          resource $their_tree,
-                         resource $opts): resource;
+                         ?resource $opts = null): resource;
 
 <<__Native>>
 function git_merge(resource $repo,
