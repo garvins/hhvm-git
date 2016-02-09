@@ -447,7 +447,7 @@ int64_t HHVM_FUNCTION(git_remote_connected,
 
 	result = git_remote_connected(HHVM_GIT2_V(remote_, remote));
 
-    if (result != GIT_OK && result != 1) {
+	if (result != GIT_OK && result != 1) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
@@ -531,7 +531,7 @@ int64_t HHVM_FUNCTION(git_remote_valid_url,
 
 	result = git_remote_valid_url(url.c_str());
 
-    if (result != GIT_OK && result != 1) {
+	if (result != GIT_OK && result != 1) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}

@@ -90,14 +90,9 @@ int64_t HHVM_FUNCTION(git_checkout_head,
     
     result = git_checkout_head(HHVM_GIT2_V(repo_, repository), __opts);
 
-    if (result == GIT_EUNBORNBRANCH) {
-        /* HEAD points to an non existing branch */
-        const git_error *error = giterr_last();
-        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
-    }
-    if (result != GIT_OK) {
-        const git_error *error = giterr_last();
-        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
+	if (result != GIT_OK) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -144,6 +139,12 @@ int64_t HHVM_FUNCTION(git_checkout_tree,
 	auto treeish_ = dyn_cast<Git2Resource>(treeish);
 
 	result = git_checkout_tree(HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(treeish_, object), __opts);
+
+	if (result != GIT_OK) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
+	}
+
 	return_value = (int64_t) result;
 	return return_value;
 }

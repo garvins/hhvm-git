@@ -91,7 +91,7 @@ int64_t HHVM_FUNCTION(git_refspec_src_matches,
 
 	result = git_refspec_src_matches(HHVM_GIT2_V(refspec_, refspec), refname.c_str());
 
-    if (result != GIT_OK && result != 1) {
+	if (result != GIT_OK && result != 1) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
@@ -111,7 +111,7 @@ int64_t HHVM_FUNCTION(git_refspec_dst_matches,
 
 	result = git_refspec_dst_matches(HHVM_GIT2_V(refspec_, refspec), refname.c_str());
 
-    if (result != GIT_OK && result != 1) {
+	if (result != GIT_OK && result != 1) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}

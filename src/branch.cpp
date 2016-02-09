@@ -88,7 +88,11 @@ Resource HHVM_FUNCTION(git_branch_next,
 
 	result = git_branch_next(&out, (git_branch_t*) out_type, HHVM_GIT2_V(iter_, branch_iterator));
 
-	if (result != GIT_OK) {
+	if (result == GIT_ITEROVER) {
+		/* todo return nullptr */
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
+	} else if (result != GIT_OK) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}

@@ -25,11 +25,11 @@ int64_t HHVM_FUNCTION(git_graph_ahead_behind,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	if (git_oid_fromstr(&local_, local.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 	if (git_oid_fromstr(&upstream_, upstream.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	result = git_graph_ahead_behind((size_t*) ahead, (size_t*) behind, HHVM_GIT2_V(repo_, repository), &local_, &upstream_);

@@ -19,9 +19,9 @@ int64_t HHVM_FUNCTION(git_cred_has_username,
 
 	result = git_cred_has_username(HHVM_GIT2_V(cred_, cred));
 
-    if (result != GIT_OK && result != 1) {
-        const git_error *error = giterr_last();
-        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
+	if (result != GIT_OK && result != 1) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;

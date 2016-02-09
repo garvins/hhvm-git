@@ -38,7 +38,28 @@ class Source extends Printer {
         $this->add("#include \"". $this->fileName .".h\"");
     }
     
-    protected function printBody() : void {
+	protected function printBody() : void {
+		/*
+		 * list of functions where libgit2 return a number of something
+		 * throw exception if return < 0
+		 */
+		$funcList = array(
+			"git_oid_shorten_add",
+			"git_packbuilder_set_threads",
+			"git_patch_num_lines_in_hunk");
+		
+		/*
+		 * list of functions where libgit2 return value is boolen
+		 * throw exception if return < 0 || 1 < return
+		 */
+		$funcList2 = array(
+			"git_object_typeisloose",
+			"git_oid_iszero",
+			"git_remote_connected",
+			"git_repository_head_detached",
+			"git_repository_head_unborn",
+			"git_submodule_fetch_recurse_submodules");
+		
         $body = "";
         
         $body .= "\nusing namespace HPHP;\n";
@@ -191,9 +212,30 @@ class Source extends Printer {
             /*
              * if error occurs throw an exception (todo depends on function maybe return null)
              */
-            if ($function->getReturnType()->getType() == "int") {
-                $body .= "\n\tif (result != GIT_OK" . ( preg_match("/_is_/", $function->getName()) ? " && result != 1" : "") . ") {\n" .
-                	"\t\tconst git_error* error = giterr_last();\n" .
+            if ($function->getReturnType()->getType() == "int" && !preg_match("/(cmp|_foreach_)/", $function->getName())) {
+                if (preg_match("/_next$/", $function->getName())) {
+                    $body .= "\n\tif (result == GIT_ITEROVER) {\n" .
+                    	"\t\t/* todo return nullptr */\n" .
+                    	"\t\tconst git_error *error = giterr_last();\n" .
+                    	"\t\tSystemLib::throwInvalidArgumentExceptionObject(error ? error->message : \"no error message\");\n" .
+						"\t} else ";
+                } else {
+                    $body .= "\n\t";
+                }
+				
+                if (in_array($function->getName(), $funcList) || preg_match("/(?:count|_prettify)$/", $function->getName())) {
+                    $body .= "if (result < 0) {\n";
+                } else {
+                	$body .= "if (result != GIT_OK";
+					
+					if (in_array($function->getName(), $funcList2) || preg_match("/_(?:(?:is|has|exists|valid|matches)(?:_|$))/", $function->getName())) {
+						$body .= " && result != 1";
+					}
+					
+					$body .= ") {\n";
+                }
+                
+                $body .= "\t\tconst git_error *error = giterr_last();\n" .
                 	"\t\tSystemLib::throwInvalidArgumentExceptionObject(error ? error->message : \"no error message\");\n" .
                 	"\t}\n\n";
             }

@@ -52,20 +52,20 @@ String HHVM_FUNCTION(git_note_next,
 
 	if (git_oid_fromstr(&annotated_id_, annotated_id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 	auto it_ = dyn_cast<Git2Resource>(it);
 
 	result = git_note_next(&note_id, &annotated_id_, HHVM_GIT2_V(it_, note_iterator));
 
-    if (result == GIT_ITEROVER) {
-        /* todo return nullptr */
-        const git_error *error = giterr_last();
-        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
-    } else if (result != GIT_OK) {
-        const git_error *error = giterr_last();
-        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
-    }
+	if (result == GIT_ITEROVER) {
+		/* todo return nullptr */
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
+	} else if (result != GIT_OK) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
+	}
 
 	git_oid_fmt(return_value, &note_id);
 	return String(return_value);
@@ -85,7 +85,7 @@ Resource HHVM_FUNCTION(git_note_read,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	if (git_oid_fromstr(&oid_, oid.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	result = git_note_read(&out, HHVM_GIT2_V(repo_, repository), notes_ref.c_str(), &oid_);
@@ -145,7 +145,7 @@ String HHVM_FUNCTION(git_note_create,
 	auto committer_ = dyn_cast<Git2Resource>(committer);
 	if (git_oid_fromstr(&oid_, oid.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	result = git_note_create(&out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(author_, signature), HHVM_GIT2_V(committer_, signature), notes_ref.c_str(), &oid_, note.c_str(), (int) force);
@@ -176,7 +176,7 @@ int64_t HHVM_FUNCTION(git_note_remove,
 	auto committer_ = dyn_cast<Git2Resource>(committer);
 	if (git_oid_fromstr(&oid_, oid.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	result = git_note_remove(HHVM_GIT2_V(repo_, repository), notes_ref.c_str(), HHVM_GIT2_V(author_, signature), HHVM_GIT2_V(committer_, signature), &oid_);

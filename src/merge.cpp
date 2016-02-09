@@ -24,11 +24,11 @@ String HHVM_FUNCTION(git_merge_base,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	if (git_oid_fromstr(&one_, one.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 	if (git_oid_fromstr(&two_, two.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	result = git_merge_base(&out, HHVM_GIT2_V(repo_, repository), &one_, &two_);
@@ -56,7 +56,7 @@ String HHVM_FUNCTION(git_merge_base_many,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	if (git_oid_fromstr(&input_array_, input_array.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	result = git_merge_base_many(&out, HHVM_GIT2_V(repo_, repository), (size_t) length, &input_array_);
@@ -108,7 +108,7 @@ Resource HHVM_FUNCTION(git_merge_head_from_fetchhead,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	if (git_oid_fromstr(&oid_, oid.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	result = git_merge_head_from_fetchhead(&out, HHVM_GIT2_V(repo_, repository), branch_name.c_str(), remote_url.c_str(), &oid_);
@@ -135,7 +135,7 @@ Resource HHVM_FUNCTION(git_merge_head_from_oid,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	if (git_oid_fromstr(&oid_, oid.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	result = git_merge_head_from_oid(&out, HHVM_GIT2_V(repo_, repository), &oid_);

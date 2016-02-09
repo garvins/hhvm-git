@@ -22,7 +22,7 @@ Resource HHVM_FUNCTION(git_blob_lookup,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	result = git_blob_lookup(&blob, HHVM_GIT2_V(repo_, repository), &id_);
@@ -50,7 +50,7 @@ Resource HHVM_FUNCTION(git_blob_lookup_prefix,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	result = git_blob_lookup_prefix(&blob, HHVM_GIT2_V(repo_, repository), &id_, (size_t) len);

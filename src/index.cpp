@@ -692,10 +692,11 @@ Array HHVM_FUNCTION(git_index_conflict_next,
 	auto iterator_ = dyn_cast<Git2Resource>(iterator);
 
     result = git_index_conflict_next(&ancestor_out, &our_out, &their_out, HHVM_GIT2_V(iterator_, index_conflict_iterator));
-    
-    if (result == GIT_ITEROVER) {
-        /* todo return nullptr */
-        SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+
+	if (result == GIT_ITEROVER) {
+		/* todo return nullptr */
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	} else if (result != GIT_OK) {
         SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
     }

@@ -193,7 +193,7 @@ int64_t HHVM_FUNCTION(git_repository_head_detached,
 
 	result = git_repository_head_detached(HHVM_GIT2_V(repo_, repository));
 
-    if (result != GIT_OK && result != 1) {
+	if (result != GIT_OK && result != 1) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
@@ -212,9 +212,10 @@ int64_t HHVM_FUNCTION(git_repository_head_unborn,
 
 	result = git_repository_head_unborn(HHVM_GIT2_V(repo_, repository));
 
-    if (result != GIT_OK && result != 1) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
-    }
+	if (result != GIT_OK && result != 1) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
+	}
 
 	return_value = (int64_t) result;
 	return return_value;
@@ -230,8 +231,9 @@ int64_t HHVM_FUNCTION(git_repository_is_empty,
 
 	result = git_repository_is_empty(HHVM_GIT2_V(repo_, repository));
 
-    if (result != GIT_OK && result != 1) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	if (result != GIT_OK && result != 1) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -301,8 +303,9 @@ int64_t HHVM_FUNCTION(git_repository_is_bare,
 
 	result = git_repository_is_bare(HHVM_GIT2_V(repo_, repository));
 
-    if (result != GIT_OK && result != 1) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+	if (result != GIT_OK && result != 1) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -559,7 +562,7 @@ int64_t HHVM_FUNCTION(git_repository_set_head_detached,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	if (git_oid_fromstr(&commitish_, commitish.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	result = git_repository_set_head_detached(HHVM_GIT2_V(repo_, repository), &commitish_);

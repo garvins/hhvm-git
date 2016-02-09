@@ -28,15 +28,11 @@ int64_t HHVM_FUNCTION(git_buf_grow,
 	auto buffer_ = dyn_cast<Git2Resource>(buffer);
 
 	result = git_buf_grow(HHVM_GIT2_V(buffer_, buf), (size_t) target_size);
-    
-    if (result ==  -1) {
-        /* allocation failure */
-        const git_error *error = giterr_last();
-        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
-    } else if (result != GIT_OK) {
-        const git_error *error = giterr_last();
-        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
-    }
+
+	if (result != GIT_OK) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
+	}
 
 	return_value = (int64_t) result;
 	return return_value;
@@ -56,12 +52,10 @@ int64_t HHVM_FUNCTION(git_buf_set,
 
 	result = git_buf_set(HHVM_GIT2_V(buffer_, buf), data_, (size_t) datalen);
 
-    if (result ==  -1) {
-        /* allocation failure */
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
-    } else if (result != GIT_OK) {
-        SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
-    }
+	if (result != GIT_OK) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
+	}
 
 	return_value = (int64_t) result;
 	return return_value;

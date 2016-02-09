@@ -242,9 +242,9 @@ int64_t HHVM_FUNCTION(git_diff_is_sorted_icase,
 
 	result = git_diff_is_sorted_icase(HHVM_GIT2_V(diff_, diff));
 
-    if (result != GIT_OK && result != 1) {
-        const git_error *error = giterr_last();
-        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
+	if (result != GIT_OK && result != 1) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;

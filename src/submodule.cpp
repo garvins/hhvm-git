@@ -305,9 +305,9 @@ int64_t HHVM_FUNCTION(git_submodule_fetch_recurse_submodules,
 
 	result = git_submodule_fetch_recurse_submodules(HHVM_GIT2_V(submodule_, submodule));
 
-    if (result != GIT_OK && result != 1) {
-        const git_error *error = giterr_last();
-        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
+	if (result != GIT_OK && result != 1) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;

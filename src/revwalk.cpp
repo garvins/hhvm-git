@@ -51,7 +51,7 @@ int64_t HHVM_FUNCTION(git_revwalk_push,
 	auto walk_ = dyn_cast<Git2Resource>(walk);
 	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	result = git_revwalk_push(HHVM_GIT2_V(walk_, revwalk), &id_);
@@ -116,7 +116,7 @@ int64_t HHVM_FUNCTION(git_revwalk_hide,
 	auto walk_ = dyn_cast<Git2Resource>(walk);
 	if (git_oid_fromstr(&commit_id_, commit_id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	result = git_revwalk_hide(HHVM_GIT2_V(walk_, revwalk), &commit_id_);
@@ -221,13 +221,13 @@ String HHVM_FUNCTION(git_revwalk_next,
 
 	result = git_revwalk_next(&out, HHVM_GIT2_V(walk_, revwalk));
 
-    if (result == GIT_ITEROVER) {
-        /* todo return nullptr */
-        const git_error *error = giterr_last();
-        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
-    } else if (result != GIT_OK) {
-        const git_error *error = giterr_last();
-        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
+	if (result == GIT_ITEROVER) {
+		/* todo return nullptr */
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
+	} else if (result != GIT_OK) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	git_oid_fmt(return_value, &out);

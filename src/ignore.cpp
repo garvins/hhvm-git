@@ -60,8 +60,7 @@ int64_t HHVM_FUNCTION(git_ignore_path_is_ignored,
 
 	result = git_ignore_path_is_ignored((int*) ignored, HHVM_GIT2_V(repo_, repository), path.c_str());
 
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
-	if (result != GIT_OK) {
+	if (result != GIT_OK && result != 1) {
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}

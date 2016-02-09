@@ -386,13 +386,13 @@ Resource HHVM_FUNCTION(git_config_next,
 
 	result = git_config_next(&entry, HHVM_GIT2_V(iter_, config_iterator));
 
-    if (result == GIT_ITEROVER) {
-        // todo return nullptr
-        const git_error *error = giterr_last();
-        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
-    } else if (result != GIT_OK) {
-        const git_error *error = giterr_last();
-        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
+	if (result == GIT_ITEROVER) {
+		/* todo return nullptr */
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
+	} else if (result != GIT_OK) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	HHVM_GIT2_V(return_value, config_entry) = entry;

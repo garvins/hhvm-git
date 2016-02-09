@@ -37,11 +37,11 @@ int64_t HHVM_FUNCTION(git_commit_create_from_oids,
 	auto committer_ = dyn_cast<Git2Resource>(committer);
 	if (git_oid_fromstr(&tree_, tree.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 	if (git_oid_fromstr(&parents_, parents.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
     // todo
 	/*result = git_commit_create_from_oids(oid_, HHVM_GIT2_V(repo_, repository), update_ref.c_str(), HHVM_GIT2_V(author_, signature), HHVM_GIT2_V(committer_, signature), message_encoding.c_str(), message.c_str(), tree_, (int) parent_count, parents_); */

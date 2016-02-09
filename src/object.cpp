@@ -23,7 +23,7 @@ Resource HHVM_FUNCTION(git_object_lookup,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	result = git_object_lookup(&object, HHVM_GIT2_V(repo_, repository), &id_, (git_otype) type);
@@ -52,7 +52,7 @@ Resource HHVM_FUNCTION(git_object_lookup_prefix,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	result = git_object_lookup_prefix(&object_out, HHVM_GIT2_V(repo_, repository), &id_, (size_t) len, (git_otype) type);
@@ -167,9 +167,9 @@ int64_t HHVM_FUNCTION(git_object_typeisloose,
 
 	result = git_object_typeisloose((git_otype) type);
 
-    if (result != GIT_OK && result != 1) {
-        const git_error *error = giterr_last();
-        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
+	if (result != GIT_OK && result != 1) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;

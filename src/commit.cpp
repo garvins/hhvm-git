@@ -23,7 +23,7 @@ Resource HHVM_FUNCTION(git_commit_lookup,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	result = git_commit_lookup(&commit, HHVM_GIT2_V(repo_, repository), &id_);
@@ -51,7 +51,7 @@ Resource HHVM_FUNCTION(git_commit_lookup_prefix,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	result = git_commit_lookup_prefix(&commit, HHVM_GIT2_V(repo_, repository), &id_, (size_t) len);
@@ -266,9 +266,9 @@ int64_t HHVM_FUNCTION(git_commit_parentcount,
 
 	result = git_commit_parentcount(HHVM_GIT2_V(commit_, commit));
 
-    if (result < 0) {
-        const git_error *error = giterr_last();
-        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
+	if (result < 0) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = (int64_t) result;
@@ -376,7 +376,8 @@ String HHVM_FUNCTION(git_commit_create,
 	result = git_commit_create(&id, HHVM_GIT2_V(repo_, repository), update_ref.c_str(), __author, __committer, message_encoding.c_str(), message.c_str(), HHVM_GIT2_V(tree_, tree), (int) parent_count, __parents);
     
 	if (result != GIT_OK) {
-		SystemLib::throwInvalidArgumentExceptionObject(giterr_last()->message);
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	git_oid_fmt(return_value, &id);

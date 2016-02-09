@@ -64,7 +64,7 @@ int64_t HHVM_FUNCTION(git_reflog_append,
 	auto reflog_ = dyn_cast<Git2Resource>(reflog);
 	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 	auto committer_ = dyn_cast<Git2Resource>(committer);
 
@@ -94,7 +94,7 @@ int64_t HHVM_FUNCTION(git_reflog_append_to,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	if (git_oid_fromstr(&id_, id.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 	auto committer_ = dyn_cast<Git2Resource>(committer);
 

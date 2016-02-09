@@ -21,9 +21,9 @@ String HHVM_FUNCTION(git_message_prettify,
 
 	result = git_message_prettify(&out, (size_t) out_size, message.c_str(), (int) strip_comments);
 
-    if (result < 0) {
-        const git_error *error = giterr_last();
-        SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
+	if (result < 0) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	return_value = String(&out);

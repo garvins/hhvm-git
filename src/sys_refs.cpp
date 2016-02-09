@@ -22,11 +22,11 @@ Resource HHVM_FUNCTION(git_reference__alloc,
 
 	if (git_oid_fromstr(&oid_, oid.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 	if (git_oid_fromstr(&peel_, peel.c_str()) != GIT_OK) {
 		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error->message);
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
 	result = git_reference__alloc(name.c_str(), &oid_, &peel_);
