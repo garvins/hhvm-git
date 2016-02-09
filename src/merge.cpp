@@ -176,9 +176,8 @@ Resource HHVM_FUNCTION(git_merge_trees,
 	auto ancestor_tree_ = dyn_cast<Git2Resource>(ancestor_tree);
 	auto our_tree_ = dyn_cast<Git2Resource>(our_tree);
 	auto their_tree_ = dyn_cast<Git2Resource>(their_tree);
-	auto opts_ = dyn_cast<Git2Resource>(opts);
 
-	result = git_merge_trees(&out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(ancestor_tree_, tree), HHVM_GIT2_V(our_tree_, tree), HHVM_GIT2_V(their_tree_, tree), HHVM_GIT2_V(opts_, merge_tree_opts));
+	result = git_merge_trees(&out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(ancestor_tree_, tree), HHVM_GIT2_V(our_tree_, tree), HHVM_GIT2_V(their_tree_, tree), NULL);
 
 	if (result != GIT_OK) {
 		const git_error *error = giterr_last();
@@ -206,7 +205,7 @@ Resource HHVM_FUNCTION(git_merge,
     
     heads[0] = HHVM_GIT2_V(their_heads_, merge_head);
 
-	git_merge(&out, HHVM_GIT2_V(repo_, repository), heads, 1, NULL);
+	git_merge(&out, HHVM_GIT2_V(repo_, repository), (const git_merge_head **) heads, 1, NULL);
 	HHVM_GIT2_V(return_value, merge_result) = out;
 	return Resource(return_value);
 }
