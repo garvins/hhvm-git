@@ -24,19 +24,13 @@ int64_t HHVM_FUNCTION(git_status_foreach,
 	callback_ = NULL;
 
 	result = git_status_foreach(HHVM_GIT2_V(repo_, repository), /* todo */ callback_, payload_);
-
-	if (result != GIT_OK) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
-	}
-
 	return_value = (int64_t) result;
 	return return_value;
 }
 
 int64_t HHVM_FUNCTION(git_status_foreach_ext,
 	const Resource& repo,
-	const Resource& opts,
+	const Array& opts,
 	const Variant& callback,
 	const Variant& payload)
 {
@@ -47,16 +41,9 @@ int64_t HHVM_FUNCTION(git_status_foreach_ext,
 	void *payload_ = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	auto opts_ = dyn_cast<Git2Resource>(opts);
 	callback_ = NULL;
 
-	result = git_status_foreach_ext(HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(opts_, status_options), /* todo */ callback_, payload_);
-
-	if (result != GIT_OK) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
-	}
-
+	result = git_status_foreach_ext(HHVM_GIT2_V(repo_, repository), NULL, /* todo */ callback_, payload_);
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -84,7 +71,7 @@ int64_t HHVM_FUNCTION(git_status_file,
 
 Resource HHVM_FUNCTION(git_status_list_new,
 	const Resource& repo,
-	const Resource& opts)
+	const Array& opts)
 {
 	int result;
 	auto return_value = req::make<Git2Resource>();
@@ -92,9 +79,8 @@ Resource HHVM_FUNCTION(git_status_list_new,
 	git_status_list *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	auto opts_ = dyn_cast<Git2Resource>(opts);
 
-	result = git_status_list_new(&out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(opts_, status_options));
+	result = git_status_list_new(&out, HHVM_GIT2_V(repo_, repository), NULL);
 
 	if (result != GIT_OK) {
 		const git_error *error = giterr_last();

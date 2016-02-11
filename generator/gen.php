@@ -37,7 +37,10 @@ foreach ($files as $file => $path)
     
     $structs = $parser->parseStructs($fileContent);
     foreach ($structs as $name) {
-        if (in_array($name, Type::$knownTypes[HackType::RESOURCE])) {
+        /* filter option structs */
+        if (preg_match("/\w+_opt\w*/", $name)) {
+            Type::$knownTypes[HackType::ARR][] = $name;
+        } else if (in_array($name, Type::$knownTypes[HackType::RESOURCE])) {
             // todo handling double names ...
         } else {
             Type::$knownTypes[HackType::RESOURCE][] = $name;
@@ -58,7 +61,6 @@ foreach ($files as $file => $path)
     
     $consts = array();
     $constants = $parser->parseConstants($fileContent);
-    
     /* add parsed constants to knownTypes */
     foreach ($constants as $name => $values) {
         if (in_array($name, Type::$knownTypes[HackType::INT])) {
@@ -70,7 +72,6 @@ foreach ($files as $file => $path)
         $consts[$name] = $values;
     }
     $fileConsts[$file] = $consts;
-    
     
     if(isset($argv[1]) && $argv[1] != $file) {
         continue;

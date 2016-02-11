@@ -15,12 +15,12 @@ using namespace HPHP;
 Resource HHVM_FUNCTION(git_clone,
 	const String& url,
 	const String& local_path,
-	const Resource& options);
+	const Array& options = null_array);
 
 int64_t HHVM_FUNCTION(git_clone_into,
 	const Resource& repo,
 	const Resource& remote,
-	const Resource& co_opts,
+	const Array& co_opts,
 	const String& branch);
 
 #endif

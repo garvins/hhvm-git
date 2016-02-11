@@ -5,6 +5,7 @@ require_once 'Type.hh';
 class Parameter {
     private string $name = "";
     private Type $type;
+	private bool $option = false;
     private bool $constant = false;
     private int $pointerLvl = 0;
     
@@ -28,6 +29,10 @@ class Parameter {
     public function isConstant() : bool {
         return $this->constant;
     }
+	
+	public function isOption() : bool {
+		return $this->option;
+	}
     
     public function setName(string $name) : this {
         $this->name = $name;
@@ -38,13 +43,18 @@ class Parameter {
         $this->type = $type;
         return $this;
     }
+	
+	public function setOption(bool $option) : this {
+		$this->option = $option;
+		return $this;
+	}
     
-    public function setConstant(bool $constant) :this {
+    public function setConstant(bool $constant) : this {
         $this->constant = $constant;
         return $this;
     }
     
-    public function setPointerLvl(int $pointerLvl) :this {
+    public function setPointerLvl(int $pointerLvl) : this {
         $this->pointerLvl = $pointerLvl;
         return $this;
     }

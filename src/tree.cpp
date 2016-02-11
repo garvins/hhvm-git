@@ -71,8 +71,6 @@ void HHVM_FUNCTION(git_tree_free,
 	auto tree_ = dyn_cast<Git2Resource>(tree);
 
 	git_tree_free(HHVM_GIT2_V(tree_, tree));
-    
-    // todo free resource, too
 }
 
 String HHVM_FUNCTION(git_tree_id,
@@ -215,7 +213,13 @@ String HHVM_FUNCTION(git_tree_entry_name,
 	auto entry_ = dyn_cast<Git2Resource>(entry);
 
 	result = git_tree_entry_name(HHVM_GIT2_V(entry_, tree_entry));
-	return_value = String(result);
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -282,7 +286,6 @@ int64_t HHVM_FUNCTION(git_tree_entry_cmp,
 	auto e2_ = dyn_cast<Git2Resource>(e2);
 
 	result = git_tree_entry_cmp(HHVM_GIT2_V(e1_, tree_entry), HHVM_GIT2_V(e2_, tree_entry));
-
 	return_value = (int64_t) result;
 	return return_value;
 }

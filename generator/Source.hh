@@ -35,9 +35,30 @@ class Source extends Printer {
     }
     
     protected function printIncludes() : void {
+		$hasArrReturnType = false;
+		
+		foreach ($this->functions as $function) {
+			if (count($function->getParams()) &&
+				(preg_match("/out/" ,$function->getParams()[0]->getName()) ||
+				 (preg_match("/_((dup|lookup|open|peel|gen_ancestor|create|next|load|rename|add_setup)($|_)|diff_[\w]*?_to_)/", $function->getName()) && count($function->getParams()) > 1))) {
+				$returnType = $function->getParams()[0]->getType();
+			} else {
+				$returnType = $function->getReturnType();
+			}
+			
+			if ($returnType->typeToHackType() == HackType::ARR) {
+				$hasArrReturnType = true;
+				break;
+			}
+		}
+		
+		if ($hasArrReturnType) {
+			$this->add("#include \"hphp/runtime/base/array-init.h\"\n");
+		}
+		
         $this->add("#include \"". $this->fileName .".h\"");
     }
-    
+	
 	protected function printBody() : void {
 		/*
 		 * list of functions where libgit2 return a number of something
@@ -94,7 +115,7 @@ class Source extends Printer {
             $body = rtrim($body, ",") . ")\n{";
             
             if ($returnType->typeToHackType() != HackType::VOID) {
-                if ($function->getReturnType()->getType() == "int") {
+                if ($function->getReturnType()->getType() == "int" && !preg_match("/_diff_\w+?_to/", $function->getName())) {
                     $body .= "\n\tint result;";
                 } else if (!$hasOutValue) {
                     $body .= "\n\t" . ($function->isConstant() ? "const " : "") . $function->getReturnType()->getType() . " " . str_repeat("*", $function->getPointerLvl()) . "result;";
@@ -164,7 +185,7 @@ class Source extends Printer {
             $body = rtrim($body) . "\n\n";
             
             /* Build call of libgit function, only assign result if return-type of libgit function ins't void */
-            $body .= "\t". ($returnType->typeToHackType() != HackType::VOID && ($function->getReturnType()->getType() == "int" || !$hasOutValue) ? "result = " : "") . $function->getName() . "(";
+            $body .= "\t". ($returnType->typeToHackType() != HackType::VOID && (($function->getReturnType()->getType() == "int" && !preg_match("/_diff_\w+?_to/", $function->getName())) || !$hasOutValue) ? "result = " : "") . $function->getName() . "(";
             foreach ($function->getParams() as $k => $param) {
                 $hackType = $param->getType()->typeToHackType();
                 
@@ -191,7 +212,9 @@ class Source extends Printer {
                                     } else {
                                         $body .= $param->getName() . ".mutableData()";
                                     }
-                                    break;
+									break;
+								case HackType::ARR :
+									$body .= "NULL";break;
                                 case HackType::RESOURCE :
                                     $body .= "HHVM_GIT2_V(" . $param->getName() . "_, " . preg_replace("/^git_/", "", $param->getType()->getType()) . ")"; break;
                                 case HackType::CALLABLE :
@@ -212,7 +235,7 @@ class Source extends Printer {
             /*
              * if error occurs throw an exception (todo depends on function maybe return null)
              */
-            if ($function->getReturnType()->getType() == "int" && !preg_match("/(cmp|_foreach_)/", $function->getName())) {
+            if ($function->getReturnType()->getType() == "int" && !preg_match("/(cmp|_foreach|_diff_\w+?_to)/", $function->getName())) {
                 if (preg_match("/_next$/", $function->getName())) {
                     $body .= "\n\tif (result == GIT_ITEROVER) {\n" .
                     	"\t\t/* todo return nullptr */\n" .
@@ -268,13 +291,16 @@ class Source extends Printer {
                         } else if ($hasOutValue && $function->getParams()[0]->getType()->getType() == "git_oid") {
                             $body .= "\tgit_oid_fmt(return_value, " . ($outValPointerLvl > 1 ? "" : "&") . $function->getParams()[0]->getName() . ");\n";
                         } else {
-                            $body .= "\treturn_value = ";
+							$body .= "\n\tif (" . ($hasOutValue ? ($outValPointerLvl > 1 ? "" : "&") . $function->getParams()[0]->getName() : ($function->getPointerLvl() == 0 ? "&" : "") . "result") . " != NULL) {\n";
+                            $body .= "\t\treturn_value = ";
                             $body .= "String(" . ($hasOutValue ? ($outValPointerLvl > 1 ? "" : "&") . $function->getParams()[0]->getName() : ($function->getPointerLvl() == 0 ? "&" : "") . "result") . ");\n";
+							$body .= "\t} else {\n";
+							$body .= "\t\treturn_value = \"\";\n";
+							$body .= "\t}\n\n";
                         } break;
                     case HackType::ARR :
                         $body .= "\treturn_value = ";
-                        $body .= "ARR";
-                        $body .= " " . ($hasOutValue ? $function->getParams()[0]->getName() : "result") . ";\n"; break;
+                        $body .= "null_array" . /*($hasOutValue ? $function->getParams()[0]->getName() : "result") . */ ";\n"; break;
                     case HackType::RESOURCE :
                         $body .= "\t";
                         

@@ -144,7 +144,13 @@ String HHVM_FUNCTION(git_object_type2string,
 	String return_value;
 
 	result = git_object_type2string((git_otype) type);
-	return_value = String(result);
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 

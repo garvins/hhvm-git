@@ -19,7 +19,7 @@ int64_t HHVM_FUNCTION(git_status_foreach,
 
 int64_t HHVM_FUNCTION(git_status_foreach_ext,
 	const Resource& repo,
-	const Resource& opts,
+	const Array& opts,
 	const Variant& callback,
 	const Variant& payload);
 
@@ -30,7 +30,7 @@ int64_t HHVM_FUNCTION(git_status_file,
 
 Resource HHVM_FUNCTION(git_status_list_new,
 	const Resource& repo,
-	const Resource& opts);
+	const Array& opts = null_array);
 
 int64_t HHVM_FUNCTION(git_status_list_entrycount,
 	const Resource& statuslist);

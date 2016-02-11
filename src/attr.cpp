@@ -40,7 +40,13 @@ String HHVM_FUNCTION(git_attr_get,
 		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
-	return_value = String(value_out);
+
+	if (value_out != NULL) {
+		return_value = String(value_out);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -66,7 +72,13 @@ String HHVM_FUNCTION(git_attr_get_many,
 		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
-	return_value = String(values_out);
+
+	if (values_out != NULL) {
+		return_value = String(values_out);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -87,12 +99,6 @@ int64_t HHVM_FUNCTION(git_attr_foreach,
 	callback_ = NULL;
 
 	result = git_attr_foreach(HHVM_GIT2_V(repo_, repository), (uint32_t) flags, path.c_str(), /* todo */ callback_, payload_);
-
-	if (result != GIT_OK) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
-	}
-
 	return_value = (int64_t) result;
 	return return_value;
 }

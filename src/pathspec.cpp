@@ -188,7 +188,13 @@ String HHVM_FUNCTION(git_pathspec_match_list_entry,
 	auto m_ = dyn_cast<Git2Resource>(m);
 
 	result = git_pathspec_match_list_entry(HHVM_GIT2_V(m_, pathspec_match_list), (size_t) pos);
-	return_value = String(result);
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -229,7 +235,13 @@ String HHVM_FUNCTION(git_pathspec_match_list_failed_entry,
 	auto m_ = dyn_cast<Git2Resource>(m);
 
 	result = git_pathspec_match_list_failed_entry(HHVM_GIT2_V(m_, pathspec_match_list), (size_t) pos);
-	return_value = String(result);
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 

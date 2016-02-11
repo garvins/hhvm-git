@@ -54,8 +54,6 @@ void HHVM_FUNCTION(git_index_free,
 	auto index_ = dyn_cast<Git2Resource>(index);
 
 	git_index_free(HHVM_GIT2_V(index_, index));
-    
-    // todo free resource, too 
 }
 
 Resource HHVM_FUNCTION(git_index_owner,
@@ -158,7 +156,13 @@ String HHVM_FUNCTION(git_index_path,
 	auto index_ = dyn_cast<Git2Resource>(index);
 
 	result = git_index_path(HHVM_GIT2_V(index_, index));
-	return_value = String(result);
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 

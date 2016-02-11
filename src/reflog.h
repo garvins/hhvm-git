@@ -22,14 +22,14 @@ int64_t HHVM_FUNCTION(git_reflog_write,
 int64_t HHVM_FUNCTION(git_reflog_append,
 	const Resource& reflog,
 	const String& id,
-	const Resource& committer,
+	const Array& committer,
 	const String& msg);
 
 int64_t HHVM_FUNCTION(git_reflog_append_to,
 	const Resource& repo,
 	const String& name,
 	const String& id,
-	const Resource& committer,
+	const Array& committer,
 	const String& msg);
 
 int64_t HHVM_FUNCTION(git_reflog_rename,
@@ -59,7 +59,7 @@ String HHVM_FUNCTION(git_reflog_entry_id_old,
 String HHVM_FUNCTION(git_reflog_entry_id_new,
 	const Resource& entry);
 
-Resource HHVM_FUNCTION(git_reflog_entry_committer,
+Array HHVM_FUNCTION(git_reflog_entry_committer,
 	const Resource& entry);
 
 String HHVM_FUNCTION(git_reflog_entry_message,

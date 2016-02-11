@@ -12,7 +12,7 @@
 
 using namespace HPHP;
 
-Resource HHVM_FUNCTION(git_signature_new,
+Array HHVM_FUNCTION(git_signature_new,
 	const String& name,
 	const String& email,
 	int64_t time,
@@ -22,14 +22,14 @@ Array HHVM_FUNCTION(git_signature_now,
 	const String& name,
 	const String& email);
 
-Resource HHVM_FUNCTION(git_signature_default,
+Array HHVM_FUNCTION(git_signature_default,
 	const Resource& repo);
 
-Resource HHVM_FUNCTION(git_signature_dup,
-	const Resource& sig);
+Array HHVM_FUNCTION(git_signature_dup,
+	const Array& sig);
 
 void HHVM_FUNCTION(git_signature_free,
-	const Resource& sig);
+	const Array& sig);
 
 #endif
 

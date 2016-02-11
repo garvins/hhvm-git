@@ -26,7 +26,13 @@ String HHVM_FUNCTION(git_message_prettify,
 		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
-	return_value = String(&out);
+
+	if (&out != NULL) {
+		return_value = String(&out);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 

@@ -35,15 +35,14 @@ Resource HHVM_FUNCTION(git_push_new,
 
 int64_t HHVM_FUNCTION(git_push_set_options,
 	const Resource& push,
-	const Resource& opts)
+	const Array& opts)
 {
 	int result;
 	int64_t return_value;
 
 	auto push_ = dyn_cast<Git2Resource>(push);
-	auto opts_ = dyn_cast<Git2Resource>(opts);
 
-	result = git_push_set_options(HHVM_GIT2_V(push_, push), HHVM_GIT2_V(opts_, push_options));
+	result = git_push_set_options(HHVM_GIT2_V(push_, push), NULL);
 
 	if (result != GIT_OK) {
 		const git_error *error = giterr_last();

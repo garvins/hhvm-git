@@ -14,7 +14,7 @@ using namespace HPHP;
 
 String HHVM_FUNCTION(git_stash_save,
 	const Resource& repo,
-	const Resource& stasher,
+	const Array& stasher,
 	const String& message,
 	int64_t flags);
 

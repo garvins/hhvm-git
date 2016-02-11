@@ -18,7 +18,13 @@ String HHVM_FUNCTION(git_refspec_src,
 	auto refspec_ = dyn_cast<Git2Resource>(refspec);
 
 	result = git_refspec_src(HHVM_GIT2_V(refspec_, refspec));
-	return_value = String(result);
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -31,7 +37,13 @@ String HHVM_FUNCTION(git_refspec_dst,
 	auto refspec_ = dyn_cast<Git2Resource>(refspec);
 
 	result = git_refspec_dst(HHVM_GIT2_V(refspec_, refspec));
-	return_value = String(result);
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -44,7 +56,13 @@ String HHVM_FUNCTION(git_refspec_string,
 	auto refspec_ = dyn_cast<Git2Resource>(refspec);
 
 	result = git_refspec_string(HHVM_GIT2_V(refspec_, refspec));
-	return_value = String(result);
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -139,7 +157,13 @@ String HHVM_FUNCTION(git_refspec_transform,
 		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
-	return_value = String(&out);
+
+	if (&out != NULL) {
+		return_value = String(&out);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -162,7 +186,13 @@ String HHVM_FUNCTION(git_refspec_rtransform,
 		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
-	return_value = String(&out);
+
+	if (&out != NULL) {
+		return_value = String(&out);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 

@@ -16,17 +16,17 @@ Array HHVM_FUNCTION(git_checkout_opts_new);
 
 int64_t HHVM_FUNCTION(git_checkout_head,
 	const Resource& repo,
-	const Array& opts);
+	const Array& opts = null_array);
 
 int64_t HHVM_FUNCTION(git_checkout_index,
 	const Resource& repo,
 	const Resource& index,
-	const Array& opts);
+	const Array& opts = null_array);
 
 int64_t HHVM_FUNCTION(git_checkout_tree,
 	const Resource& repo,
 	const Resource& treeish,
-	const Array& opts);
+	const Array& opts = null_array);
 
 #endif
 

@@ -41,7 +41,7 @@ Resource HHVM_FUNCTION(git_repository_init,
 
 Resource HHVM_FUNCTION(git_repository_init_ext,
 	const String& repo_path,
-	const Resource& opts);
+	const Array& opts = null_array);
 
 Resource HHVM_FUNCTION(git_repository_head,
 	const Resource& repo);

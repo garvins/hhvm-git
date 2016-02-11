@@ -146,7 +146,13 @@ String HHVM_FUNCTION(git_remote_name,
 	auto remote_ = dyn_cast<Git2Resource>(remote);
 
 	result = git_remote_name(HHVM_GIT2_V(remote_, remote));
-	return_value = String(result);
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -159,7 +165,13 @@ String HHVM_FUNCTION(git_remote_url,
 	auto remote_ = dyn_cast<Git2Resource>(remote);
 
 	result = git_remote_url(HHVM_GIT2_V(remote_, remote));
-	return_value = String(result);
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -172,7 +184,13 @@ String HHVM_FUNCTION(git_remote_pushurl,
 	auto remote_ = dyn_cast<Git2Resource>(remote);
 
 	result = git_remote_pushurl(HHVM_GIT2_V(remote_, remote));
-	return_value = String(result);
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -481,8 +499,6 @@ void HHVM_FUNCTION(git_remote_free,
 	auto remote_ = dyn_cast<Git2Resource>(remote);
 
 	git_remote_free(HHVM_GIT2_V(remote_, remote));
-    
-    // todo free resource, too
 }
 
 int64_t HHVM_FUNCTION(git_remote_update_tips,

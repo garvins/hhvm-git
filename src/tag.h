@@ -42,7 +42,7 @@ int64_t HHVM_FUNCTION(git_tag_target_type,
 String HHVM_FUNCTION(git_tag_name,
 	const Resource& tag);
 
-Resource HHVM_FUNCTION(git_tag_tagger,
+Array HHVM_FUNCTION(git_tag_tagger,
 	const Resource& tag);
 
 String HHVM_FUNCTION(git_tag_message,
@@ -52,7 +52,7 @@ String HHVM_FUNCTION(git_tag_create,
 	const Resource& repo,
 	const String& tag_name,
 	const Resource& target,
-	const Resource& tagger,
+	const Array& tagger,
 	const String& message,
 	int64_t force);
 
@@ -60,7 +60,7 @@ String HHVM_FUNCTION(git_tag_annotation_create,
 	const Resource& repo,
 	const String& tag_name,
 	const Resource& target,
-	const Resource& tagger,
+	const Array& tagger,
 	const String& message);
 
 String HHVM_FUNCTION(git_tag_create_frombuffer,

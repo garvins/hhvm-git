@@ -36,7 +36,7 @@ Resource HHVM_FUNCTION(git_patch_from_blobs,
 	const String& old_as_path,
 	const Resource& new_blob,
 	const String& new_as_path,
-	const Resource& opts)
+	const Array& opts)
 {
 	int result;
 	auto return_value = req::make<Git2Resource>();
@@ -45,9 +45,8 @@ Resource HHVM_FUNCTION(git_patch_from_blobs,
 
 	auto old_blob_ = dyn_cast<Git2Resource>(old_blob);
 	auto new_blob_ = dyn_cast<Git2Resource>(new_blob);
-	auto opts_ = dyn_cast<Git2Resource>(opts);
 
-	result = git_patch_from_blobs(&out, HHVM_GIT2_V(old_blob_, blob), old_as_path.c_str(), HHVM_GIT2_V(new_blob_, blob), new_as_path.c_str(), HHVM_GIT2_V(opts_, diff_options));
+	result = git_patch_from_blobs(&out, HHVM_GIT2_V(old_blob_, blob), old_as_path.c_str(), HHVM_GIT2_V(new_blob_, blob), new_as_path.c_str(), NULL);
 
 	if (result != GIT_OK) {
 		const git_error *error = giterr_last();
@@ -64,7 +63,7 @@ Resource HHVM_FUNCTION(git_patch_from_blob_and_buffer,
 	const String& buffer,
 	int64_t buffer_len,
 	const String& buffer_as_path,
-	const Resource& opts)
+	const Array& opts)
 {
 	int result;
 	auto return_value = req::make<Git2Resource>();
@@ -72,9 +71,8 @@ Resource HHVM_FUNCTION(git_patch_from_blob_and_buffer,
 	git_patch *out = NULL;
 
 	auto old_blob_ = dyn_cast<Git2Resource>(old_blob);
-	auto opts_ = dyn_cast<Git2Resource>(opts);
 
-	result = git_patch_from_blob_and_buffer(&out, HHVM_GIT2_V(old_blob_, blob), old_as_path.c_str(), buffer.c_str(), (size_t) buffer_len, buffer_as_path.c_str(), HHVM_GIT2_V(opts_, diff_options));
+	result = git_patch_from_blob_and_buffer(&out, HHVM_GIT2_V(old_blob_, blob), old_as_path.c_str(), buffer.c_str(), (size_t) buffer_len, buffer_as_path.c_str(), NULL);
 
 	if (result != GIT_OK) {
 		const git_error *error = giterr_last();

@@ -184,12 +184,6 @@ int64_t HHVM_FUNCTION(git_packbuilder_foreach,
 	cb_ = NULL;
 
 	result = git_packbuilder_foreach(HHVM_GIT2_V(pb_, packbuilder), /* todo */ cb_, payload_);
-
-	if (result != GIT_OK) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
-	}
-
 	return_value = (int64_t) result;
 	return return_value;
 }

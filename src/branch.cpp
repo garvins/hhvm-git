@@ -173,7 +173,13 @@ String HHVM_FUNCTION(git_branch_name,
 		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
-	return_value = String(out);
+
+	if (out != NULL) {
+		return_value = String(out);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -237,7 +243,13 @@ String HHVM_FUNCTION(git_branch_upstream_name,
 		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
-	return_value = String(&tracking_branch_name_out);
+
+	if (&tracking_branch_name_out != NULL) {
+		return_value = String(&tracking_branch_name_out);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -279,7 +291,13 @@ String HHVM_FUNCTION(git_branch_remote_name,
 		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
-	return_value = String(&remote_name_out);
+
+	if (&remote_name_out != NULL) {
+		return_value = String(&remote_name_out);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 

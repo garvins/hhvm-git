@@ -53,7 +53,7 @@ Resource HHVM_FUNCTION(git_blame_get_hunk_byline,
 Resource HHVM_FUNCTION(git_blame_file,
 	const Resource& repo,
 	const String& path,
-	const Resource& options)
+	const Array& options)
 {
 	int result;
 	auto return_value = req::make<Git2Resource>();
@@ -61,9 +61,8 @@ Resource HHVM_FUNCTION(git_blame_file,
 	git_blame *out = NULL;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	auto options_ = dyn_cast<Git2Resource>(options);
 
-	result = git_blame_file(&out, HHVM_GIT2_V(repo_, repository), path.c_str(), HHVM_GIT2_V(options_, blame_options));
+	result = git_blame_file(&out, HHVM_GIT2_V(repo_, repository), path.c_str(), NULL);
 
 	if (result != GIT_OK) {
 		const git_error *error = giterr_last();

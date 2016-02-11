@@ -67,7 +67,13 @@ String HHVM_FUNCTION(git_repository_discover,
 		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
-	return_value = String(&path_out);
+
+	if (&path_out != NULL) {
+		return_value = String(&path_out);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -142,16 +148,14 @@ Resource HHVM_FUNCTION(git_repository_init,
 
 Resource HHVM_FUNCTION(git_repository_init_ext,
 	const String& repo_path,
-	const Resource& opts)
+	const Array& opts)
 {
 	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_repository *out = NULL;
 
-	auto opts_ = dyn_cast<Git2Resource>(opts);
-
-	result = git_repository_init_ext(&out, repo_path.c_str(), HHVM_GIT2_V(opts_, repository_init_options));
+	result = git_repository_init_ext(&out, repo_path.c_str(), NULL);
 
 	if (result != GIT_OK) {
 		const git_error *error = giterr_last();
@@ -249,7 +253,13 @@ String HHVM_FUNCTION(git_repository_path,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
 	result = git_repository_path(HHVM_GIT2_V(repo_, repository));
-	return_value = String(result);
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -262,13 +272,13 @@ String HHVM_FUNCTION(git_repository_workdir,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
 	result = git_repository_workdir(HHVM_GIT2_V(repo_, repository));
-    
-    if (result != NULL) {
-        return_value = String(result);
-    } else {
-        return_value = "";
-    }
-    
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -414,7 +424,13 @@ String HHVM_FUNCTION(git_repository_message,
 		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
-	return_value = String(&out);
+
+	if (&out != NULL) {
+		return_value = String(&out);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -471,12 +487,6 @@ int64_t HHVM_FUNCTION(git_repository_fetchhead_foreach,
 	callback_ = NULL;
 
 	result = git_repository_fetchhead_foreach(HHVM_GIT2_V(repo_, repository), /* todo */ callback_, payload_);
-
-	if (result != GIT_OK) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
-	}
-
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -496,12 +506,6 @@ int64_t HHVM_FUNCTION(git_repository_mergehead_foreach,
 	callback_ = NULL;
 
 	result = git_repository_mergehead_foreach(HHVM_GIT2_V(repo_, repository), /* todo */ callback_, payload_);
-
-	if (result != GIT_OK) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
-	}
-
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -643,7 +647,13 @@ String HHVM_FUNCTION(git_repository_get_namespace,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 
 	result = git_repository_get_namespace(HHVM_GIT2_V(repo_, repository));
-	return_value = String(result);
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 

@@ -156,8 +156,6 @@ void HHVM_FUNCTION(git_merge_head_free,
 	auto head_ = dyn_cast<Git2Resource>(head);
 
 	git_merge_head_free(HHVM_GIT2_V(head_, merge_head));
-    
-    // todo free resource, too
 }
 
 Resource HHVM_FUNCTION(git_merge_trees,
@@ -165,7 +163,7 @@ Resource HHVM_FUNCTION(git_merge_trees,
 	const Resource& ancestor_tree,
 	const Resource& our_tree,
 	const Resource& their_tree,
-	const Resource& opts)
+	const Array& opts)
 {
 	int result;
 	auto return_value = req::make<Git2Resource>();
@@ -276,7 +274,5 @@ void HHVM_FUNCTION(git_merge_result_free,
 	auto merge_result_ = dyn_cast<Git2Resource>(merge_result);
 
 	git_merge_result_free(HHVM_GIT2_V(merge_result_, merge_result));
-    
-    // todo free resource, too
 }
 

@@ -11,14 +11,14 @@
 
 using namespace HPHP;
 
-Resource HHVM_FUNCTION(git_signature_new,
+Array HHVM_FUNCTION(git_signature_new,
 	const String& name,
 	const String& email,
 	int64_t time,
 	int64_t offset)
 {
 	int result;
-	auto return_value = req::make<Git2Resource>();
+	Array return_value;
 
 	git_signature *out = NULL;
 
@@ -29,20 +29,27 @@ Resource HHVM_FUNCTION(git_signature_new,
 		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
-	HHVM_GIT2_V(return_value, signature) = out;
-	return Resource(return_value);
+	return_value = null_array;
+	return return_value;
 }
 
 Array HHVM_FUNCTION(git_signature_now,
 	const String& name,
 	const String& email)
 {
+	int result;
+	Array return_value;
+
 	git_signature *out = NULL;
-    char *name_ = NULL, *email_ = NULL;
-    Array return_value;
-    
-    git_signature_now(&out, name.c_str(), email.c_str());
-    
+	char *name_ = NULL, *email_ = NULL;
+	
+	result = git_signature_now(&out, name.c_str(), email.c_str());
+	
+	if (result != GIT_OK) {
+		const git_error *error = giterr_last();
+		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
+	}
+	
     if (out->name != NULL) {
         name_ = out->name;
     }
@@ -56,11 +63,11 @@ Array HHVM_FUNCTION(git_signature_now,
     return return_value;
 }
 
-Resource HHVM_FUNCTION(git_signature_default,
+Array HHVM_FUNCTION(git_signature_default,
 	const Resource& repo)
 {
 	int result;
-	auto return_value = req::make<Git2Resource>();
+	Array return_value;
 
 	git_signature *out = NULL;
 
@@ -73,29 +80,25 @@ Resource HHVM_FUNCTION(git_signature_default,
 		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
-	HHVM_GIT2_V(return_value, signature) = out;
-	return Resource(return_value);
+	return_value = null_array;
+	return return_value;
 }
 
-Resource HHVM_FUNCTION(git_signature_dup,
-	const Resource& sig)
+Array HHVM_FUNCTION(git_signature_dup,
+	const Array& sig)
 {
 	git_signature *result;
-	auto return_value = req::make<Git2Resource>();
+	Array return_value;
 
-	auto sig_ = dyn_cast<Git2Resource>(sig);
-
-	result = git_signature_dup(HHVM_GIT2_V(sig_, signature));
-	HHVM_GIT2_V(return_value, signature) = result;
-	return Resource(return_value);
+	result = git_signature_dup(NULL);
+	return_value = null_array;
+	return return_value;
 }
 
 void HHVM_FUNCTION(git_signature_free,
-	const Resource& sig)
+	const Array& sig)
 {
 
-	auto sig_ = dyn_cast<Git2Resource>(sig);
-
-	git_signature_free(HHVM_GIT2_V(sig_, signature));
+	git_signature_free(NULL);
 }
 

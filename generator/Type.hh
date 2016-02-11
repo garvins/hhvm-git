@@ -21,7 +21,7 @@ class Type {
 				"unsigned", "unsigned int", "uint16_t", "uint32_t"),
             HackType::FLOAT    => array(),
             HackType::STRING   => array("char", "unsigned char", "git_oid"),
-            HackType::ARR      => array(),
+            HackType::ARR      => array("git_error", "git_signature"),
             HackType::RESOURCE => array(),
             HackType::CALLABLE => array(),
         );

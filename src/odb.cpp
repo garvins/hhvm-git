@@ -218,12 +218,6 @@ int64_t HHVM_FUNCTION(git_odb_foreach,
 	cb_ = NULL;
 
 	result = git_odb_foreach(HHVM_GIT2_V(db_, odb), /* todo */ cb_, payload_);
-
-	if (result != GIT_OK) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
-	}
-
 	return_value = (int64_t) result;
 	return return_value;
 }

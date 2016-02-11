@@ -44,7 +44,7 @@ Resource HHVM_FUNCTION(git_merge_trees,
 	const Resource& ancestor_tree,
 	const Resource& our_tree,
 	const Resource& their_tree,
-	const Resource& opts);
+	const Array& opts = null_array);
 
 Resource HHVM_FUNCTION(git_merge,
 	const Resource& repo,

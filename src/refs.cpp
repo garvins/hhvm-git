@@ -163,7 +163,13 @@ String HHVM_FUNCTION(git_reference_symbolic_target,
 	auto ref_ = dyn_cast<Git2Resource>(ref);
 
 	result = git_reference_symbolic_target(HHVM_GIT2_V(ref_, reference));
-	return_value = String(result);
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -189,7 +195,13 @@ String HHVM_FUNCTION(git_reference_name,
 	auto ref_ = dyn_cast<Git2Resource>(ref);
 
 	result = git_reference_name(HHVM_GIT2_V(ref_, reference));
-	return_value = String(result);
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -354,12 +366,6 @@ int64_t HHVM_FUNCTION(git_reference_foreach,
 	callback_ = NULL;
 
 	result = git_reference_foreach(HHVM_GIT2_V(repo_, repository), /* todo */ callback_, payload_);
-
-	if (result != GIT_OK) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
-	}
-
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -379,12 +385,6 @@ int64_t HHVM_FUNCTION(git_reference_foreach_name,
 	callback_ = NULL;
 
 	result = git_reference_foreach_name(HHVM_GIT2_V(repo_, repository), /* todo */ callback_, payload_);
-
-	if (result != GIT_OK) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
-	}
-
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -409,12 +409,6 @@ int64_t HHVM_FUNCTION(git_reference_cmp,
 	auto ref2_ = dyn_cast<Git2Resource>(ref2);
 
 	result = git_reference_cmp(HHVM_GIT2_V(ref1_, reference), HHVM_GIT2_V(ref2_, reference));
-
-	if (result != GIT_OK) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
-	}
-
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -503,7 +497,13 @@ String HHVM_FUNCTION(git_reference_next_name,
 		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
-	return_value = String(out);
+
+	if (out != NULL) {
+		return_value = String(out);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -532,12 +532,6 @@ int64_t HHVM_FUNCTION(git_reference_foreach_glob,
 	callback_ = NULL;
 
 	result = git_reference_foreach_glob(HHVM_GIT2_V(repo_, repository), glob.c_str(), /* todo */ callback_, payload_);
-
-	if (result != GIT_OK) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
-	}
-
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -635,7 +629,13 @@ String HHVM_FUNCTION(git_reference_normalize_name,
 		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
-	return_value = String(&buffer_out);
+
+	if (&buffer_out != NULL) {
+		return_value = String(&buffer_out);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -687,7 +687,13 @@ String HHVM_FUNCTION(git_reference_shorthand,
 	auto ref_ = dyn_cast<Git2Resource>(ref);
 
 	result = git_reference_shorthand(HHVM_GIT2_V(ref_, reference));
-	return_value = String(result);
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 

@@ -24,7 +24,13 @@ String HHVM_FUNCTION(git_config_find_global,
 		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
-	return_value = String(&out);
+
+	if (&out != NULL) {
+		return_value = String(&out);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -43,7 +49,13 @@ String HHVM_FUNCTION(git_config_find_xdg,
 		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
-	return_value = String(&out);
+
+	if (&out != NULL) {
+		return_value = String(&out);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -62,7 +74,13 @@ String HHVM_FUNCTION(git_config_find_system,
 		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
-	return_value = String(&out);
+
+	if (&out != NULL) {
+		return_value = String(&out);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -320,7 +338,13 @@ String HHVM_FUNCTION(git_config_get_string,
 		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
 
-	return_value = String(out);
+
+	if (out != NULL) {
+		return_value = String(out);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -341,12 +365,6 @@ int64_t HHVM_FUNCTION(git_config_get_multivar_foreach,
 	callback_ = NULL;
 
 	result = git_config_get_multivar_foreach(HHVM_GIT2_V(cfg_, config), name.c_str(), regexp.c_str(), /* todo */ callback_, payload_);
-
-	if (result != GIT_OK) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
-	}
-
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -570,12 +588,6 @@ int64_t HHVM_FUNCTION(git_config_foreach,
 	callback_ = NULL;
 
 	result = git_config_foreach(HHVM_GIT2_V(cfg_, config), /* todo */ callback_, payload_);
-
-	if (result != GIT_OK) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
-	}
-
 	return_value = (int64_t) result;
 	return return_value;
 }
@@ -639,12 +651,6 @@ int64_t HHVM_FUNCTION(git_config_foreach_match,
 	callback_ = NULL;
 
 	result = git_config_foreach_match(HHVM_GIT2_V(cfg_, config), regexp.c_str(), /* todo */ callback_, payload_);
-
-	if (result != GIT_OK) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
-	}
-
 	return_value = (int64_t) result;
 	return return_value;
 }

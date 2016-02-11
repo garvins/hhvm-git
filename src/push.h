@@ -17,7 +17,7 @@ Resource HHVM_FUNCTION(git_push_new,
 
 int64_t HHVM_FUNCTION(git_push_set_options,
 	const Resource& push,
-	const Resource& opts);
+	const Array& opts = null_array);
 
 int64_t HHVM_FUNCTION(git_push_set_callbacks,
 	const Resource& push,

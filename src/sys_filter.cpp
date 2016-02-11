@@ -101,7 +101,13 @@ String HHVM_FUNCTION(git_filter_source_path,
 	auto src_ = dyn_cast<Git2Resource>(src);
 
 	result = git_filter_source_path(HHVM_GIT2_V(src_, filter_source));
-	return_value = String(result);
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 

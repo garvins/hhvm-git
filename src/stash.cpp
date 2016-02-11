@@ -11,7 +11,7 @@ using namespace HPHP;
 
 String HHVM_FUNCTION(git_stash_save,
 	const Resource& repo,
-	const Resource& stasher,
+	const Array& stasher,
 	const String& message,
 	int64_t flags)
 {
@@ -21,9 +21,8 @@ String HHVM_FUNCTION(git_stash_save,
 	git_oid out;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	auto stasher_ = dyn_cast<Git2Resource>(stasher);
 
-	result = git_stash_save(&out, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(stasher_, signature), message.c_str(), (unsigned int) flags);
+	result = git_stash_save(&out, HHVM_GIT2_V(repo_, repository), NULL, message.c_str(), (unsigned int) flags);
 
 	if (result != GIT_OK) {
 		const git_error *error = giterr_last();
@@ -49,12 +48,6 @@ int64_t HHVM_FUNCTION(git_stash_foreach,
 	callback_ = NULL;
 
 	result = git_stash_foreach(HHVM_GIT2_V(repo_, repository), /* todo */ callback_, payload_);
-
-	if (result != GIT_OK) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
-	}
-
 	return_value = (int64_t) result;
 	return return_value;
 }

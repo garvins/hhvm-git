@@ -65,7 +65,6 @@ Resource HHVM_FUNCTION(git_diff_index_to_workdir,
 	const Resource& index,
 	const Array& opts)
 {
-	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_diff *diff = NULL;
@@ -73,13 +72,7 @@ Resource HHVM_FUNCTION(git_diff_index_to_workdir,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto index_ = dyn_cast<Git2Resource>(index);
 
-	result = git_diff_index_to_workdir(&diff, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(index_, index), NULL);
-
-	if (result != GIT_OK) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
-	}
-
+	git_diff_index_to_workdir(&diff, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(index_, index), NULL);
 	HHVM_GIT2_V(return_value, diff) = diff;
 	return Resource(return_value);
 }
@@ -89,7 +82,6 @@ Resource HHVM_FUNCTION(git_diff_tree_to_workdir,
 	const Resource& old_tree,
 	const Array& opts)
 {
-	int result;
 	auto return_value = req::make<Git2Resource>();
 
 	git_diff *diff = NULL;
@@ -97,13 +89,7 @@ Resource HHVM_FUNCTION(git_diff_tree_to_workdir,
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto old_tree_ = dyn_cast<Git2Resource>(old_tree);
 
-	result = git_diff_tree_to_workdir(&diff, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(old_tree_, tree), NULL);
-
-	if (result != GIT_OK) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
-	}
-
+	git_diff_tree_to_workdir(&diff, HHVM_GIT2_V(repo_, repository), HHVM_GIT2_V(old_tree_, tree), NULL);
 	HHVM_GIT2_V(return_value, diff) = diff;
 	return Resource(return_value);
 }
@@ -148,15 +134,14 @@ int64_t HHVM_FUNCTION(git_diff_merge,
 
 int64_t HHVM_FUNCTION(git_diff_find_similar,
 	const Resource& diff,
-	const Resource& options)
+	const Array& options)
 {
 	int result;
 	int64_t return_value;
 
 	auto diff_ = dyn_cast<Git2Resource>(diff);
-	auto options_ = dyn_cast<Git2Resource>(options);
 
-	result = git_diff_find_similar(HHVM_GIT2_V(diff_, diff), HHVM_GIT2_V(options_, diff_find_options));
+	result = git_diff_find_similar(HHVM_GIT2_V(diff_, diff), NULL);
 
 	if (result != GIT_OK) {
 		const git_error *error = giterr_last();
@@ -168,15 +153,13 @@ int64_t HHVM_FUNCTION(git_diff_find_similar,
 }
 
 int64_t HHVM_FUNCTION(git_diff_options_init,
-	const Resource& options,
+	const Array& options,
 	int64_t version)
 {
 	int result;
 	int64_t return_value;
 
-	auto options_ = dyn_cast<Git2Resource>(options);
-
-	result = git_diff_options_init(HHVM_GIT2_V(options_, diff_options), (unsigned int) version);
+	result = git_diff_options_init(NULL, (unsigned int) version);
 
 	if (result != GIT_OK) {
 		const git_error *error = giterr_last();
@@ -272,12 +255,6 @@ int64_t HHVM_FUNCTION(git_diff_foreach,
 	line_cb_ = NULL;
 
 	result = git_diff_foreach(HHVM_GIT2_V(diff_, diff), /* todo */ file_cb_, /* todo */ hunk_cb_, /* todo */ line_cb_, payload_);
-
-	if (result != GIT_OK) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
-	}
-
 	return_value = (int64_t) result;
 	return return_value;
 }

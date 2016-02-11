@@ -51,7 +51,7 @@ function git_blame_get_hunk_byline(resource $blame,
 <<__Native>>
 function git_blame_file(resource $repo,
                         string $path,
-                        resource $options): resource;
+                        ?array $options = array()): resource;
 
 <<__Native>>
 function git_blame_buffer(resource $reference,
@@ -194,17 +194,17 @@ function git_checkout_opts_new(): array;
 
 <<__Native>>
 function git_checkout_head(resource $repo,
-                           array $opts): int;
+                           ?array $opts = array()): int;
 
 <<__Native>>
 function git_checkout_index(resource $repo,
                             resource $index,
-                            array $opts): int;
+                            ?array $opts = array()): int;
 
 <<__Native>>
 function git_checkout_tree(resource $repo,
                            resource $treeish,
-                           array $opts): int;
+                           ?array $opts = array()): int;
 
 
 // --------------- clone.h ---------------
@@ -212,12 +212,12 @@ function git_checkout_tree(resource $repo,
 <<__Native>>
 function git_clone(string $url,
                    string $local_path,
-                   resource $options): resource;
+                   ?array $options = array()): resource;
 
 <<__Native>>
 function git_clone_into(resource $repo,
                         resource $remote,
-                        resource $co_opts,
+                        array $co_opts,
                         string $branch): int;
 
 
@@ -257,7 +257,7 @@ function git_commit_time(resource $commit): int;
 function git_commit_time_offset(resource $commit): int;
 
 <<__Native>>
-function git_commit_committer(resource $commit): resource;
+function git_commit_committer(resource $commit): array;
 
 <<__Native>>
 function git_commit_author(resource $commit): array;
@@ -299,8 +299,8 @@ function git_commit_create(resource $repo,
 <<__Native>>
 function git_commit_create_v(resource $repo,
                              string $update_ref,
-                             resource $author,
-                             resource $committer,
+                             array $author,
+                             array $committer,
                              string $message_encoding,
                              string $message,
                              resource $tree,
@@ -525,10 +525,10 @@ function git_diff_merge(resource $onto,
 
 <<__Native>>
 function git_diff_find_similar(resource $diff,
-                               resource $options): int;
+                               ?array $options = array()): int;
 
 <<__Native>>
-function git_diff_options_init(resource $options,
+function git_diff_options_init(array $options,
                                int $version): int;
 
 <<__Native>>
@@ -566,7 +566,7 @@ function git_diff_blobs(resource $old_blob,
                         string $old_as_path,
                         resource $new_blob,
                         string $new_as_path,
-                        resource $options,
+                        array $options,
                         mixed $file_cb,
                         mixed $hunk_cb,
                         mixed $line_cb,
@@ -577,7 +577,7 @@ function git_diff_blob_to_buffer(string $old_as_path,
                                  string $buffer,
                                  int $buffer_len,
                                  string $buffer_as_path,
-                                 resource $options,
+                                 array $options,
                                  mixed $file_cb,
                                  mixed $hunk_cb,
                                  mixed $line_cb,
@@ -593,7 +593,7 @@ function giterr_last(): array;
 function giterr_clear(): void;
 
 <<__Native>>
-function giterr_detach(resource $cpy): int;
+function giterr_detach(array $cpy): int;
 
 <<__Native>>
 function giterr_set_str(int $error_class,
@@ -849,7 +849,7 @@ function git_merge_trees(resource $repo,
                          resource $ancestor_tree,
                          resource $our_tree,
                          resource $their_tree,
-                         ?resource $opts = null): resource;
+                         ?array $opts = array()): resource;
 
 <<__Native>>
 function git_merge(resource $repo,
@@ -903,8 +903,8 @@ function git_note_oid(resource $note): string;
 
 <<__Native>>
 function git_note_create(resource $repo,
-                         resource $author,
-                         resource $committer,
+                         array $author,
+                         array $committer,
                          string $notes_ref,
                          string $oid,
                          string $note,
@@ -913,8 +913,8 @@ function git_note_create(resource $repo,
 <<__Native>>
 function git_note_remove(resource $repo,
                          string $notes_ref,
-                         resource $author,
-                         resource $committer,
+                         array $author,
+                         array $committer,
                          string $oid): int;
 
 <<__Native>>
@@ -1247,7 +1247,7 @@ function git_patch_from_blobs(resource $old_blob,
                               string $old_as_path,
                               resource $new_blob,
                               string $new_as_path,
-                              resource $opts): resource;
+                              ?array $opts = array()): resource;
 
 <<__Native>>
 function git_patch_from_blob_and_buffer(resource $old_blob,
@@ -1255,7 +1255,7 @@ function git_patch_from_blob_and_buffer(resource $old_blob,
                                         string $buffer,
                                         int $buffer_len,
                                         string $buffer_as_path,
-                                        resource $opts): resource;
+                                        ?array $opts = array()): resource;
 
 <<__Native>>
 function git_patch_free(resource $patch): void;
@@ -1361,7 +1361,7 @@ function git_push_new(resource $remote): resource;
 
 <<__Native>>
 function git_push_set_options(resource $push,
-                              resource $opts): int;
+                              ?array $opts = array()): int;
 
 <<__Native>>
 function git_push_set_callbacks(resource $push,
@@ -1419,14 +1419,14 @@ function git_reflog_write(resource $reflog): int;
 <<__Native>>
 function git_reflog_append(resource $reflog,
                            string $id,
-                           resource $committer,
+                           array $committer,
                            string $msg): int;
 
 <<__Native>>
 function git_reflog_append_to(resource $repo,
                               string $name,
                               string $id,
-                              resource $committer,
+                              array $committer,
                               string $msg): int;
 
 <<__Native>>
@@ -1457,7 +1457,7 @@ function git_reflog_entry_id_old(resource $entry): string;
 function git_reflog_entry_id_new(resource $entry): string;
 
 <<__Native>>
-function git_reflog_entry_committer(resource $entry): resource;
+function git_reflog_entry_committer(resource $entry): array;
 
 <<__Native>>
 function git_reflog_entry_message(resource $entry): string;
@@ -1823,7 +1823,7 @@ function git_repository_init(string $path,
 
 <<__Native>>
 function git_repository_init_ext(string $repo_path,
-                                 resource $opts): resource;
+                                 ?array $opts = array()): resource;
 
 <<__Native>>
 function git_repository_head(resource $repo): resource;
@@ -2008,27 +2008,27 @@ function git_revwalk_repository(resource $walk): resource;
 function git_signature_new(string $name,
                            string $email,
                            int $time,
-                           int $offset): resource;
+                           int $offset): array;
 
 <<__Native>>
 function git_signature_now(string $name,
                            string $email): array;
 
 <<__Native>>
-function git_signature_default(resource $repo): resource;
+function git_signature_default(resource $repo): array;
 
 <<__Native>>
-function git_signature_dup(resource $sig): resource;
+function git_signature_dup(array $sig): array;
 
 <<__Native>>
-function git_signature_free(resource $sig): void;
+function git_signature_free(array $sig): void;
 
 
 // --------------- stash.h ---------------
 
 <<__Native>>
 function git_stash_save(resource $repo,
-                        resource $stasher,
+                        array $stasher,
                         string $message,
                         int $flags): string;
 
@@ -2051,7 +2051,7 @@ function git_status_foreach(resource $repo,
 
 <<__Native>>
 function git_status_foreach_ext(resource $repo,
-                                resource $opts,
+                                array $opts,
                                 mixed $callback,
                                 mixed $payload): int;
 
@@ -2062,7 +2062,7 @@ function git_status_file(int $status_flags,
 
 <<__Native>>
 function git_status_list_new(resource $repo,
-                             resource $opts): resource;
+                             ?array $opts = array()): resource;
 
 <<__Native>>
 function git_status_list_entrycount(resource $statuslist): int;
@@ -2193,8 +2193,8 @@ function git_submodule_location(int $location_status,
 <<__Native>>
 function git_commit_create_from_oids(resource $repo,
                                      string $update_ref,
-                                     resource $author,
-                                     resource $committer,
+                                     array $author,
+                                     array $committer,
                                      string $message_encoding,
                                      string $message,
                                      string $tree,
@@ -2404,7 +2404,7 @@ function git_tag_target_type(resource $tag): int;
 function git_tag_name(resource $tag): string;
 
 <<__Native>>
-function git_tag_tagger(resource $tag): resource;
+function git_tag_tagger(resource $tag): array;
 
 <<__Native>>
 function git_tag_message(resource $tag): string;
@@ -2413,7 +2413,7 @@ function git_tag_message(resource $tag): string;
 function git_tag_create(resource $repo,
                         string $tag_name,
                         resource $target,
-                        resource $tagger,
+                        array $tagger,
                         string $message,
                         int $force): string;
 
@@ -2421,7 +2421,7 @@ function git_tag_create(resource $repo,
 function git_tag_annotation_create(resource $repo,
                                    string $tag_name,
                                    resource $target,
-                                   resource $tagger,
+                                   array $tagger,
                                    string $message): string;
 
 <<__Native>>

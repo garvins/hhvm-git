@@ -17,7 +17,7 @@ Array HHVM_FUNCTION(giterr_last);
 void HHVM_FUNCTION(giterr_clear);
 
 int64_t HHVM_FUNCTION(giterr_detach,
-	const Resource& cpy);
+	const Array& cpy);
 
 void HHVM_FUNCTION(giterr_set_str,
 	int64_t error_class,

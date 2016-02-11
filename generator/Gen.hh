@@ -172,8 +172,27 @@ class Gen {
                         
                         $match2 = array();
                         
-                        if (preg_match("/^([\s\S]+?)\s+\**(\w+)$/", $v1, $match2)) {
-                            $content .= Type::hhvmTypeToHack(trim($match2[1]))." $".$match2[2];
+                        if (preg_match("/^([\s\S]+?)\s+\**(\w+)(\s*=\s*\w+)?$/", $v1, $match2)) {
+							$hackType = Type::hhvmTypeToHack(trim($match2[1]));
+							
+							$content .= (count($match2) > 3 ? "?" : "") . $hackType . " $" . $match2[2];
+							
+							if (count($match2) > 3) {
+								switch ($hackType) {
+									case HackType::BOOL:
+										$content .= " = false";break;
+									case HackType::INT:
+										$content .= " = 0";break;
+									case HackType::FLOAT:
+										$content .= " = 0.0";break;
+									case HackType::STRING:
+										$content .= " = \"\"";break;
+									case HackType::ARR:
+										$content .= " = array()";break;
+									default:
+										$content .= " = null";
+								}
+							}
                         } else {
                             if (strlen(trim($v1) > 0)) {
                                 $content .= "ERROR";

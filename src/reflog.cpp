@@ -5,6 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
+#include "hphp/runtime/base/array-init.h"
+
 #include "reflog.h"
 
 using namespace HPHP;
@@ -53,7 +55,7 @@ int64_t HHVM_FUNCTION(git_reflog_write,
 int64_t HHVM_FUNCTION(git_reflog_append,
 	const Resource& reflog,
 	const String& id,
-	const Resource& committer,
+	const Array& committer,
 	const String& msg)
 {
 	int result;
@@ -66,9 +68,8 @@ int64_t HHVM_FUNCTION(git_reflog_append,
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
-	auto committer_ = dyn_cast<Git2Resource>(committer);
 
-	result = git_reflog_append(HHVM_GIT2_V(reflog_, reflog), &id_, HHVM_GIT2_V(committer_, signature), msg.c_str());
+	result = git_reflog_append(HHVM_GIT2_V(reflog_, reflog), &id_, NULL, msg.c_str());
 
 	if (result != GIT_OK) {
 		const git_error *error = giterr_last();
@@ -83,7 +84,7 @@ int64_t HHVM_FUNCTION(git_reflog_append_to,
 	const Resource& repo,
 	const String& name,
 	const String& id,
-	const Resource& committer,
+	const Array& committer,
 	const String& msg)
 {
 	int result;
@@ -96,9 +97,8 @@ int64_t HHVM_FUNCTION(git_reflog_append_to,
 		const git_error *error = giterr_last();
 		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
 	}
-	auto committer_ = dyn_cast<Git2Resource>(committer);
 
-	result = git_reflog_append_to(HHVM_GIT2_V(repo_, repository), name.c_str(), &id_, HHVM_GIT2_V(committer_, signature), msg.c_str());
+	result = git_reflog_append_to(HHVM_GIT2_V(repo_, repository), name.c_str(), &id_, NULL, msg.c_str());
 
 	if (result != GIT_OK) {
 		const git_error *error = giterr_last();
@@ -218,17 +218,17 @@ String HHVM_FUNCTION(git_reflog_entry_id_new,
 	return String(return_value);
 }
 
-Resource HHVM_FUNCTION(git_reflog_entry_committer,
+Array HHVM_FUNCTION(git_reflog_entry_committer,
 	const Resource& entry)
 {
 	const git_signature *result;
-	auto return_value = req::make<Git2Resource>();
+	Array return_value;
 
 	auto entry_ = dyn_cast<Git2Resource>(entry);
 
 	result = git_reflog_entry_committer(HHVM_GIT2_V(entry_, reflog_entry));
-	//HHVM_GIT2_V(return_value, signature) = result; todo return as array
-	return Resource(return_value);
+	return_value = null_array;
+	return return_value;
 }
 
 String HHVM_FUNCTION(git_reflog_entry_message,
@@ -240,7 +240,13 @@ String HHVM_FUNCTION(git_reflog_entry_message,
 	auto entry_ = dyn_cast<Git2Resource>(entry);
 
 	result = git_reflog_entry_message(HHVM_GIT2_V(entry_, reflog_entry));
-	return_value = String(result);
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 

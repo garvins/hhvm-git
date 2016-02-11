@@ -6,6 +6,7 @@
  */
 
 #include "hphp/runtime/base/array-init.h"
+
 #include "commit.h"
 
 using namespace HPHP;
@@ -68,11 +69,10 @@ Resource HHVM_FUNCTION(git_commit_lookup_prefix,
 void HHVM_FUNCTION(git_commit_free,
 	const Resource& commit)
 {
+
 	auto commit_ = dyn_cast<Git2Resource>(commit);
 
 	git_commit_free(HHVM_GIT2_V(commit_, commit));
-    
-    // todo free resource, too
 }
 
 String HHVM_FUNCTION(git_commit_id,
@@ -110,7 +110,13 @@ String HHVM_FUNCTION(git_commit_message_encoding,
 	auto commit_ = dyn_cast<Git2Resource>(commit);
 
 	result = git_commit_message_encoding(HHVM_GIT2_V(commit_, commit));
-	return_value = String(result);
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -123,7 +129,13 @@ String HHVM_FUNCTION(git_commit_message,
 	auto commit_ = dyn_cast<Git2Resource>(commit);
 
 	result = git_commit_message(HHVM_GIT2_V(commit_, commit));
-	return_value = String(result);
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -136,7 +148,13 @@ String HHVM_FUNCTION(git_commit_message_raw,
 	auto commit_ = dyn_cast<Git2Resource>(commit);
 
 	result = git_commit_message_raw(HHVM_GIT2_V(commit_, commit));
-	return_value = String(result);
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -172,17 +190,17 @@ int64_t HHVM_FUNCTION(git_commit_time_offset,
 	return return_value;
 }
 
-Resource HHVM_FUNCTION(git_commit_committer,
+Array HHVM_FUNCTION(git_commit_committer,
 	const Resource& commit)
 {
 	const git_signature *result;
-	auto return_value = req::make<Git2Resource>();
+	Array return_value;
 
 	auto commit_ = dyn_cast<Git2Resource>(commit);
 
 	result = git_commit_committer(HHVM_GIT2_V(commit_, commit));
-	//HHVM_GIT2_V(return_value, signature) = result; todo return as array
-	return Resource(return_value);
+	return_value = null_array;
+	return return_value;
 }
 
 Array HHVM_FUNCTION(git_commit_author,
@@ -218,7 +236,13 @@ String HHVM_FUNCTION(git_commit_raw_header,
 	auto commit_ = dyn_cast<Git2Resource>(commit);
 
 	result = git_commit_raw_header(HHVM_GIT2_V(commit_, commit));
-	return_value = String(result);
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -387,8 +411,8 @@ String HHVM_FUNCTION(git_commit_create,
 String HHVM_FUNCTION(git_commit_create_v,
 	const Resource& repo,
 	const String& update_ref,
-	const Resource& author,
-	const Resource& committer,
+	const Array& author,
+	const Array& committer,
 	const String& message_encoding,
 	const String& message,
 	const Resource& tree,
@@ -400,11 +424,9 @@ String HHVM_FUNCTION(git_commit_create_v,
 	git_oid id;
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
-	auto author_ = dyn_cast<Git2Resource>(author);
-	auto committer_ = dyn_cast<Git2Resource>(committer);
 	auto tree_ = dyn_cast<Git2Resource>(tree);
 
-	result = git_commit_create_v(&id, HHVM_GIT2_V(repo_, repository), update_ref.c_str(), HHVM_GIT2_V(author_, signature), HHVM_GIT2_V(committer_, signature), message_encoding.c_str(), message.c_str(), HHVM_GIT2_V(tree_, tree), (int) parent_count);
+	result = git_commit_create_v(&id, HHVM_GIT2_V(repo_, repository), update_ref.c_str(), NULL, NULL, message_encoding.c_str(), message.c_str(), HHVM_GIT2_V(tree_, tree), (int) parent_count);
 
 	if (result != GIT_OK) {
 		const git_error *error = giterr_last();

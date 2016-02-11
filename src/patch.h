@@ -21,7 +21,7 @@ Resource HHVM_FUNCTION(git_patch_from_blobs,
 	const String& old_as_path,
 	const Resource& new_blob,
 	const String& new_as_path,
-	const Resource& opts);
+	const Array& opts = null_array);
 
 Resource HHVM_FUNCTION(git_patch_from_blob_and_buffer,
 	const Resource& old_blob,
@@ -29,7 +29,7 @@ Resource HHVM_FUNCTION(git_patch_from_blob_and_buffer,
 	const String& buffer,
 	int64_t buffer_len,
 	const String& buffer_as_path,
-	const Resource& opts);
+	const Array& opts = null_array);
 
 void HHVM_FUNCTION(git_patch_free,
 	const Resource& patch);

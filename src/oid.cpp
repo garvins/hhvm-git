@@ -94,7 +94,13 @@ String HHVM_FUNCTION(git_oid_fmt,
 	}
 
 	git_oid_fmt(&out, &id_);
-	return_value = String(&out);
+
+	if (&out != NULL) {
+		return_value = String(&out);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -113,7 +119,13 @@ String HHVM_FUNCTION(git_oid_nfmt,
 	}
 
 	git_oid_nfmt(&out, (size_t) n, &id_);
-	return_value = String(&out);
+
+	if (&out != NULL) {
+		return_value = String(&out);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -131,7 +143,13 @@ String HHVM_FUNCTION(git_oid_pathfmt,
 	}
 
 	git_oid_pathfmt(&out, &id_);
-	return_value = String(&out);
+
+	if (&out != NULL) {
+		return_value = String(&out);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -149,7 +167,13 @@ String HHVM_FUNCTION(git_oid_allocfmt,
 	}
 
 	result = git_oid_allocfmt(&id_);
-	return_value = String(result);
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -168,7 +192,13 @@ String HHVM_FUNCTION(git_oid_tostr,
 	}
 
 	git_oid_tostr(&out, (size_t) n, &id_);
-	return_value = String(&out);
+
+	if (&out != NULL) {
+		return_value = String(&out);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 

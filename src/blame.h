@@ -26,7 +26,7 @@ Resource HHVM_FUNCTION(git_blame_get_hunk_byline,
 Resource HHVM_FUNCTION(git_blame_file,
 	const Resource& repo,
 	const String& path,
-	const Resource& options);
+	const Array& options = null_array);
 
 Resource HHVM_FUNCTION(git_blame_buffer,
 	const Resource& reference,

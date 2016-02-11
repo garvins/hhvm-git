@@ -48,10 +48,10 @@ int64_t HHVM_FUNCTION(git_diff_merge,
 
 int64_t HHVM_FUNCTION(git_diff_find_similar,
 	const Resource& diff,
-	const Resource& options);
+	const Array& options = null_array);
 
 int64_t HHVM_FUNCTION(git_diff_options_init,
-	const Resource& options,
+	const Array& options,
 	int64_t version);
 
 int64_t HHVM_FUNCTION(git_diff_num_deltas,
@@ -89,7 +89,7 @@ int64_t HHVM_FUNCTION(git_diff_blobs,
 	const String& old_as_path,
 	const Resource& new_blob,
 	const String& new_as_path,
-	const Resource& options,
+	const Array& options,
 	const Variant& file_cb,
 	const Variant& hunk_cb,
 	const Variant& line_cb,
@@ -101,7 +101,7 @@ int64_t HHVM_FUNCTION(git_diff_blob_to_buffer,
 	const String& buffer,
 	int64_t buffer_len,
 	const String& buffer_as_path,
-	const Resource& options,
+	const Array& options,
 	const Variant& file_cb,
 	const Variant& hunk_cb,
 	const Variant& line_cb,

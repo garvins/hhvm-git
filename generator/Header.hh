@@ -44,12 +44,15 @@ class Header extends Printer {
             $body .= "\n";
             $body .= $returnType . " HHVM_FUNCTION(" . $function->getName() . ",";
             
+			$paramCount = count($function->getParams());
             foreach ($function->getParams() as $k => $param) {
                 if ($k == 0 && $hasOutValue) {
                     continue;
                 }
-                
-                if ($param->getPointerLvl() > 1) {
+				
+				if ($param->isOption() && $k == $paramCount - 1) {
+					$body .= "\n\t" . $param->getType()->getHHVMType() . " " . $param->getName() . " = null_array,";
+				} else if ($param->getPointerLvl() > 1) {
                     $body .= "\n\tconst Array& " . $param->getName() . ",";
                 } else {
                     $body .= "\n\t" . $param->getType()->getHHVMType() . " " . $param->getName() . ",";

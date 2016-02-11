@@ -152,7 +152,13 @@ String HHVM_FUNCTION(git_submodule_name,
 	auto submodule_ = dyn_cast<Git2Resource>(submodule);
 
 	result = git_submodule_name(HHVM_GIT2_V(submodule_, submodule));
-	return_value = String(result);
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -165,7 +171,13 @@ String HHVM_FUNCTION(git_submodule_path,
 	auto submodule_ = dyn_cast<Git2Resource>(submodule);
 
 	result = git_submodule_path(HHVM_GIT2_V(submodule_, submodule));
-	return_value = String(result);
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -178,7 +190,13 @@ String HHVM_FUNCTION(git_submodule_url,
 	auto submodule_ = dyn_cast<Git2Resource>(submodule);
 
 	result = git_submodule_url(HHVM_GIT2_V(submodule_, submodule));
-	return_value = String(result);
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 

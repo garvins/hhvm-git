@@ -151,6 +151,7 @@ class Parser {
                     $typeName = preg_replace("/const /", "", $typeName);
                     $parameter->setType(new Type($typeName));
                     $parameter->setPointerLvl($pointerLvl);
+					$parameter->setOption((preg_match("/\w+_opt\w*/", $typeName)) ? true : false);
                     $parameter->setConstant(strpos($param, "const") !== false ? true : false);
                     
                     if (strlen($parameter->getName())) {

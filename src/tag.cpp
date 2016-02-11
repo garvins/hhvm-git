@@ -5,6 +5,8 @@
  * a Linking Exception. For full terms see the included LICENSE file.
  */
 
+#include "hphp/runtime/base/array-init.h"
+
 #include "tag.h"
 
 using namespace HPHP;
@@ -155,21 +157,27 @@ String HHVM_FUNCTION(git_tag_name,
 	auto tag_ = dyn_cast<Git2Resource>(tag);
 
 	result = git_tag_name(HHVM_GIT2_V(tag_, tag));
-	return_value = String(result);
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
-Resource HHVM_FUNCTION(git_tag_tagger,
+Array HHVM_FUNCTION(git_tag_tagger,
 	const Resource& tag)
 {
 	const git_signature *result;
-	auto return_value = req::make<Git2Resource>();
+	Array return_value;
 
 	auto tag_ = dyn_cast<Git2Resource>(tag);
 
 	result = git_tag_tagger(HHVM_GIT2_V(tag_, tag));
-	//HHVM_GIT2_V(return_value, signature) = result; todo return as array
-	return Resource(return_value);
+	return_value = null_array;
+	return return_value;
 }
 
 String HHVM_FUNCTION(git_tag_message,
@@ -181,7 +189,13 @@ String HHVM_FUNCTION(git_tag_message,
 	auto tag_ = dyn_cast<Git2Resource>(tag);
 
 	result = git_tag_message(HHVM_GIT2_V(tag_, tag));
-	return_value = String(result);
+
+	if (result != NULL) {
+		return_value = String(result);
+	} else {
+		return_value = "";
+	}
+
 	return return_value;
 }
 
@@ -189,7 +203,7 @@ String HHVM_FUNCTION(git_tag_create,
 	const Resource& repo,
 	const String& tag_name,
 	const Resource& target,
-	const Resource& tagger,
+	const Array& tagger,
 	const String& message,
 	int64_t force)
 {
@@ -200,9 +214,8 @@ String HHVM_FUNCTION(git_tag_create,
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto target_ = dyn_cast<Git2Resource>(target);
-	auto tagger_ = dyn_cast<Git2Resource>(tagger);
 
-	result = git_tag_create(&oid, HHVM_GIT2_V(repo_, repository), tag_name.c_str(), HHVM_GIT2_V(target_, object), HHVM_GIT2_V(tagger_, signature), message.c_str(), (int) force);
+	result = git_tag_create(&oid, HHVM_GIT2_V(repo_, repository), tag_name.c_str(), HHVM_GIT2_V(target_, object), NULL, message.c_str(), (int) force);
 
 	if (result != GIT_OK) {
 		const git_error *error = giterr_last();
@@ -217,7 +230,7 @@ String HHVM_FUNCTION(git_tag_annotation_create,
 	const Resource& repo,
 	const String& tag_name,
 	const Resource& target,
-	const Resource& tagger,
+	const Array& tagger,
 	const String& message)
 {
 	int result;
@@ -227,9 +240,8 @@ String HHVM_FUNCTION(git_tag_annotation_create,
 
 	auto repo_ = dyn_cast<Git2Resource>(repo);
 	auto target_ = dyn_cast<Git2Resource>(target);
-	auto tagger_ = dyn_cast<Git2Resource>(tagger);
 
-	result = git_tag_annotation_create(&oid, HHVM_GIT2_V(repo_, repository), tag_name.c_str(), HHVM_GIT2_V(target_, object), HHVM_GIT2_V(tagger_, signature), message.c_str());
+	result = git_tag_annotation_create(&oid, HHVM_GIT2_V(repo_, repository), tag_name.c_str(), HHVM_GIT2_V(target_, object), NULL, message.c_str());
 
 	if (result != GIT_OK) {
 		const git_error *error = giterr_last();
@@ -366,12 +378,6 @@ int64_t HHVM_FUNCTION(git_tag_foreach,
 	callback_ = NULL;
 
 	result = git_tag_foreach(HHVM_GIT2_V(repo_, repository), /* todo */ callback_, payload_);
-
-	if (result != GIT_OK) {
-		const git_error *error = giterr_last();
-		SystemLib::throwInvalidArgumentExceptionObject(error ? error->message : "no error message");
-	}
-
 	return_value = (int64_t) result;
 	return return_value;
 }

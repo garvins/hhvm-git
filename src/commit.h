@@ -45,7 +45,7 @@ int64_t HHVM_FUNCTION(git_commit_time,
 int64_t HHVM_FUNCTION(git_commit_time_offset,
 	const Resource& commit);
 
-Resource HHVM_FUNCTION(git_commit_committer,
+Array HHVM_FUNCTION(git_commit_committer,
 	const Resource& commit);
 
 Array HHVM_FUNCTION(git_commit_author,
@@ -88,8 +88,8 @@ String HHVM_FUNCTION(git_commit_create,
 String HHVM_FUNCTION(git_commit_create_v,
 	const Resource& repo,
 	const String& update_ref,
-	const Resource& author,
-	const Resource& committer,
+	const Array& author,
+	const Array& committer,
 	const String& message_encoding,
 	const String& message,
 	const Resource& tree,
