@@ -40,7 +40,7 @@ class Gen {
             }
             
             // todo add preprocessor hhvm version check
-            $content .= "#define HHVM_RC_INT_SAME(const_name)                  \\\n" .
+            $content .= "\n#define HHVM_RC_INT_SAME(const_name)                  \\\n" .
             	"Native::registerConstant<KindOfInt64>(                \\\n" .
            	 	"makeStaticString(#const_name), (int64_t)const_name);\n\n" .
             	"namespace HPHP {\n\n" .
@@ -84,7 +84,13 @@ class Gen {
             }
             
             $content .= "\n\n      loadSystemlib();\n" .
-            	"  }\n" .
+            	"  }\n\n" .
+				"  virtual void requestInit() {\n" .
+				"    git_threads_init();\n" .
+				"  }\n\n" .
+				"  virtual void requestShutdown() {\n" .
+				"    git_threads_shutdown();\n" .
+				"  }\n" .
             	"} s_git2_extension;\n\n" .
             	"HHVM_GET_MODULE(git2)\n} // namespace HPHP\n";
             
