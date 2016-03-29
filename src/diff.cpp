@@ -369,7 +369,7 @@ int64_t HHVM_FUNCTION(git_diff_blobs,
 	const String& old_as_path,
 	const Resource& new_blob,
 	const String& new_as_path,
-	const Resource& options,
+	const Array& options,
 	const Variant& file_cb,
 	const Variant& hunk_cb,
 	const Variant& line_cb,
@@ -385,13 +385,11 @@ int64_t HHVM_FUNCTION(git_diff_blobs,
 
 	auto old_blob_ = dyn_cast<Git2Resource>(old_blob);
 	auto new_blob_ = dyn_cast<Git2Resource>(new_blob);
-	auto options_ = dyn_cast<Git2Resource>(options);
 	file_cb_ = NULL;
 	hunk_cb_ = NULL;
 	line_cb_ = NULL;
 
-    //todo next
-	result = git_diff_blobs(HHVM_GIT2_V(old_blob_, blob), old_as_path.c_str(), HHVM_GIT2_V(new_blob_, blob), new_as_path.c_str(), HHVM_GIT2_V(options_, diff_options), /* todo */ file_cb_, /* todo */ hunk_cb_, /* todo */ line_cb_, payload_);
+	result = git_diff_blobs(HHVM_GIT2_V(old_blob_, blob), old_as_path.c_str(), HHVM_GIT2_V(new_blob_, blob), new_as_path.c_str(), NULL, /* todo */ file_cb_, /* todo */ hunk_cb_, /* todo */ line_cb_, payload_);
 
 	if (result != GIT_OK) {
 		const git_error *error = giterr_last();
@@ -408,7 +406,7 @@ int64_t HHVM_FUNCTION(git_diff_blob_to_buffer,
 	const String& buffer,
 	int64_t buffer_len,
 	const String& buffer_as_path,
-	const Resource& options,
+	const Array& options,
 	const Variant& file_cb,
 	const Variant& hunk_cb,
 	const Variant& line_cb,
@@ -423,12 +421,11 @@ int64_t HHVM_FUNCTION(git_diff_blob_to_buffer,
 	void *payload_ = NULL;
     
     auto old_blob_ = dyn_cast<Git2Resource>(old_blob);
-	auto options_ = dyn_cast<Git2Resource>(options);
 	file_cb_ = NULL;
 	hunk_cb_ = NULL;
 	line_cb_ = NULL;
 
-    git_diff_blob_to_buffer(HHVM_GIT2_V(old_blob_, blob), old_as_path.c_str(), buffer.c_str(), (size_t) buffer_len, buffer_as_path.c_str(), HHVM_GIT2_V(options_, diff_options), /* todo */ file_cb_, /* todo */ hunk_cb_, /* todo */ line_cb_, payload_);
+    result = git_diff_blob_to_buffer(HHVM_GIT2_V(old_blob_, blob), old_as_path.c_str(), buffer.c_str(), (size_t) buffer_len, buffer_as_path.c_str(), NULL, /* todo */ file_cb_, /* todo */ hunk_cb_, /* todo */ line_cb_, payload_);
     return_value = (int64_t) result;
     return return_value;
 }
