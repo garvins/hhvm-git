@@ -57,6 +57,7 @@
 #include "src/trace.h"
 #include "src/transport.h"
 #include "src/tree.h"
+
 #define HHVM_RC_INT_SAME(const_name)                  \
 Native::registerConstant<KindOfInt64>(                \
 makeStaticString(#const_name), (int64_t)const_name);
@@ -1384,6 +1385,14 @@ static class Git2Extension : public Extension  {
 
 
       loadSystemlib();
+  }
+
+  virtual void requestInit() {
+    git_threads_init();
+  }
+
+  virtual void requestShutdown() {
+    git_threads_shutdown();
   }
 } s_git2_extension;
 
